@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Rutina PPL lumbar</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<meta name="theme-color" content="#0f1113">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PPL Lumbar">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: herramienta de gym, directa, sin adornos
+   IDEA: la pizarra junto al rack y los discos de competición (rojo 25, azul 20)
+   PICTURE: la propia sesión: series con check, dock de descanso fijo abajo
+   COLOUR and TYPE: goma negra, tiza, rojo disco, azul disco; Barlow Condensed + Barlow
+   LAYOUT: barra fija con cronómetro, semana y día, tarjetas de ejercicio, dock abajo */
+:root{color-scheme:dark;--bg:#0f1113;--panel:#181b1e;--panel2:#20242838;--card:#1b1f22;--line:#2c3237;--ink:#eceae4;--mute:#9aa1a7;--red:#e0342b;--blue:#3b80d4;--ok:#36a865;--warn:#e7a23a;--hd:'Barlow Condensed',Impact,sans-serif}
+:root[data-theme=light],:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:130px;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Barlow,system-ui,sans-serif;overflow-x:clip;padding-bottom:calc(110px + env(safe-area-inset-bottom))}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;-webkit-tap-highlight-color:transparent}
+button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+h1,h2,h3{font-family:var(--hd);font-weight:700;line-height:1.05;margin:0;letter-spacing:.01em}
+.wrap{max-width:760px;margin:0 auto;padding:0 max(14px,env(safe-area-inset-left))}
+.top{position:sticky;top:0;z-index:20;background:rgba(15,17,19,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
+.topin{display:flex;align-items:center;gap:10px;padding:10px 0}
+.brand{flex:1}.brand h1{font-size:24px}.brand small{color:var(--mute);font-size:13px}
+.sess{display:flex;align-items:center;gap:8px}
+.clock{font:700 28px/1 var(--hd);font-variant-numeric:tabular-nums;min-width:74px;text-align:right}
+.clock.run{color:var(--ink)}.clock.off{color:var(--mute)}
+.tabs{display:flex;gap:4px;padding-bottom:8px}
+.tabs button{flex:1;min-height:42px;border-radius:10px;background:var(--panel);font-weight:600;color:var(--mute)}
+.tabs button[aria-selected=true]{background:var(--ink);color:#111}
+.btn{min-height:46px;padding:0 16px;border-radius:12px;background:var(--red);color:#fff;font-weight:700}
+.btn.blue{background:var(--blue)}.btn.ghost{background:var(--panel);color:var(--ink);border:1px solid var(--line)}
+.btn.sm{min-height:40px;padding:0 12px;font-size:15px}
+.btn:disabled{opacity:.4}
+.lbl{font-size:13px;color:var(--mute);font-weight:600;margin:16px 0 6px}
+.weeks{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:5px}
+.weeks button{min-height:48px;border-radius:10px;background:var(--panel);font:700 22px/1 var(--hd);border:2px solid transparent;position:relative}
+.weeks button.dl{color:var(--warn)}
+.weeks button[aria-pressed=true]{border-color:var(--red);background:#2a1716}
+.days{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.days button{min-height:68px;border-radius:12px;background:var(--panel);text-align:left;padding:8px 10px;border:2px solid transparent;display:flex;flex-direction:column;justify-content:space-between}
+.days button b{font:700 20px/1 var(--hd)}.days button span{font-size:12px;color:var(--mute)}
+.days button[aria-pressed=true]{border-color:var(--blue);background:#14202e}
+.mini{height:4px;border-radius:2px;background:var(--line);overflow:hidden;margin-top:5px}.mini i{display:block;height:100%;background:var(--ok)}
+.dayhead{margin-top:18px;padding:16px;border-radius:16px;background:linear-gradient(135deg,#1d2125,#15181b);border:1px solid var(--line)}
+.dayhead h2{font-size:38px}
+.dayhead .meta{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.pill{font-size:13px;font-weight:600;padding:4px 10px;border-radius:99px;background:var(--panel);border:1px solid var(--line);white-space:nowrap}
+.pill.r{background:#341614;border-color:#5a2420}.pill.b{background:#132235;border-color:#24426a}.pill.w{background:#36290f;border-color:#5f4718;color:#f3c77a}
+.dayhead p{margin:6px 0 0;color:#c9ccce;font-size:15px}
+.focus{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;margin-top:10px}.focus>div{background:#121518;border:1px solid var(--line);border-radius:10px;padding:8px 10px}.focus small{display:block;font-size:12px;color:var(--mute);font-weight:600}.focus b{font-size:15px;line-height:1.3;display:block}.focus span{font-size:14px;color:#c9cdd0;line-height:1.3;display:block}
+@media(max-width:420px){.focus{grid-template-columns:1fr}}
+.prog{margin-top:12px;display:flex;align-items:center;gap:10px}
+.bar{flex:1;height:12px;border-radius:6px;background:var(--line);overflow:hidden}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--ok));transition:width .3s}
+.prog b{font:700 20px/1 var(--hd);font-variant-numeric:tabular-nums;min-width:64px;text-align:right}
+details.box{margin-top:12px;border-radius:14px;background:var(--panel);border:1px solid var(--line)}
+details.box summary{min-height:50px;display:flex;align-items:center;padding:0 14px;font-weight:700;cursor:pointer;list-style:none}
+details.box summary::after{content:'+';margin-left:auto;font-size:22px;color:var(--mute)}
+details.box[open] summary::after{content:'–'}
+details.box .in{padding:0 14px 14px}
+ol.wu{margin:0;padding-left:20px}ol.wu li{margin:6px 0}
+.ex{margin-top:12px;border-radius:16px;background:var(--card);border:1px solid var(--line);overflow:hidden}
+.ex.done{border-color:#25553a}
+.exh{padding:14px 14px 8px}
+.exh .t{display:flex;gap:8px;align-items:flex-start}
+.exh h3{font-size:24px;flex:1}
+.num{font:700 15px/1 var(--hd);color:var(--mute);padding-top:5px}
+.star{color:var(--warn);font-size:13px;font-weight:700;white-space:nowrap;padding-top:4px}
+.exh .meta{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.mus{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}.mus span{font-size:13px;font-weight:600;padding:3px 9px;border-radius:7px;line-height:1.3}.mus .m1{background:#ece9e2;color:#141414}.mus .m1::before{content:'Principal · ';font-weight:500;opacity:.7}.mus .m2{border:1px dashed #5b636a;color:#c9cdd0}.mus .m2::before{content:'Secundario · ';opacity:.7}
+.cue{color:#c3c7ca;font-size:14.5px;margin:8px 0 0}
+.altinfo{font-size:13px;color:var(--warn);margin-top:6px}
+.prev{font-size:13px;color:var(--mute);margin-top:6px}.prev b{color:#cfd3d6;font-weight:600}
+.sets{padding:4px 10px 10px}
+.set{display:grid;grid-template-columns:28px minmax(0,1fr) minmax(0,1fr) 58px;gap:7px;align-items:center;padding:4px 0}
+.set.iso{grid-template-columns:28px minmax(0,1.3fr) minmax(0,1fr) 58px}
+.set .n{font:700 18px/1 var(--hd);color:var(--mute);text-align:center}
+.set input{width:100%;height:50px;border-radius:10px;border:1px solid var(--line);background:#0f1214;color:var(--ink);font:600 18px Barlow,sans-serif;text-align:center;padding:0 4px}
+.set input::placeholder{color:#5f676e;font-weight:500}
+.chk{height:50px;border-radius:12px;border:2px solid var(--line);background:#121518;font-size:24px;font-weight:700;color:#4a5157}
+.chk[aria-pressed=true]{background:var(--ok);border-color:var(--ok);color:#fff}
+.set.on input{border-color:#25553a}
+.isob{height:50px;border-radius:10px;background:#14202e;border:1px solid #24426a;font-weight:700;font-size:15px}
+.exf{display:flex;gap:6px;padding:0 10px 12px}
+.exf .btn{flex:1}
+.molp{padding:0 12px 12px}.molb.g{color:#7fd6a1}.molb.a{color:#f3c77a;border-color:#5f4718}.molb.x{color:#ff8a83;border-color:#5a2420}
+.finish{margin-top:18px;padding:16px;border-radius:16px;background:var(--panel);border:1px solid var(--line)}
+.finish h2{font-size:28px}
+.pain{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin-top:10px}
+.pain button{min-height:50px;border-radius:10px;font:700 22px/1 var(--hd);background:#121518;border:2px solid var(--line)}
+.pain button.g{color:#7fd6a1}.pain button.a{color:#f3c77a}.pain button.x{color:#ff8a83}
+.pain button[aria-pressed=true]{background:var(--ink);color:#111;border-color:var(--ink)}
+.msg{margin-top:10px;padding:10px 12px;border-radius:10px;font-size:14.5px}
+.msg.w{background:#36290f;color:#f6d79b}.msg.x{background:#3a1513;color:#ffc2bd}.msg.ok{background:#11301f;color:#a6e7bf}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.row .btn{flex:1 1 140px}
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:30;background:#0b0d0e;border-top:1px solid var(--line);padding:8px max(12px,env(safe-area-inset-left)) calc(10px + env(safe-area-inset-bottom));transform:translateY(110%);transition:transform .25s}
+.dock.show{transform:none}
+.dockin{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:8px}
+.dockt{flex:1}.dockt small{display:block;color:var(--mute);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dockt b{font:700 46px/1 var(--hd);font-variant-numeric:tabular-nums}
+.dock.end{background:#11301f}.dock.end b{color:#7fe0a5}
+.dock .rb{height:6px;border-radius:3px;background:var(--line);overflow:hidden;max-width:760px;margin:0 auto 8px}.dock .rb i{display:block;height:100%;background:var(--red)}
+.modal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;padding:16px}
+.modal[hidden]{display:none}
+.sheet{width:100%;max-width:460px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;max-height:90vh;overflow:auto}
+.sheet h3{font-size:26px}
+.isoBig{font:700 clamp(84px,30vw,140px)/1 var(--hd);text-align:center;font-variant-numeric:tabular-nums;margin:10px 0}
+.isoL{text-align:center;font:700 26px/1.1 var(--hd)}.isoS{text-align:center;color:var(--mute)}
+.iso-hold .isoBig{color:#ff8a83}.iso-rest .isoBig{color:#8fb9ee}
+.guide h2{font-size:30px;margin:26px 0 8px}.guide h3{font-size:22px;margin:16px 0 6px}
+.guide p,.guide li{color:#d3d6d8}.guide ul{padding-left:20px}
+.tag{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:99px;vertical-align:2px;margin-right:4px;white-space:nowrap}
+.tag.ev{background:#132235;color:#9cc4f2}.tag.cr{background:#36290f;color:#f3c77a}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--mute);font-weight:600;font-size:13px}
+.scroll{overflow-x:auto}
+textarea{width:100%;min-height:130px;border-radius:10px;border:1px solid var(--line);background:#0f1214;color:var(--ink);font:14px/1.4 ui-monospace,monospace;padding:10px}
+.file{display:block;margin-top:8px}
+.file input{font-size:16px;color:var(--mute);width:100%}
+.sum{margin-top:12px;padding:14px;border-radius:12px;background:#121518;border:1px solid var(--line)}
+.sum li{margin:3px 0}
+.note{font-size:13px;color:var(--mute)}
+@media(max-width:600px){table{font-size:13.5px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px;border-bottom:1px solid var(--line)}.stack td{display:flow-root;border:0;padding:3px 0;padding-inline-start:7.2em;text-align:start}.stack td::before{content:attr(data-l);float:inline-start;width:6.8em;margin-inline-start:-7.2em;white-space:normal;color:var(--mute);font-size:12px;font-weight:600}.stack td:empty{display:none}
+.dayhead h2{font-size:32px}.exh h3{font-size:22px}.brand h1{font-size:21px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <div class="topin">
+    <div class="brand"><h1>PPL · 8 semanas</h1><small id="subt">Espalda y bíceps ★</small></div>
+    <div class="sess"><div class="clock off" id="clock">0:00</div><button class="btn sm blue" id="sessBtn">Iniciar</button></div>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-tab="train">Entreno</button>
+    <button role="tab" aria-selected="false" data-tab="guide">Guía</button>
+    <button role="tab" aria-selected="false" data-tab="data">Datos</button>
+  </nav>
+</div></header>
+
+<main class="wrap">
+  <section id="v-train"></section>
+  <section id="v-guide" class="guide" hidden></section>
+  <section id="v-data" hidden></section>
+</main>
+
+<div class="dock" id="dock" aria-live="polite">
+  <div class="rb"><i id="dockBar"></i></div>
+  <div class="dockin">
+    <div class="dockt"><small id="dockName">Descanso</small><b id="dockTime">0:00</b></div>
+    <button class="btn ghost sm" data-rest="-15">−15</button>
+    <button class="btn ghost sm" data-rest="15">+15</button>
+    <button class="btn sm" data-rest="skip">Listo</button>
+  </div>
+</div>
+
+<div class="modal" id="isoM" hidden><div class="sheet" id="isoS">
+  <div class="isoL" id="isoL">Prepárate</div>
+  <div class="isoBig" id="isoT">3</div>
+  <div class="isoS" id="isoC"></div>
+  <div class="row"><button class="btn ghost" id="isoX">Cancelar</button><button class="btn" id="isoDone">Terminar serie</button></div>
+</div></div>
+
+<div class="modal" id="dlg" hidden><div class="sheet">
+  <h3 id="dlgT"></h3><div id="dlgB" style="margin-top:8px;color:#d3d6d8"></div>
+  <div class="row"><button class="btn ghost" id="dlgNo">Cancelar</button><button class="btn" id="dlgOk">Confirmar</button></div>
+</div></div>
+
+<script>
+{
+const $=s=>document.querySelector(s);
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=s=>{s=Math.max(0,Math.round(s));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return(h?h+':'+String(m).padStart(2,'0'):m)+':'+String(x).padStart(2,'0')};
+const fmtRest=s=>s>=60?(Math.floor(s/60)+':'+String(s%60).padStart(2,'0')):s+' s';
+
+/* ---------- PROGRAMA ---------- */
+const DAYS=[
+ {id:'pushA',n:'Push A',d:'Lun',f:'Pecho',fp:'Pectoral (máquina Hammer y poleas)',fs:'Tríceps, sobre todo la cabeza larga · deltoides lateral',fx:'Día de pecho: máquina Hammer pesada y poleas, donde mejor lo notas. Puedes apretar cerca del fallo sin spotter.'},
+ {id:'pullA',n:'Pull A',d:'Mar',f:'Dorsal',fp:'Dorsal ancho (tirones verticales y pullover)',fs:'Bíceps cabeza larga · braquial · deltoides posterior',fx:'Día de amplitud: jalón y pullover para el dorsal; remo con apoyo de pecho como complemento.'},
+ {id:'legsA',n:'Legs A',d:'Mié',f:'Cuádriceps',fp:'Cuádriceps',fs:'Glúteo · isquiotibiales (solo un ejercicio de curl) · gemelos',fx:'Día dominante de rodilla: hack, prensa, búlgara y extensiones.'},
+ {id:'pushB',n:'Push B',d:'Jue',f:'Pecho alto · hombro',fp:'Pectoral superior y deltoides',fs:'Tríceps · braquial (curl martillo extra)',fx:'Inclinado pesado en Smith con topes para abrir y más volumen de deltoides lateral.'},
+ {id:'pullB',n:'Pull B',d:'Vie',f:'Espalda media',fp:'Espalda media (romboides, trapecio medio) y dorsal',fs:'Bíceps cabeza corta · deltoides posterior',fx:'Día de grosor: dominadas y remos horizontales; el dorsal sigue trabajando, pero con más tirón horizontal que el Pull A.'},
+ {id:'legsB',n:'Legs B',d:'Sáb',f:'Glúteo · femoral',fp:'Glúteo mayor e isquiotibiales',fs:'Cuádriceps (prensa con pies altos y zancadas) · glúteo medio · dorsal (jalón extra)',fx:'Día dominante de cadera, pero sin bisagras cargadas: hip thrust y curl femoral sustituyen al peso muerto rumano.'}];
+const dayName=id=>(DAYS.find(d=>d.id===id)||{}).n||id;
+const WEEKS=[null,
+ {t:'Calibración',rir:'3',rirI:'2–3',add:0,txt:'Encuentra cargas con margen. Anota todo: es tu referencia para las 7 semanas siguientes.'},
+ {t:'Acumulación',rir:'2',rirI:'2',add:0,txt:'Sube carga o reps donde la semana 1 te quedó fácil. Técnica idéntica.'},
+ {t:'Acumulación +',rir:'2',rirI:'1–2',add:1,txt:'+1 serie en los ejercicios ★ (espalda y bíceps). Bloque lumbar pasa a fase 2 si cumples los criterios.'},
+ {t:'Pico bloque 1',rir:'1–2',rirI:'1',add:1,txt:'Semana más dura del bloque 1. Si el dolor sube, quita primero las series extra ★.'},
+ {t:'Descarga',rir:'3–4',rirI:'3',add:0,dl:1,txt:'≈60 % de las series y cargas −10–15 %. Bloque lumbar vuelve al volumen de fase 1. No es opcional: aquí se consolida.'},
+ {t:'Bloque 2',rir:'2',rirI:'1–2',add:1,txt:'Retoma con las cargas de semana 3–4. Bloque lumbar fase 3 si las semanas 3–4 fueron sin dolor.'},
+ {t:'Bloque 2 +',rir:'1–2',rirI:'1',add:1,txt:'Empuja la doble progresión. Sentadilla con barra opcional solo si cumples los criterios (Guía).'},
+ {t:'Pico final',rir:'1',rirI:'0–1',add:1,txt:'Última serie de aislamiento cerca del fallo. Nunca al fallo en compuestos ni en el bloque lumbar. Después: semana de descarga.'}];
+const phase=w=>w<=2?0:w<=4?1:w===5?0:2;
+
+/* e(id,nombre,series,reps,descanso,{p:prioridad,i:aislamiento},cue,[altNombre,altCue]) */
+const E=(id,n,s,r,rest,f,cue,alt)=>({id,n,s,r,rest,p:!!f.p,i:!!f.i,opt:f.opt||'',cue,alt:{n:alt[0],c:alt[1]}});
+const C=(id,n,ph,cue,alt,rest=40)=>({id,n,core:1,ph,cue,alt:{n:alt[0],c:alt[1]},rest});
+
+const coreBack=x=>[
+ C(x+'bd','Bird dog con pausa',[{s:3,r:'6/lado · 5 s',h:5,k:12,g:2},{s:3,r:'8/lado · 8 s',h:8,k:16,g:2},{s:3,r:'8/lado · 10 s',h:10,k:16,g:2,c:'Fase 3: tobillera ligera o banda en el pie.'}],
+  'Columna neutra y pelvis quieta: imagina un vaso de agua sobre la zona lumbar. Extiende brazo y pierna contrarios lento, sin arquear.',['Bird dog parcial (solo brazos o solo piernas)','Misma pausa. Úsalo si el completo te hace perder el control de la pelvis.']),
+ C(x+'pl','Plancha lateral',[{s:3,r:'20 s/lado',h:20,k:2,g:6},{s:3,r:'30 s/lado',h:30,k:2,g:6},{s:3,r:'40 s/lado',h:40,k:2,g:6,c:'Fase 3: eleva la pierna de arriba unos cm durante la última mitad.'}],
+  'Codo bajo el hombro, cuerpo en línea recta, cadera arriba. Respira normal.',['Plancha lateral con rodillas apoyadas','Mismo tiempo, palanca más corta.']),
+ C(x+'ex','Extensión lumbar progresiva',[{s:3,r:'5 × 8 s',h:8,k:5,g:4,n:'Extensión prona isométrica (hasta neutro)'},{s:3,r:'10 reps',n:'Extensión de cadera en banco (hasta neutro)'},{s:3,r:'12 reps · 2 s arriba',n:'Extensión de cadera en banco + tobillera',c:'Pausa de 2 s con piernas en línea con el tronco.'}],
+  'Boca abajo: despega pecho o piernas solo hasta quedar recto, nunca más allá (nada de hiperextensión). En banco: cadera en el borde, sube las piernas hasta la línea del cuerpo.',['Superman alterno en el suelo','Brazo y pierna contrarios, despegue mínimo, 2 s de pausa.'])];
+
+const EX={
+pushA:[
+ E('pa1h','Press plano en máquina Hammer',4,'6–10',150,{},'Ajusta el asiento para que las asas queden a la altura del pecho medio. Escápulas atrás y pies firmes, sin despegar la lumbar del respaldo. Puedes llegar cerca del fallo sin spotter, y lo notas mejor en el pecho.',['Press de banca con mancuernas','Recoge las mancuernas con la espalda recta y las rodillas flexionadas. Túmbate con ellas apoyadas en los muslos y, al terminar, bájalas al pecho y siéntate. RIR 1–2 sin spotter.']),
+ E('pa2h','Press inclinado en máquina Hammer',3,'8–10',120,{},'Unilateral o bilateral. Bajada controlada de 2 s y estiramiento completo.',['Press inclinado con mancuernas (30°)','Codos a ~45°, misma salida segura que el press plano.']),
+ E('pa3','Press de hombro sentado con respaldo',3,'8–10',120,{},'Mancuernas, respaldo casi vertical y espalda apoyada: el respaldo evita compensar arqueando la lumbar.',['Press de hombro en máquina','Espalda pegada al respaldo.']),
+ E('pa4','Aperturas en polea (cruce medio)',3,'12–15',75,{i:1},'Codos ligeramente flexionados, estira sin dolor de hombro.',['Pec deck o aperturas con mancuernas en banco','Mismo rango.']),
+ E('pa5','Elevaciones laterales con mancuernas',4,'12–20',60,{i:1},'Sin balanceo del tronco. Sube hasta la altura del hombro.',['Laterales en polea, unilateral','Polea a la altura de la mano.']),
+ E('pa6','Extensión de tríceps en polea',3,'10–12',75,{i:1},'Codos pegados, tronco quieto.',['Press francés con mancuernas tumbado','Banco plano, codos fijos.']),
+ E('pa7','Extensión de tríceps sobre la cabeza en polea',3,'10–15',75,{i:1},'Pie adelantado, costillas abajo y glúteo apretado. Si la lumbar se arquea, hazlo sentado.',['Extensión a una mano con mancuerna, sentado con respaldo','Espalda apoyada todo el set.'])],
+pullA:[
+ E('la1','Jalón al pecho, agarre medio',4,'8–10',120,{p:1},'Pecho alto, sin balancearte. Codos hacia los bolsillos.',['Dominadas asistidas (banda o máquina)','Sin kipping, bajada controlada.']),
+ E('la2','Remo con apoyo de pecho en máquina',4,'8–10',120,{p:1},'Pecho pegado al apoyo todo el set: así la lumbar no sostiene nada.',['Remo con mancuernas pecho apoyado en banco inclinado (30–45°)','Reemplaza también el remo en T. Escápulas atrás y abajo.']),
+ E('la3','Remo unilateral en polea baja',3,'10–12/lado',90,{},'Sentado o de rodillas. Tronco quieto: no te inclines hacia delante para estirar más (eso es flexión lumbar).',['Remo unilateral con mancuerna apoyado en banco','Mano y rodilla en el banco, columna neutra.']),
+ E('la4','Pullover en polea alta',3,'12–15',75,{i:1},'Brazos casi rectos, ligera inclinación fija de cadera, abdomen firme. Lleva la barra hasta los muslos.',['Pullover con mancuerna en banco','Cadera baja, costillas abajo; no arquees.']),
+ E('la5','Face pull en polea',3,'12–15',60,{i:1},'Tira hacia la frente separando la cuerda; codos altos.',['Pájaros con mancuernas pecho apoyado en banco inclinado','Ligero y lento.']),
+ E('la6','Curl inclinado con mancuernas',3,'8–12',75,{p:1,i:1},'Banco a 45–60°, hombros atrás, sin adelantar el codo.',['Curl bayesiano en polea baja (de espaldas)','Mismo estiramiento del bíceps.']),
+ E('la7','Curl martillo',3,'10–12',60,{i:1},'Sin balanceo; si tienes que mover el tronco, baja el peso.',['Curl con cuerda en polea','Agarre neutro.']),
+ ...coreBack('a')],
+legsA:[
+ E('lg1','Hack squat (o péndulo / belt squat)',4,'6–10',150,{opt:'Desde la semana 6, puedes cambiarla por sentadilla con barra solo si cumples los criterios de la Guía.'},'Espalda pegada al respaldo. Baja hasta donde la pelvis no se despega ni se redondea la lumbar.',['Sentadilla goblet con mancuerna','Carga delante, tronco erguido; si hace falta, a un cajón.']),
+ E('lg2','Prensa de piernas (carga moderada)',3,'10–15',120,{},'La prensa pesada te molesta: trabaja en 10–15 reps y frena antes de que el coxis se despegue del asiento.',['Step-up a cajón con mancuernas','Cajón a la altura de la rodilla, sube con la pierna de arriba.']),
+ E('lg3','Sentadilla búlgara con mancuernas',3,'8–10/pierna',90,{},'Mancuernas a los lados, tronco algo inclinado y columna neutra.',['Zancada inversa con mancuernas','Paso atrás controlado.']),
+ E('lg4','Extensión de cuádriceps',3,'12–15',75,{i:1},'Pausa de 1 s arriba.',['Sentadilla española con banda','Banda tras las rodillas anclada delante.']),
+ E('lg5','Curl femoral sentado',3,'10–12',75,{i:1},'Pelvis fija contra el respaldo.',['Curl femoral con fitball o deslizadores','Cadera arriba durante todo el set.']),
+ E('lg6','Gemelos en prensa',4,'12–15',60,{i:1},'Pausa de 2 s abajo en estiramiento. Sin carga sobre los hombros.',['Gemelos sentado con mancuerna en las rodillas','Sobre un disco o escalón.']),
+ C('lgdb','Dead bug',[{s:3,r:'6/lado'},{s:3,r:'8/lado · 3 s pausa'},{s:3,r:'8/lado + banda en manos',c:'Fase 3: banda o mancuerna ligera sostenida arriba.'}],'Lumbar apoyada suave en el suelo, exhala al extender brazo y pierna contrarios.',['Dead bug solo piernas (talón al suelo)','Misma respiración.']),
+ C('lgcu','McGill curl-up',[{s:3,r:'5 × 8 s',h:8,k:5,g:3},{s:3,r:'6 × 10 s',h:10,k:6,g:3},{s:3,r:'6 × 10 s, codos arriba',h:10,k:6,g:3}],'Manos bajo la lumbar, una rodilla flexionada. Despega solo cabeza y hombros unos cm, sin doblar la zona lumbar. Alterna la pierna cada serie.',['Dead bug isométrico','Brazos y piernas a 90°, aguanta el mismo tiempo.']),
+ C('lgpa','Pallof press (antirrotación)',[{s:2,r:'10/lado'},{s:3,r:'10/lado · 2 s'},{s:3,r:'12/lado · 2 s'}],'Polea a la altura del pecho, empuja al frente y no dejes que el tronco gire. Es antirrotación: no hay rotación con peso.',['Pallof press con banda','Misma ejecución.'])],
+pushB:[
+ E('pb1s','Press inclinado en Smith (con topes de seguridad)',4,'6–8',150,{},'Banco a 30°, glúteos en el banco, arco moderado. Pon los topes justo por debajo del pecho antes de empezar: así puedes ir pesado sin spotter.',['Press inclinado con mancuernas','Mismo rango; aplica la misma salida y entrega segura que en el press plano.']),
+ E('pb2c','Press de pecho en polea, sentado en banco',3,'10–12',90,{},'Banco entre las poleas, poleas a la altura del pecho y espalda apoyada. Empuja hacia delante y un poco hacia dentro. Tensión constante y gran estiramiento.',['Press plano en máquina Hammer','8–12 reps, bajada lenta.']),
+ E('pb3','Press de hombro en máquina',3,'8–10',120,{},'Espalda pegada al respaldo.',['Press de hombro sentado con mancuernas y respaldo','Respaldo casi vertical.']),
+ E('pb4','Cruces en polea de abajo hacia arriba',3,'12–15',60,{i:1},'Pecho alto, junta las manos a la altura del mentón.',['Aperturas inclinadas con mancuernas','Banco a 30°.']),
+ E('pb5','Elevaciones laterales en polea',4,'12–15',60,{i:1},'Unilateral, cable por detrás del cuerpo.',['Laterales con mancuernas, sentado','Sentado elimina el impulso.']),
+ E('pb6','Press francés con barra Z',3,'10–12',75,{i:1},'Codos fijos, barra hacia la frente.',['Extensión de tríceps con mancuernas tumbado','Agarre neutro.']),
+ E('pb7','Curl martillo en polea con cuerda (extra bíceps)',3,'10–12',60,{p:1,i:1},'Frecuencia extra de bíceps/braquial. Codos quietos.',['Curl martillo con mancuernas','Alterno o simultáneo.'])],
+pullB:[
+ E('lb1','Dominadas agarre neutro',4,'6–10',150,{p:1},'Cuelga activo, sin balanceo ni kipping. Si no llegas a 6 reps, usa asistencia.',['Jalón agarre neutro estrecho','Pecho alto, sin balanceo.']),
+ E('lb2','Remo unilateral con mancuerna apoyado en banco',4,'8–10/lado',90,{p:1},'Mano y rodilla en el banco, columna neutra. Tira hacia la cadera.',['Remo unilateral en máquina con apoyo de pecho','Pecho pegado al apoyo.']),
+ E('lb3','Remo sentado en polea, agarre neutro',3,'10–12',90,{},'Torso vertical y fijo. Nada de balanceo adelante-atrás: el estiramiento viene de los hombros, no de la lumbar.',['Remo pecho apoyado con mancuernas en banco inclinado','Pecho pegado al banco.']),
+ E('lb4','Jalón unilateral de rodillas en polea alta',3,'10–12/lado',75,{i:1},'Codo hacia la cadera, estira arriba sin girar el tronco.',['Jalón con agarre en V','Mismo rango.']),
+ E('lb5','Pájaros en máquina (pec deck invertido)',3,'12–15',60,{i:1},'Brazos casi rectos, abre hasta la línea de los hombros.',['Pájaros con mancuernas pecho apoyado en banco inclinado','Ligero y lento.']),
+ E('lb6','Curl en banco predicador',3,'8–12',75,{p:1,i:1},'Barra Z o máquina; bajada lenta hasta casi extender.',['Curl predicador con mancuerna sobre banco inclinado','A una mano.']),
+ E('lb7','Curl bayesiano en polea baja',3,'10–12',60,{i:1},'De espaldas a la polea, brazo detrás del cuerpo.',['Curl alterno con mancuernas sentado','Supina al subir.']),
+ ...coreBack('b')],
+legsB:[
+ E('lh1m','Hip thrust en máquina',4,'8–10',120,{},'Espalda alta apoyada en el respaldo, mentón metido y costillas abajo. Extiende la cadera, no la lumbar, y aguanta 1 s arriba.',['Hip thrust con barra','Espalda alta en el banco y almohadilla en la barra. No necesitas spotter: si no puedes subirla, baja la cadera y apoya la barra en el suelo.']),
+ E('lh2','Curl femoral tumbado',4,'8–12',90,{i:1},'Cadera pegada al banco; si se levanta, baja el peso.',['Curl femoral con fitball o deslizadores','Cadera arriba todo el set.']),
+ E('lh3','Prensa con pies altos (o péndulo)',3,'10–12',120,{},'Carga moderada, mismo criterio que la prensa de Legs A: no despegues el coxis.',['Step-up alto con mancuernas','Cajón algo por encima de la rodilla.']),
+ E('lh4','Zancadas caminando con mancuernas',2,'10–12/pierna',90,{},'Paso largo, tronco erguido, mancuernas a los lados.',['Split squat estático con mancuernas','Sin desplazarte.']),
+ E('lh5','Abducción de cadera en máquina',3,'15–20',60,{i:1},'Ligera inclinación al frente, pausa fuera.',['Abducción con banda sentado','Banda sobre las rodillas.']),
+ E('lh6','Gemelos sentado',4,'12–15',60,{i:1},'Pausa abajo de 2 s.',['Gemelos a una pierna con mancuerna en escalón','Apóyate en la pared, sin carga en los hombros.']),
+ E('lh7','Jalón agarre neutro (frecuencia extra de dorsal)',3,'10–12',75,{p:1},'Tercer estímulo semanal de dorsal. Moderado, RIR indicado.',['Pullover en polea alta','Brazos casi rectos.']),
+ C('lhpt','Pull-through en polea',[{s:2,r:'12 ligero'},{s:3,r:'12'},{s:3,r:'10 + carga'}],'Aprender la bisagra con poca carga: cadera atrás, columna neutra de principio a fin. Si la notas en la lumbar en vez de glúteo/femoral, acorta el rango.',['Puente de glúteo con pausa','3 s arriba.']),
+ C('lhsc','Suitcase carry',[{s:2,r:'20 s/lado',h:20,k:2,g:10},{s:3,r:'30 s/lado',h:30,k:2,g:10},{s:3,r:'40 s/lado + carga',h:40,k:2,g:10}],'Una mancuerna pesada a un lado, camina erguido sin inclinarte. Anota el peso.',['Suitcase hold estático','De pie sin caminar, mismo tiempo.']),
+ C('lhpf','Plancha frontal',[{s:3,r:'20 s',h:20,k:1},{s:3,r:'30 s',h:30,k:1},{s:3,r:'40 s',h:40,k:1}],'Aprieta glúteos y lleva los codos hacia los pies. Nada de cadera hundida.',['Plancha con rodillas apoyadas','Mismo tiempo.'])]
+};
+
+const MUS={pa1h:['Pectoral','Tríceps, deltoides anterior'],pa2h:['Pectoral superior','Deltoides anterior, tríceps'],pa3:['Deltoides anterior','Tríceps, deltoides lateral'],pa4:['Pectoral',''],pa5:['Deltoides lateral',''],pa6:['Tríceps (cabeza lateral)',''],pa7:['Tríceps (cabeza larga)',''],
+la1:['Dorsal ancho','Bíceps, redondo mayor'],la2:['Espalda media (romboides, trapecio medio)','Dorsal, deltoides posterior'],la3:['Dorsal ancho','Espalda media, bíceps'],la4:['Dorsal ancho','Redondo mayor, tríceps (cabeza larga)'],la5:['Deltoides posterior','Trapecio medio, manguito rotador'],la6:['Bíceps (cabeza larga)','Braquial'],la7:['Braquial y braquiorradial','Bíceps'],
+lg1:['Cuádriceps','Glúteo'],lg2:['Cuádriceps','Glúteo, aductores'],lg3:['Cuádriceps y glúteo','Aductores'],lg4:['Cuádriceps',''],lg5:['Isquiotibiales',''],lg6:['Gemelos','Sóleo'],lgdb:['Core anterior (transverso, recto abdominal)','Flexores de cadera'],lgcu:['Recto abdominal','Oblicuos'],lgpa:['Oblicuos (antirrotación)','Transverso abdominal'],
+pb1s:['Pectoral superior','Deltoides anterior, tríceps'],pb2c:['Pectoral','Deltoides anterior, tríceps'],pb3:['Deltoides anterior','Tríceps, deltoides lateral'],pb4:['Pectoral superior',''],pb5:['Deltoides lateral',''],pb6:['Tríceps','' ],pb7:['Braquial y braquiorradial','Bíceps'],
+lb1:['Dorsal ancho','Bíceps, braquial, espalda media'],lb2:['Dorsal ancho','Espalda media, bíceps'],lb3:['Espalda media (romboides, trapecio medio)','Dorsal, bíceps'],lb4:['Dorsal ancho',''],lb5:['Deltoides posterior','Trapecio medio'],lb6:['Bíceps (cabeza corta)','Braquial'],lb7:['Bíceps (cabeza larga)',''],
+lh1m:['Glúteo mayor','Isquiotibiales'],lh2:['Isquiotibiales','Gemelos'],lh3:['Glúteo y cuádriceps','Isquiotibiales, aductores'],lh4:['Cuádriceps y glúteo','Aductores'],lh5:['Glúteo medio',''],lh6:['Sóleo','Gemelos'],lh7:['Dorsal ancho','Bíceps'],lhpt:['Glúteo e isquiotibiales','Erectores espinales (isométrico)'],lhsc:['Cuadrado lumbar y oblicuos','Agarre, trapecio'],lhpf:['Core anterior','Glúteo'],
+bd:['Erectores espinales y multífidos (estabilidad)','Glúteo, core'],pl:['Oblicuos y cuadrado lumbar','Glúteo medio'],ex:['Erectores espinales','Glúteo, isquiotibiales']};
+const musOf=id=>MUS[id]||MUS[id.slice(1)]||null;
+const WU_BASE=['Cardio suave 3–5 min (bici, elíptica o caminadora inclinada).','Respiración 90/90 tumbado con pies en la pared: 5 respiraciones lentas, costillas abajo.','Puente de glúteo 2×10 con 2 s arriba.','Bird dog 1×5 por lado, lento.','Dead bug 1×6 por lado.','Cat-camel suave ×5, solo en rango cómodo. La flexión es lo que te molesta, así que omite la fase de redondear si la notas.'];
+const WU_DAY={push:['Rotación externa con banda ×15 y flexiones inclinadas ×10.'],pull:['Colgarte de la barra 2×15–20 s si te sienta bien (si no, sáltalo).','Jalón ligero ×15 y face pull ligero ×15.'],legs:['Sentadilla al cajón sin peso ×10 y zancada inversa sin peso ×5/lado.','Hip airplane asistido (apoyado) ×3/lado, opcional.']};
+const warmup=d=>[...WU_BASE,...WU_DAY[d.replace(/[AB]$/,'')],'Series de aproximación del primer ejercicio: ~50 %×10, 70 %×5, 85 %×2–3.'];
+
+/* ---------- ESTADO ---------- */
+const KEY='ppl-lumbar-v1';
+let S=null;
+try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!S||typeof S.log!=='object'||!S.log)S={v:1,w:1,d:'pushA',log:{}};
+if(!(S.w>=1&&S.w<=8))S.w=1;if(!EX[S.d])S.d='pushA';
+let storeOK=true;
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));storeOK=true}catch(e){storeOK=false}};
+const L=(w,d,create)=>{const k=w+'|'+d;if(!S.log[k]&&create)S.log[k]={ex:{},alt:{},pain:null,t0:null,t1:null};return S.log[k]};
+const cur=c=>L(S.w,S.d,c);
+const isAlt=(ex,l=cur())=>!!(l&&l.alt&&l.alt[ex.id]);
+const keyOf=(ex,l)=>ex.id+(isAlt(ex,l)?'~a':'');
+function spec(ex,w){
+  if(ex.core){const p=ex.ph[phase(w)];return{sets:p.s,reps:p.r,rest:ex.rest,rir:'Control, sin dolor',iso:p.h?{h:p.h,k:p.k||1,g:p.g||3}:null,name:p.n||ex.n,note:p.c||'',fase:phase(w)+1}}
+  const W=WEEKS[w];return{sets:W.dl?Math.max(1,Math.round(ex.s*.6)):ex.s+(ex.p?W.add:0),reps:ex.r,rest:ex.rest,rir:ex.i?W.rirI:W.rir,iso:null,name:ex.n,note:''};
+}
+function setsOf(w,d,ex){const l=L(w,d);const e=l&&l.ex[keyOf(ex,l)];return e?e.s:[]}
+function getSet(ex,i){const l=cur(true);const k=keyOf(ex,l);const e=l.ex[k]||(l.ex[k]={s:[]});while(e.s.length<=i)e.s.push({d:0,w:'',r:''});return e.s[i]}
+function prog(w,d){let t=0,n=0;for(const ex of EX[d]){const sp=spec(ex,w),s=setsOf(w,d,ex);t+=sp.sets;for(let i=0;i<sp.sets;i++)if(s[i]&&s[i].d)n++}return{t,n}}
+function prev(ex){const k=keyOf(ex);for(let pw=S.w-1;pw>=1;pw--){const l=S.log[pw+'|'+S.d];const e=l&&l.ex[k];if(e&&e.s.some(x=>x.w||x.r))return{pw,s:e.s}}return null}
+
+/* ---------- AUDIO ---------- */
+let ac=null;
+const audio=()=>{try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume()}catch(e){}};
+function beep(n=3,f=880,dur=.16){if(!ac)return;try{const t=ac.currentTime;for(let i=0;i<n;i++){const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;o.type='square';g.gain.setValueAtTime(.0001,t+i*.28);g.gain.exponentialRampToValueAtTime(.35,t+i*.28+.01);g.gain.exponentialRampToValueAtTime(.0001,t+i*.28+dur);o.connect(g).connect(ac.destination);o.start(t+i*.28);o.stop(t+i*.28+dur+.02)}}catch(e){}}
+const buzz=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
+
+/* ---------- RENDER ENTRENO ---------- */
+function renderTrain(){
+  const W=WEEKS[S.w],l=cur(),list=EX[S.d],day=DAYS.find(d=>d.id===S.d),ph=phase(S.w)+1;
+  const pr=prog(S.w,S.d);
+  let h=`<div class="lbl">Semana</div><div class="weeks">${[1,2,3,4,5,6,7,8].map(w=>`<button data-w="${w}" class="${WEEKS[w].dl?'dl':''}" aria-pressed="${w===S.w}" aria-label="Semana ${w}${WEEKS[w].dl?' (descarga)':''}">${w}</button>`).join('')}</div>
+  <div class="lbl">Día</div><div class="days">${DAYS.map(d=>{const p=prog(S.w,d.id),lg=L(S.w,d.id);return`<button data-d="${d.id}" aria-pressed="${d.id===S.d}"><b>${d.n}</b><span>${d.d} · ${d.f}${lg&&lg.pain!=null?' · dolor '+lg.pain:''}</span><div class="mini"><i style="width:${p.t?Math.round(p.n/p.t*100):0}%"></i></div></button>`}).join('')}</div>
+  <div class="dayhead"><h2>${day.n} · Semana ${S.w}</h2>
+   <div class="meta"><span class="pill ${W.dl?'w':'r'}">${W.t}</span><span class="pill">RIR compuestos ${W.rir}</span><span class="pill">RIR aislamiento ${W.rirI}</span><span class="pill b">Lumbar fase ${ph}</span></div>
+   <div class="focus"><div><small>Enfoque principal</small><b>${day.fp}</b></div><div><small>Secundario</small><span>${day.fs}</span></div></div>
+   <p class="note" style="margin-top:6px">${day.fx}</p>
+   <p>${W.txt}</p>
+   <div class="prog"><div class="bar"><i id="pbar" style="width:${pr.t?pr.n/pr.t*100:0}%"></i></div><b id="ptxt">${pr.n}/${pr.t}</b></div>
+  </div>
+  ${lumbarDay(S.d)?`<div class="finish" style="margin-top:12px"><h2>Antes de empezar</h2><p class="note" style="margin:4px 0 0">Dolor lumbar ahora mismo (0–10). Tu basal es 0–2. Este día carga espalda o pierna.</p>${scale('pre',l&&l.pre)}${preMsg(l&&l.pre)}</div>`:''}
+  <details class="box"><summary>Calentamiento lumbar (~8 min)</summary><div class="in"><ol class="wu">${warmup(S.d).map(x=>`<li>${x}</li>`).join('')}</ol></div></details>`;
+  let coreStart=list.findIndex(x=>x.core);
+  h+=list.map((ex,xi)=>(xi===coreStart?`<div class="lbl" style="margin-top:22px">Bloque lumbar y core · fase ${ph}${W.dl?' (volumen de fase 1 por descarga)':''}</div>`:'')+card(ex,xi)).join('');
+  const pain=l&&l.pain;
+  h+=`<div class="finish"><h2>Cierre de la sesión</h2><p class="note" style="margin:4px 0 0">Dolor lumbar al terminar (0–10). Tu basal es 0–2.</p>
+   <div class="pain">${[0,1,2,3,4,5,6,7,8,9,10].map(v=>`<button data-pain="${v}" class="${v<=2?'g':v<=4?'a':'x'}" aria-pressed="${pain===v}">${v}</button>`).join('')}</div>
+   ${painMsg(pain)}
+   ${l&&l.pre!=null&&pain!=null?`<div class="msg ${pain-l.pre>=2?'x':pain>l.pre?'w':'ok'}">Antes ${l.pre} → después ${pain} (${pain-l.pre>0?'+':''}${pain-l.pre}). ${pain-l.pre>=2?'La sesión subió el dolor 2 puntos o más: revisa qué ejercicios marcaron molestia.':pain>l.pre?'Subida leve: confirma mañana que vuelva a tu basal.':'La sesión no subió el dolor.'}</div>`:''}
+   <div class="row"><button class="btn blue" id="finBtn">${l&&l.t1?'Reanudar sesión':'Terminar sesión'}</button></div>
+   <div class="row"><button class="btn ghost" id="rstDay">Reiniciar día</button><button class="btn ghost" id="rstWeek">Reiniciar semana ${S.w}</button></div>
+   ${storeOK?'':'<div class="msg x">Este navegador no está dejando guardar datos. Exporta tu historial en «Datos» antes de cerrar.</div>'}
+  </div>`;
+  $('#v-train').innerHTML=h;
+  updateClock();
+}
+const lumbarDay=d=>/^(pull|legs)/.test(d);
+const scale=(attr,val,extra='')=>`<div class="pain">${[0,1,2,3,4,5,6,7,8,9,10].map(v=>`<button data-${attr}="${extra}${v}" class="${v<=2?'g':v<=4?'a':'x'}" aria-pressed="${val===v}">${v}</button>`).join('')}</div>`;
+function preMsg(p){
+  if(p==null)return'';
+  if(p<=2)return'<div class="msg ok">Dentro de tu basal: sesión completa según lo planeado.</div>';
+  if(p<=4)return'<div class="msg w">Hoy estás por encima de tu basal. Haz la sesión, pero sin subir cargas, quita las series extra ★ y haz el bloque lumbar con la alternativa o con los números de la fase anterior. Si el dolor sube durante la sesión, para lo que lo provoque.</div>';
+  return'<div class="msg x">Dolor alto antes de empezar. Hoy no cargues espalda ni pierna: haz el calentamiento, el bloque lumbar en versión suave y cardio suave. Si sigue así varios días o notas síntomas hacia la pierna, consulta (mira «Señales de alerta» en la Guía).</div>';
+}
+function molMsg(v){
+  if(v==null)return'';
+  if(v<=2)return'<div class="msg ok">Sin problema: sigue la progresión normal.</div>';
+  if(v<=4)return'<div class="msg w">Vigílalo. La próxima vez mantén la carga (no subas). Si vuelve a dar 3 o más, cambia a la alternativa.</div>';
+  return'<div class="msg x">Este ejercicio te está alborotando. Termínalo con la alternativa o quítalo hoy, y la próxima sesión usa la alternativa.</div>';
+}
+function molHist(ex){const k=keyOf(ex),out=[];for(let w=1;w<=8;w++){const l=S.log[w+'|'+S.d],e=l&&l.ex[k];if(e&&e.m!=null)out.push({w,m:e.m})}return out}
+const openMol=new Set();
+function painMsg(p){
+  if(p==null)return'';
+  if(p<=2)return'<div class="msg ok">Dentro de tu basal. Sigue con la progresión.</div>';
+  if(p<=4)return'<div class="msg w">Por encima de tu basal. Mañana comprueba que vuelva a 0–2. Si no vuelve, la próxima sesión repite cargas (no subas) y usa alternativas en lo que moleste.</div>';
+  return'<div class="msg x">Dolor alto. Próxima sesión: baja cargas 20–30 % y quita las series extra ★. Si se repite dos sesiones seguidas, o aparece dolor hacia la pierna, hormigueo o debilidad, consulta con tu médico/fisio (mira «Señales de alerta» en la Guía).</div>';
+}
+function card(ex,xi){
+  const sp=spec(ex,S.w),alt=isAlt(ex),name=alt?ex.alt.n:sp.name,cue=alt?ex.alt.c:ex.cue+(sp.note?' '+sp.note:'');
+  const pv=prev(ex),s=setsOf(S.w,S.d,ex),all=sp.sets&&[...Array(sp.sets).keys()].every(i=>s[i]&&s[i].d);
+  const rows=[...Array(sp.sets).keys()].map(i=>{const st=s[i]||{},p=pv&&pv.s[i]||{},on=!!st.d;
+    if(sp.iso)return`<div class="set iso ${on?'on':''}"><span class="n">${i+1}</span><button class="isob" data-iso="${xi}|${i}">▶ ${sp.iso.k>1?sp.iso.k+' × ':''}${sp.iso.h} s</button><input inputmode="decimal" data-in="${xi}|${i}|w" value="${esc(st.w)}" placeholder="${esc(p.w||'kg')}" aria-label="Carga serie ${i+1}"><button class="chk" data-chk="${xi}|${i}" aria-pressed="${on}" aria-label="Serie ${i+1} hecha">✓</button></div>`;
+    return`<div class="set ${on?'on':''}"><span class="n">${i+1}</span><input inputmode="decimal" data-in="${xi}|${i}|w" value="${esc(st.w)}" placeholder="${esc(p.w||'kg')}" aria-label="Peso serie ${i+1}"><input inputmode="numeric" data-in="${xi}|${i}|r" value="${esc(st.r)}" placeholder="${esc(p.r||'reps')}" aria-label="Reps serie ${i+1}"><button class="chk" data-chk="${xi}|${i}" aria-pressed="${on}" aria-label="Serie ${i+1} hecha">✓</button></div>`}).join('');
+  const ek=cur()&&cur().ex[keyOf(ex)],mol=ek&&ek.m!=null?ek.m:null,mh=molHist(ex).filter(x=>x.w!==S.w),om=openMol.has(ex.id);
+  const molTxt=mh.length?`<div class="prev">Molestia en semanas anteriores: <b>${mh.map(x=>'S'+x.w+': '+x.m).join(' · ')}</b></div>`:'';
+  const pvTxt=pv?`<div class="prev">Semana ${pv.pw}: <b>${pv.s.slice(0,Math.max(sp.sets,1)).map(x=>(x.w||'–')+(sp.iso?' kg':'×'+(x.r||'–'))).join(' · ')}</b></div>`:`<div class="prev">Sin registro previo${alt?' con la alternativa':''}.</div>`;
+  return`<article class="ex ${all?'done':''}" id="ex${xi}"><div class="exh">
+   <div class="t"><span class="num">${xi+1}</span><h3>${esc(name)}</h3>${ex.p?'<span class="star">★ prioridad</span>':''}</div>
+   ${(()=>{const m=musOf(ex.id);return m?`<div class="mus"><span class="m1">${esc(m[0])}</span>${m[1]?`<span class="m2">${esc(m[1])}</span>`:''}</div>`:''})()}
+   <div class="meta"><span class="pill r">${sp.sets} × ${esc(sp.reps)}</span><span class="pill">${ex.core?esc(sp.rir):'RIR '+esc(sp.rir)}</span><span class="pill b">Descanso ${fmtRest(sp.rest)}</span></div>
+   <p class="cue">${esc(cue)}</p>${ex.opt&&!alt?`<div class="altinfo">${esc(ex.opt)}</div>`:''}${alt?`<div class="altinfo">Usando alternativa. Original: ${esc(sp.name)}</div>`:''}${pvTxt}${molTxt}</div>
+   <div class="sets">${!sp.iso?`<div class="set" style="padding:0"><span></span><span class="note" style="text-align:center">kg</span><span class="note" style="text-align:center">reps</span><span></span></div>`:''}${rows}</div>
+   <div class="exf"><button class="btn ghost sm" data-alt="${xi}">${alt?'Volver al original':'Usar alternativa'}</button><button class="btn ghost sm molb ${mol==null?'':mol<=2?'g':mol<=4?'a':'x'}" data-mol="${xi}" aria-expanded="${om}">Molestia: ${mol==null?'–':mol+'/10'}</button></div>
+   ${om?`<div class="molp"><p class="note" style="margin:0">¿Cuánto te molestó la lumbar con este ejercicio? (0 = nada). Toca el mismo número para borrarlo.</p>${scale('molv',mol,xi+'|')}${molMsg(mol)}</div>`:''}</article>`;
+}
+
+/* ---------- DESCANSO ---------- */
+let R=null,hideT=null;
+function startRest(sec,name){clearTimeout(hideT);R={end:Date.now()+sec*1000,total:sec,name,done:false};$('#dock').classList.add('show');$('#dock').classList.remove('end');tick()}
+function stopRest(){R=null;$('#dock').classList.remove('show','end')}
+
+/* ---------- SESIÓN ---------- */
+function updateClock(){
+  const l=cur(),c=$('#clock'),b=$('#sessBtn');
+  if(!l||!l.t0){c.textContent='0:00';c.className='clock off';b.textContent='Iniciar';return}
+  const end=l.t1||Date.now();c.textContent=fmt((end-l.t0)/1000);c.className='clock '+(l.t1?'off':'run');b.textContent=l.t1?'Hecha':'Terminar';
+}
+function tick(){
+  updateClock();
+  if(R){const left=(R.end-Date.now())/1000;
+    $('#dockName').textContent=R.done?'Descanso terminado · '+R.name:'Descanso · '+R.name;
+    $('#dockTime').textContent=R.done?'¡Vamos!':fmt(Math.ceil(left));
+    $('#dockBar').style.width=Math.max(0,Math.min(100,left/R.total*100))+'%';
+    if(left<=0&&!R.done){R.done=true;$('#dock').classList.add('end');beep(3,880);buzz([300,150,300,150,300]);hideT=setTimeout(()=>{if(R&&R.done)stopRest()},8000)}
+  }
+  if(ISO)isoTick();
+}
+setInterval(tick,250);
+
+/* ---------- ISOMÉTRICOS ---------- */
+let ISO=null;
+function runIso(xi,i){
+  const ex=EX[S.d][xi],sp=spec(ex,S.w),{h,k,g}=sp.iso,seq=[{t:'prep',d:3,l:'Prepárate'}];
+  for(let j=0;j<k;j++){seq.push({t:'hold',d:h,l:'Aguanta',c:k>1?`${j+1} de ${k}${k===2||/lado/.test(sp.reps)?(j%2?' · lado 2':' · lado 1'):''}`:''});if(j<k-1)seq.push({t:'rest',d:g,l:'Cambia / suelta'})}
+  let t=Date.now();seq.forEach(s=>{s.s=t;t+=s.d*1000;s.e=t});
+  ISO={xi,i,seq,idx:-1};$('#isoM').hidden=false;stopRest();isoTick();
+}
+function isoTick(){
+  const now=Date.now();let idx=ISO.seq.findIndex(s=>now<s.e);
+  if(idx===-1){isoFinish(true);return}
+  const s=ISO.seq[idx];
+  if(idx!==ISO.idx){ISO.idx=idx;if(s.t==='hold'){beep(1,1040,.2);buzz(120)}else if(s.t==='rest'){beep(2,660,.12)}}
+  $('#isoS').className='sheet iso-'+s.t;$('#isoL').textContent=s.l;$('#isoT').textContent=Math.ceil((s.e-now)/1000);$('#isoC').textContent=s.c||'';
+}
+function isoFinish(complete){
+  const {xi,i}=ISO;ISO=null;$('#isoM').hidden=true;
+  if(complete){beep(3,880);buzz([300,150,300])}
+  const ex=EX[S.d][xi],st=getSet(ex,i);if(!st.d)markSet(xi,i,true);
+}
+
+/* ---------- ACCIONES ---------- */
+function markSet(xi,i,force){
+  const ex=EX[S.d][xi],sp=spec(ex,S.w),l=cur(true),st=getSet(ex,i);
+  st.d=force?1:(st.d?0:1);
+  if(st.d){if(!l.t0)l.t0=Date.now();if(l.t1)l.t1=null;const last=i===sp.sets-1;startRest(sp.rest,(isAlt(ex)?ex.alt.n:sp.name)+(last?' (siguiente ejercicio)':''))}
+  save();
+  const row=document.querySelector(`[data-chk="${xi}|${i}"]`);
+  if(row){row.setAttribute('aria-pressed',!!st.d);row.parentElement.classList.toggle('on',!!st.d)}
+  const s=setsOf(S.w,S.d,ex);document.getElementById('ex'+xi).classList.toggle('done',[...Array(sp.sets).keys()].every(k=>s[k]&&s[k].d));
+  const p=prog(S.w,S.d);$('#pbar').style.width=(p.t?p.n/p.t*100:0)+'%';$('#ptxt').textContent=p.n+'/'+p.t;
+  const db=document.querySelector(`[data-d="${S.d}"] .mini i`);if(db)db.style.width=(p.t?Math.round(p.n/p.t*100):0)+'%';
+}
+function ask(title,body,ok='Confirmar'){return new Promise(res=>{$('#dlgT').textContent=title;$('#dlgB').innerHTML=body;$('#dlgOk').textContent=ok;$('#dlg').hidden=false;const done=v=>{$('#dlg').hidden=true;$('#dlgOk').onclick=$('#dlgNo').onclick=null;res(v)};$('#dlgOk').onclick=()=>done(true);$('#dlgNo').onclick=()=>done(false)})}
+
+$('#v-train').addEventListener('click',async e=>{
+  audio();const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.w){S.w=+b.dataset.w;save();renderTrain();return}
+  if(b.dataset.d){S.d=b.dataset.d;save();renderTrain();scrollTo({top:0});return}
+  if(b.dataset.chk){const[xi,i]=b.dataset.chk.split('|').map(Number);markSet(xi,i);return}
+  if(b.dataset.iso){const[xi,i]=b.dataset.iso.split('|').map(Number);runIso(xi,i);return}
+  if(b.dataset.alt){const ex=EX[S.d][+b.dataset.alt],l=cur(true);l.alt[ex.id]=!l.alt[ex.id];save();renderTrain();document.getElementById('ex'+b.dataset.alt)?.scrollIntoView({block:'start'});return}
+  if(b.dataset.pre){const l=cur(true),v=+b.dataset.pre;l.pre=l.pre===v?null:v;save();const y=scrollY;renderTrain();scrollTo({top:y});return}
+  if(b.dataset.mol){const ex=EX[S.d][+b.dataset.mol];openMol.has(ex.id)?openMol.delete(ex.id):openMol.add(ex.id);const y=scrollY;renderTrain();scrollTo({top:y});return}
+  if(b.dataset.molv){const[xi,v]=b.dataset.molv.split('|').map(Number),ex=EX[S.d][xi],l=cur(true),k=keyOf(ex,l),e=l.ex[k]||(l.ex[k]={s:[]});e.m=e.m===v?null:v;save();const y=scrollY;renderTrain();scrollTo({top:y});return}
+  if(b.dataset.pain){const l=cur(true),v=+b.dataset.pain;l.pain=l.pain===v?null:v;save();renderTrain();document.querySelector('.finish').scrollIntoView({block:'start'});return}
+  if(b.id==='finBtn'){const l=cur(true);if(l.t1)l.t1=null;else{if(!l.t0)l.t0=Date.now();l.t1=Date.now();stopRest()}save();renderTrain();document.querySelector('.finish').scrollIntoView({block:'start'});return}
+  if(b.id==='rstDay'){if(await ask('Reiniciar día',`Se borran checks, pesos, reps, alternativas, cronómetro y dolor de <b>${dayName(S.d)} · semana ${S.w}</b>. No se puede deshacer (salvo que tengas una exportación).`,'Reiniciar día')){delete S.log[S.w+'|'+S.d];stopRest();save();renderTrain()}return}
+  if(b.id==='rstWeek'){if(await ask('Reiniciar semana',`Se borra todo lo registrado en los 6 días de la <b>semana ${S.w}</b>. No se puede deshacer.`,'Reiniciar semana')){for(const k of Object.keys(S.log))if(k.startsWith(S.w+'|'))delete S.log[k];stopRest();save();renderTrain()}return}
+});
+$('#v-train').addEventListener('input',e=>{const t=e.target;if(!t.dataset.in)return;const[xi,i,f]=t.dataset.in.split('|');const st=getSet(EX[S.d][+xi],+i);st[f]=t.value.slice(0,12);save()});
+$('#sessBtn').addEventListener('click',()=>{audio();const l=cur(true);if(!l.t0){l.t0=Date.now();l.t1=null;save();updateClock();return}if($('#v-train').hidden)showTab('train');document.querySelector('.finish')?.scrollIntoView({block:'start'})});
+$('#dock').addEventListener('click',e=>{const b=e.target.closest('[data-rest]');if(!b||!R)return;const v=b.dataset.rest;if(v==='skip'){stopRest();return}R.end+=(+v)*1000;R.total=Math.max(R.total,(R.end-Date.now())/1000);if(R.done&&R.end>Date.now()){R.done=false;$('#dock').classList.remove('end')}tick()});
+$('#isoX').onclick=()=>{ISO=null;$('#isoM').hidden=true};
+$('#isoDone').onclick=()=>{if(ISO)isoFinish(false)};
+
+/* ---------- TABS ---------- */
+function showTab(t){for(const b of document.querySelectorAll('[data-tab]'))b.setAttribute('aria-selected',b.dataset.tab===t);for(const v of['train','guide','data'])$('#v-'+v).hidden=v!==t;if(t==='data')renderData();if(t==='train')renderTrain();scrollTo({top:0})}
+document.querySelector('.tabs').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(b)showTab(b.dataset.tab)});
+
+/* ---------- DATOS: exportar / importar ---------- */
+let DL=null;
+(async()=>{try{if(window.claude&&typeof claude.use==='function')DL=await claude.use('downloads')}catch(e){DL=null}})();
+const VALID=new RegExp('^[1-8]\\|('+DAYS.map(d=>d.id).join('|')+')$');
+function summarize(st){
+  const keys=Object.keys(st.log||{}).filter(k=>VALID.test(k));let sets=0,vals=0,pre=0,mols=0;const pains=[],weeks=new Set();
+  for(const k of keys){const l=st.log[k],[wk,d]=k.split('|');let any=false;
+    for(const e of Object.values(l.ex||{}))for(const s of(e.s||[])){if(s.d){sets++;any=true}if(s.w||s.r){vals++;any=true}}
+    if(l.pre!=null){pre++;any=true}for(const e of Object.values(l.ex||{}))if(e.m!=null){mols++;any=true}if(l.pain!=null){pains.push(`S${wk} ${dayName(d)}: ${l.pain}/10`);any=true}if(l.t0)any=true;if(any)weeks.add(+wk)}
+  return{sessions:keys.length,sets,vals,pre,mols,pains,weeks:[...weeks].sort((a,b)=>a-b)};
+}
+function sumHTML(sm){return`<ul style="margin:6px 0;padding-left:20px"><li>Semanas con datos: <b>${sm.weeks.length?sm.weeks.join(', '):'ninguna'}</b></li><li>Sesiones registradas: <b>${sm.sessions}</b></li><li>Series marcadas: <b>${sm.sets}</b></li><li>Series con peso/reps: <b>${sm.vals}</b></li><li>Dolor antes de la sesión: <b>${sm.pre}</b> · molestias por ejercicio: <b>${sm.mols}</b></li><li>Dolor al terminar: <b>${sm.pains.length}</b>${sm.pains.length?' ('+esc(sm.pains.slice(-6).join(' · '))+(sm.pains.length>6?' …':'')+')':''}</li></ul>`}
+function clean(raw){
+  const st=raw&&raw.app==='rutina-ppl-lumbar'&&raw.state?raw.state:raw;
+  if(!st||typeof st.log!=='object'||!st.log)throw new Error('El archivo no tiene el formato de esta app.');
+  const log={};const str=v=>String(v??'').slice(0,12);const num=v=>typeof v==='number'&&isFinite(v)?v:null;
+  for(const[k,l]of Object.entries(st.log)){if(!VALID.test(k)||!l||typeof l!=='object')continue;const o={ex:{},alt:{},pain:null,t0:num(l.t0),t1:num(l.t1)};
+    const p=num(l.pain);o.pain=p!=null&&p>=0&&p<=10?Math.round(p):null;const pr=num(l.pre);o.pre=pr!=null&&pr>=0&&pr<=10?Math.round(pr):null;
+    for(const[a,v]of Object.entries(l.alt||{}))if(/^[a-z0-9]{2,6}$/.test(a))o.alt[a]=!!v;
+    for(const[ek,e]of Object.entries(l.ex||{})){if(!/^[a-z0-9]{2,6}(~a)?$/.test(ek)||!e||!Array.isArray(e.s))continue;o.ex[ek]={s:e.s.slice(0,8).map(s=>({d:s&&s.d?1:0,w:str(s&&s.w),r:str(s&&s.r)}))};const m=num(e.m);if(m!=null&&m>=0&&m<=10)o.ex[ek].m=Math.round(m)}
+    log[k]=o}
+  return{v:1,w:+st.w>=1&&+st.w<=8?+st.w:1,d:EX[st.d]?st.d:'pushA',log,exportedAt:raw&&raw.exportedAt};
+}
+let PENDING=null;
+function renderData(){
+  const sm=summarize(S);
+  $('#v-data').innerHTML=`<h2 style="font-size:32px;margin-top:20px">Tus datos</h2>
+  <p class="note">Se guardan solo en este navegador. Para pasarlos a otro dispositivo, exporta aquí e importa allá.</p>
+  <div class="sum"><b>En este navegador</b>${sumHTML(sm)}</div>
+  ${molMap()}
+  <h3 style="font-size:24px;margin-top:22px">Exportar historial</h3>
+  <div class="row"><button class="btn blue" id="expBtn">Descargar JSON</button><button class="btn ghost" id="cpyBtn">Copiar JSON</button></div>
+  <div id="expMsg"></div><textarea id="expTxt" hidden readonly aria-label="Historial en JSON"></textarea>
+  <h3 style="font-size:24px;margin-top:24px">Importar historial</h3>
+  <label class="file"><span class="note">Elige el archivo .json exportado</span><input type="file" id="impFile" accept=".json,application/json"></label>
+  <p class="note" style="margin:12px 0 4px">…o pega el contenido del JSON:</p>
+  <textarea id="impTxt" placeholder='{"app":"rutina-ppl-lumbar", ...}'></textarea>
+  <div class="row"><button class="btn ghost" id="impParse">Analizar texto pegado</button></div>
+  <div id="impSum"></div>
+  <h3 style="font-size:24px;margin-top:24px">Reinicios</h3>
+  <div class="row"><button class="btn ghost" id="dRstW">Reiniciar semana ${S.w}</button><button class="btn" id="dRstAll">Borrar todo</button></div>`;
+}
+function exName(k){const a=k.endsWith('~a'),id=a?k.slice(0,-2):k;for(const d of DAYS)for(const ex of EX[d.id])if(ex.id===id)return{n:a?ex.alt.n:(ex.core?ex.n:ex.n),d:d.n,a};return null}
+function molMap(){
+  const g={};for(const[k,l]of Object.entries(S.log)){const wk=+k.split('|')[0];for(const[ek,e]of Object.entries(l.ex||{})){if(e.m==null)continue;const x=exName(ek);if(!x)continue;const id=x.d+'|'+x.n;(g[id]=g[id]||{n:x.n,d:x.d,a:x.a,v:[]}).v.push({w:wk,m:e.m})}}
+  const rows=Object.values(g).map(r=>{r.v.sort((a,b)=>a.w-b.w);r.max=Math.max(...r.v.map(x=>x.m));r.avg=r.v.reduce((a,x)=>a+x.m,0)/r.v.length;r.last=r.v[r.v.length-1];return r}).sort((a,b)=>b.max-a.max||b.avg-a.avg);
+  if(!rows.length)return`<h3 style="font-size:24px;margin-top:22px">Mapa de molestias</h3><p class="note">Aún no hay registros. Usa el botón «Molestia» de cada ejercicio para ir viendo cuáles te alborotan la lumbar.</p>`;
+  return`<h3 style="font-size:24px;margin-top:22px">Mapa de molestias</h3><p class="note">Ordenado de peor a mejor. Si un ejercicio marca 3 o más en dos sesiones, cámbialo por su alternativa (o al revés, si es la alternativa la que molesta).</p>
+  <table class="stack"><thead><tr><th>Ejercicio</th><th>Día</th><th>Máx</th><th>Media</th><th>Historial</th></tr></thead><tbody>${rows.map(r=>`<tr><td><b>${esc(r.n)}</b>${r.a?' <span class="note">(alternativa)</span>':''}</td><td>${esc(r.d)}</td><td style="color:${r.max<=2?'#7fd6a1':r.max<=4?'#f3c77a':'#ff8a83'};font-weight:700">${r.max}</td><td>${r.avg.toFixed(1)}</td><td>${r.v.map(x=>'S'+x.w+': '+x.m).join(' · ')}</td></tr>`).join('')}</tbody></table>`;
+}
+function exportJSON(){return JSON.stringify({app:'rutina-ppl-lumbar',version:1,exportedAt:new Date().toISOString(),state:S},null,1)}
+function showImport(raw){
+  try{PENDING=clean(raw)}catch(err){$('#impSum').innerHTML=`<div class="msg x">${esc(err.message)}</div>`;PENDING=null;return}
+  const sm=summarize(PENDING),mine=summarize(S);
+  $('#impSum').innerHTML=`<div class="sum"><b>Se va a cargar</b>${PENDING.exportedAt?`<div class="note">Exportado: ${esc(new Date(PENDING.exportedAt).toLocaleString('es'))}</div>`:''}${sumHTML(sm)}
+   <div class="msg w">Ahora tienes ${mine.sessions} sesiones en este navegador. «Reemplazar» las borra todas; «Combinar» conserva las tuyas y solo sustituye las sesiones (semana + día) que vienen en el archivo.</div>
+   <div class="row"><button class="btn" id="impRep">Reemplazar todo</button><button class="btn blue" id="impMerge">Combinar</button><button class="btn ghost" id="impCancel">Cancelar</button></div></div>`;
+}
+$('#v-data').addEventListener('click',async e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.id==='expBtn'){const json=exportJSON(),fn='rutina-ppl-'+new Date().toISOString().slice(0,10)+'.json';let ok=false,msg='';
+    if(DL){try{await DL.save({filename:fn,data:json});ok=true}catch(err){msg=err&&err.code==='declined'?'Descarga cancelada.':'No se pudo descargar aquí.'}}
+    let cancel=false;
+    if(!ok&&navigator.canShare){try{const f=new File([json],fn,{type:'application/json'});if(navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'Historial rutina PPL'});ok=true;msg='En el menú, elige «Guardar en Archivos».'}}catch(err){if(err&&err.name==='AbortError'){cancel=true;msg='Exportación cancelada.'}}}
+    if(!ok&&!cancel&&!DL){try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([json],{type:'application/json'}));a.download=fn;document.body.appendChild(a);a.click();a.remove();ok=true;msg='Si no ves la descarga, usa «Copiar JSON».'}catch(err){}}
+    $('#expMsg').innerHTML=ok?`<div class="msg ok">Archivo listo: ${esc(fn)}. ${esc(msg)}</div>`:`<div class="msg w">${esc(msg||'La descarga no está disponible en esta vista.')} Copia el texto de abajo y guárdalo en un archivo .json.</div>`;
+    if(!ok){const t=$('#expTxt');t.hidden=false;t.value=json}return}
+  if(b.id==='cpyBtn'){const json=exportJSON(),t=$('#expTxt');t.hidden=false;t.value=json;try{await navigator.clipboard.writeText(json);$('#expMsg').innerHTML='<div class="msg ok">JSON copiado. Pégalo en una nota o archivo.</div>'}catch(err){t.select();$('#expMsg').innerHTML='<div class="msg w">No pude copiar automáticamente: el texto está seleccionado abajo, cópialo a mano.</div>'}return}
+  if(b.id==='impParse'){try{showImport(JSON.parse($('#impTxt').value))}catch(err){$('#impSum').innerHTML='<div class="msg x">El texto no es JSON válido.</div>'}return}
+  if(b.id==='impCancel'){PENDING=null;$('#impSum').innerHTML='';return}
+  if((b.id==='impRep'||b.id==='impMerge')&&PENDING){const rep=b.id==='impRep';
+    if(!await ask(rep?'Reemplazar todo':'Combinar datos',rep?'Se borrará <b>todo</b> lo que hay en este navegador y se cargará el archivo. ¿Seguro?':'Las sesiones del archivo sustituirán a las mismas sesiones de este navegador. El resto se conserva.',rep?'Reemplazar':'Combinar'))return;
+    if(rep){S.log=PENDING.log;S.w=PENDING.w;S.d=PENDING.d}else Object.assign(S.log,PENDING.log);
+    PENDING=null;save();renderData();$('#impSum').innerHTML='<div class="msg ok">Historial importado.</div>';return}
+  if(b.id==='dRstW'){if(await ask('Reiniciar semana',`Se borra todo lo registrado en la <b>semana ${S.w}</b>.`,'Reiniciar')){for(const k of Object.keys(S.log))if(k.startsWith(S.w+'|'))delete S.log[k];save();renderData()}return}
+  if(b.id==='dRstAll'){if(await ask('Borrar todo','Se borran las 8 semanas: pesos, reps, checks y dolor. Exporta antes si quieres conservarlo.','Borrar todo')){S={v:1,w:1,d:'pushA',log:{}};stopRest();save();renderData()}return}
+});
+$('#v-data').addEventListener('change',e=>{if(e.target.id!=='impFile')return;const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{showImport(JSON.parse(r.result))}catch(err){$('#impSum').innerHTML='<div class="msg x">El archivo no es JSON válido.</div>'}};r.readAsText(f)});
+
+/* ---------- GUÍA ---------- */
+const DISC=[
+ ['Peso muerto (convencional o rumano)','Te duele. Carga la columna en flexión de cadera con mucho peso.','Hip thrust + curl femoral (2 variantes) + pull-through ligero'],
+ ['Remo con barra inclinado','Te duele. La lumbar sostiene el tronco inclinado toda la serie.','Remo con apoyo de pecho, remo unilateral apoyado, remos en polea'],
+ ['Buenos días','Te duele. Es casi pura carga de flexión sobre la lumbar.','Curl femoral + pull-through en polea'],
+ ['Sentadilla trasera con barra','A veces duele y mete carga axial directa.','Hack squat/péndulo, prensa moderada, búlgara. Opcional desde la semana 6 con criterios'],
+ ['Remo en T (no hay máquina)','Falta la máquina.','Remo con mancuernas pecho apoyado en banco inclinado'],
+ ['Hiperextensiones con disco','Extensión lumbar cargada hasta el final del rango (lo pediste fuera).','Extensión prona isométrica → extensión de cadera en banco hasta neutro'],
+ ['Russian twist, leñadores con peso','Rotación (y flexión) con carga (lo pediste fuera).','Pallof press (antirrotación), suitcase carry'],
+ ['Crunch y sit-ups','Flexión lumbar repetida: es tu patrón de dolor.','McGill curl-up, dead bug'],
+ ['Press militar de pie','No te duele. Lo cambio por precaución: es fácil arquear la lumbar para terminar reps.','Press de hombro sentado con respaldo o máquina'],
+ ['Press de banca con barra','No tienes spotter y entrenas solo: fallar una rep con la barra sobre el pecho es un riesgo real.','Máquina Hammer plana e inclinada (Push A), Smith con topes y press en polea (Push B)'],
+ ['Gemelos de pie en máquina','Carga axial sobre los hombros.','Gemelos en prensa y sentado'],
+ ['Prensa muy pesada','La notas cuando va pesada; la pelvis tiende a rodar.','Prensa a 10–15 reps con rango controlado']];
+$('#v-guide').innerHTML=`
+<h2>Cómo usarla</h2>
+<p>Instalada en la pantalla de inicio funciona sin conexión. Mientras la sesión está en marcha, la pantalla se mantiene encendida para que el aviso de descanso suene. Si la bloqueas, iOS pausa la app y el aviso puede no sonar. Exporta el historial de vez en cuando: es tu copia de seguridad.</p>
+<p>Elige semana y día. Al marcar una serie arranca el descanso de ese ejercicio y suena (y vibra en Android) al terminar. Los isométricos tienen botón ▶ que guía cada aguante y marca la serie al acabar. En los campos vacíos aparece en gris lo que anotaste la semana anterior. Si tienes el móvil bloqueado o la pestaña en segundo plano puede que no suene: el iPhone no vibra desde el navegador.</p>
+<h2>Progresión de 8 semanas <span class="tag cr">Criterio</span></h2>
+<div class="scroll"><table class="stack"><thead><tr><th>Sem</th><th>Fase</th><th>RIR comp. / aisl.</th><th>Series ★</th><th>Lumbar</th></tr></thead><tbody>
+${[1,2,3,4,5,6,7,8].map(w=>{const W=WEEKS[w];return`<tr><td>${w}</td><td>${W.t}</td><td>${W.rir} / ${W.rirI}</td><td>${W.dl?'≈60 % de todo':W.add?'+1':'base'}</td><td>Fase ${phase(w)+1}</td></tr>`}).join('')}
+</tbody></table></div>
+<h3>Cargas: doble progresión</h3>
+<p>Trabaja dentro del rango de reps. Cuando completes <b>todas</b> las series en el tope del rango con el RIR de la semana, sube la carga lo mínimo (2,5 kg en barra/máquina, siguiente mancuerna) y vuelve al mínimo del rango. En la semana 5 baja las cargas 10–15 %. Después de la semana 8 conviene otra descarga antes del siguiente bloque.</p>
+<p class="note">RIR = repeticiones que te quedan en reserva. RIR 2 = podrías hacer 2 más con buena técnica.</p>
+<h2>Calentamiento lumbar</h2>
+<ol class="wu">${WU_BASE.map(x=>`<li>${x}</li>`).join('')}<li>Específico del día y series de aproximación (en cada día).</li></ol>
+<h2>Bloque lumbar y core <span class="tag cr">Criterio</span></h2>
+<p>Va en Pull A, Legs A, Pull B y Legs B (~10 min). Prioriza resistencia y control con la columna en neutro, porque la flexión es lo que te molesta. La extensión solo llega hasta neutro, nunca más allá.</p>
+<ul><li><b>Fase 1 (sem 1–2 y 5):</b> isométricos cortos, bird dog 5 s, planchas 20 s, extensión prona isométrica, pull-through ligero para aprender la bisagra.</li>
+<li><b>Fase 2 (sem 3–4):</b> aguantes más largos, extensión de cadera en banco hasta neutro, Pallof con pausa, suitcase carry 30 s.</li>
+<li><b>Fase 3 (sem 6–8):</b> 10 s / 40 s, carga externa ligera (tobillera, banda, más peso en carry y pull-through).</li></ul>
+<p><b>Para pasar de fase</b> deben cumplirse las tres condiciones: dolor durante los ejercicios ≤2/10, dolor al terminar la sesión dentro de tu basal (0–2) y a la mañana siguiente no peor que antes. Si no se cumplen, repite la fase. La app avanza la fase por semana; si no cumples, usa la alternativa o los números de la fase anterior.</p>
+<h2>Sentadilla con barra: opcional <span class="tag cr">Criterio</span></h2>
+<p>Solo desde la semana 6 y solo si cumples <b>todo</b> esto: dolor basal 0–2 las últimas 2 semanas, ningún registro post-sesión de Legs por encima de 2, hack squat y búlgara sin molestia, y ese día 0–1/10 tras calentar.</p>
+<ul><li>Sustituye al hack squat como primer ejercicio de Legs A. Empieza con ~50 % de lo que movías antes, 3×6–8 a RIR 3, y sube como máximo 5 kg/semana.</li><li>Siempre en rack con las barras de seguridad a la altura de tu punto más bajo, porque entrenas sin spotter.</li><li>Barra alta, profundidad hasta donde la pelvis no se mete (sin «butt wink»).</li><li>Abandónala si durante la serie pasas de 3/10, si al día siguiente estás por encima de tu basal o si notas que la lumbar se redondea al bajar.</li></ul>
+<h2>Señales de alerta</h2>
+<h3>Para y consulta (urgencias si es lo primero)</h3>
+<ul><li>Pérdida de control de orina o heces, adormecimiento en la zona genital o entre las piernas, debilidad que avanza en una pierna: <b>urgencias</b>. <span class="tag ev">Evidencia</span></li>
+<li>Dolor que baja por la pierna (sobre todo por debajo de la rodilla), hormigueo o entumecimiento. <span class="tag ev">Evidencia</span></li>
+<li>Dolor nocturno constante que no cambia con la postura, o con fiebre o pérdida de peso sin explicación. <span class="tag ev">Evidencia</span></li></ul>
+<h3>Para el ejercicio y modifícalo <span class="tag cr">Criterio</span></h3>
+<ul><li>Dolor punzante o «pinchazo» en lugar de fatiga muscular.</li><li>Dolor durante la serie por encima de 3/10 o más de 2 puntos sobre tu basal.</li><li>Dolor que sube serie a serie.</li><li>Para terminar las reps tienes que redondear o arquear la lumbar: corta la serie.</li><li>Al día siguiente estás peor que tu basal o te dura más de 24 h.</li></ul>
+<p><b>Qué hacer, en orden:</b> 1) baja la carga 20–30 % o acorta el rango; 2) cambia a la alternativa; 3) quita ese ejercicio esa sesión; 4) si te pasa dos sesiones seguidas, consulta con tu fisio.</p>
+<h2>Medidores de dolor <span class="tag cr">Criterio</span></h2>
+<ul><li><b>Antes de empezar</b> (días Pull y Legs): 0–2 es sesión normal. 3–4: no subas cargas, quita las series extra ★ y baja una fase el bloque lumbar. 5 o más: solo calentamiento, bloque lumbar suave y cardio. Al cerrar, la app compara el dolor de antes con el de después.</li>
+<li><b>Molestia por ejercicio</b>: anótala al terminar el ejercicio, solo si notaste algo en la lumbar. Con 3 o más dos veces, ese ejercicio pasa a su alternativa. En «Datos» tienes el mapa de los que más te alborotan.</li>
+<li>La molestia de un ejercicio que se nota al día siguiente no se ve en el momento: si amaneces peor que tu basal, revisa en el mapa qué ejercicios marcaron algo.</li></ul>
+<h2>Ejercicios descartados y su reemplazo</h2>
+<table class="stack"><thead><tr><th>Ejercicio típico</th><th>Por qué</th><th>Lo reemplaza</th></tr></thead><tbody>${DISC.map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')}</tbody></table>
+<h2>Qué es evidencia y qué es criterio</h2>
+<p class="note">Lo marcado como evidencia sale de conocimiento general de guías y revisiones, no de fuentes que haya consultado para esta rutina. Contrástalo con tu fisio.</p>
+<h3><span class="tag ev">Evidencia general</span></h3>
+<ul><li>Las guías clínicas recomiendan el ejercicio para el dolor lumbar crónico. No hay un tipo de ejercicio claramente superior: funciona el que toleras y haces con constancia.</li>
+<li>Para hipertrofia es habitual un rango de ~10–20 series semanales por músculo, con cada músculo entrenado al menos 2 veces por semana. Por encima de eso los beneficios son decrecientes.</li>
+<li>Entrenar a 0–3 RIR produce hipertrofia comparable. No hace falta llegar al fallo.</li>
+<li>Recomposición: proteína de ~1,6–2,2 g/kg/día, déficit calórico moderado y fuerza mantenida o en aumento.</li>
+<li>La artrosis facetaria se asocia a menudo con dolor en extensión. A ti te duele la flexión y los ejercicios de bisagra cargada. Puede que haya otro componente, o simplemente que tú respondes así: la rutina sigue tus síntomas, no el patrón «típico». Coméntalo con tu médico.</li></ul>
+<h3><span class="tag cr">Mi criterio / estimación</span></h3>
+<ul><li>Que los remos con apoyo de pecho descarguen la lumbar es razonamiento biomecánico, no un ensayo clínico concreto.</li>
+<li>La selección concreta de ejercicios, series, orden y descansos.</li>
+<li>La descarga en la semana 5 y las 3 fases del bloque lumbar. Los ejercicios tipo McGill tienen sobre todo respaldo biomecánico y clínico, con pocos ensayos que los comparen con otras opciones.</li>
+<li>Los umbrales de dolor (≤3/10, +2 sobre basal, 24 h) son una adaptación del «modelo de monitorización del dolor», que se estudió sobre todo en tendinopatías.</li>
+<li>El volumen de espalda (~30 series/semana contando deltoides posterior) está en la parte alta. Si no recuperas o las sesiones pasan de 75 min, quita primero las series extra ★ y el jalón de Legs B.</li></ul>
+<h3>Lo que no sé</h3>
+<ul><li>Tu edad, peso, cargas y el plan exacto de tu fisio. Si te dio ejercicios concretos, esos mandan sobre el bloque lumbar de aquí.</li></ul>`;
+
+/* ---------- APP: pantalla encendida, offline, almacenamiento ---------- */
+let WL=null;
+async function wake(){const l=cur(),on=l&&l.t0&&!l.t1;try{if(on&&!WL&&'wakeLock'in navigator&&document.visibilityState==='visible'){WL=await navigator.wakeLock.request('screen');WL.addEventListener('release',()=>{WL=null})}else if(!on&&WL){await WL.release();WL=null}}catch(e){WL=null}}
+setInterval(wake,3000);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')wake()});
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+if('serviceWorker'in navigator&&location.protocol==='https:'){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})})}
+
+renderTrain();
+}
+</script>
+</body>
+</html>
