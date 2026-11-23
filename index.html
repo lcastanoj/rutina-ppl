@@ -94,6 +94,9 @@ ol.wu{margin:0;padding-left:20px}ol.wu li{margin:6px 0}
 .exf{display:flex;gap:6px;padding:0 10px 12px}
 .exf .btn{flex:1}
 .molp{padding:0 12px 12px}.molb.g{color:#7fd6a1}.molb.a{color:#f3c77a;border-color:#5f4718}.molb.x{color:#ff8a83;border-color:#5a2420}
+.start{position:fixed;inset:0;z-index:45;background:var(--bg);overflow-y:auto;padding:env(safe-area-inset-top) 0 calc(24px + env(safe-area-inset-bottom))}.start[hidden]{display:none}
+.start .days button.sug{border-color:#5f4718}.sugt{font-size:11px;color:#f3c77a;font-weight:700}
+.prev2{margin-top:14px;padding:14px;border-radius:14px;background:var(--panel);border:1px solid var(--line)}.prev2 h3{font-size:26px}.prev2 ul{margin:8px 0 0;padding-left:20px}.prev2 li{margin:4px 0;color:#d3d6d8}
 .finish{margin-top:18px;padding:16px;border-radius:16px;background:var(--panel);border:1px solid var(--line)}
 .finish h2{font-size:28px}
 .pain{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin-top:10px}
@@ -173,6 +176,10 @@ textarea{width:100%;min-height:130px;border-radius:10px;border:1px solid var(--l
   <div class="row"><button class="btn ghost" id="isoX">Cancelar</button><button class="btn" id="isoDone">Terminar serie</button></div>
 </div></div>
 
+<div class="start" id="startM" hidden><div class="wrap">
+  <h2 style="font-size:40px;margin-top:18px">¿Qué toca hoy?</h2>
+  <div id="startBody"></div>
+</div></div>
 <div class="modal" id="dlg" hidden><div class="sheet">
   <h3 id="dlgT"></h3><div id="dlgB" style="margin-top:8px;color:#d3d6d8"></div>
   <div class="row"><button class="btn ghost" id="dlgNo">Cancelar</button><button class="btn" id="dlgOk">Confirmar</button></div>
@@ -234,17 +241,15 @@ pullA:[
  E('la5','Face pull en polea',3,'12–15',60,{i:1},'Tira hacia la frente separando la cuerda; codos altos.',['Pájaros con mancuernas pecho apoyado en banco inclinado','Ligero y lento.']),
  E('la6','Curl inclinado con mancuernas',3,'8–12',75,{p:1,i:1},'Banco a 45–60°, hombros atrás, sin adelantar el codo.',['Curl bayesiano en polea baja (de espaldas)','Mismo estiramiento del bíceps.']),
  E('la7','Curl martillo',3,'10–12',60,{i:1},'Sin balanceo; si tienes que mover el tronco, baja el peso.',['Curl con cuerda en polea','Agarre neutro.']),
- ...coreBack('a')],
+ E('la8','Curl inverso con barra Z',3,'12–15',60,{i:1},'Agarre prono (palmas abajo), codos pegados y sin balanceo. Sube controlado y baja en 2 s.',['Curl inverso en polea baja con barra recta','Mismo agarre y tempo.']),
+ ...coreBack('a').slice(0,2)],
 legsA:[
  E('lg1','Hack squat (o péndulo / belt squat)',4,'6–10',150,{opt:'Desde la semana 6, puedes cambiarla por sentadilla con barra solo si cumples los criterios de la Guía.'},'Espalda pegada al respaldo. Baja hasta donde la pelvis no se despega ni se redondea la lumbar.',['Sentadilla goblet con mancuerna','Carga delante, tronco erguido; si hace falta, a un cajón.']),
  E('lg2','Prensa de piernas (carga moderada)',3,'10–15',120,{},'La prensa pesada te molesta: trabaja en 10–15 reps y frena antes de que el coxis se despegue del asiento.',['Step-up a cajón con mancuernas','Cajón a la altura de la rodilla, sube con la pierna de arriba.']),
  E('lg3','Sentadilla búlgara con mancuernas',3,'8–10/pierna',90,{},'Mancuernas a los lados, tronco algo inclinado y columna neutra.',['Zancada inversa con mancuernas','Paso atrás controlado.']),
  E('lg4','Extensión de cuádriceps',3,'12–15',75,{i:1},'Pausa de 1 s arriba.',['Sentadilla española con banda','Banda tras las rodillas anclada delante.']),
  E('lg5','Curl femoral sentado',3,'10–12',75,{i:1},'Pelvis fija contra el respaldo.',['Curl femoral con fitball o deslizadores','Cadera arriba durante todo el set.']),
- E('lg6','Gemelos en prensa',4,'12–15',60,{i:1},'Pausa de 2 s abajo en estiramiento. Sin carga sobre los hombros.',['Gemelos sentado con mancuerna en las rodillas','Sobre un disco o escalón.']),
- C('lgdb','Dead bug',[{s:3,r:'6/lado'},{s:3,r:'8/lado · 3 s pausa'},{s:3,r:'8/lado + banda en manos',c:'Fase 3: banda o mancuerna ligera sostenida arriba.'}],'Lumbar apoyada suave en el suelo, exhala al extender brazo y pierna contrarios.',['Dead bug solo piernas (talón al suelo)','Misma respiración.']),
- C('lgcu','McGill curl-up',[{s:3,r:'5 × 8 s',h:8,k:5,g:3},{s:3,r:'6 × 10 s',h:10,k:6,g:3},{s:3,r:'6 × 10 s, codos arriba',h:10,k:6,g:3}],'Manos bajo la lumbar, una rodilla flexionada. Despega solo cabeza y hombros unos cm, sin doblar la zona lumbar. Alterna la pierna cada serie.',['Dead bug isométrico','Brazos y piernas a 90°, aguanta el mismo tiempo.']),
- C('lgpa','Pallof press (antirrotación)',[{s:2,r:'10/lado'},{s:3,r:'10/lado · 2 s'},{s:3,r:'12/lado · 2 s'}],'Polea a la altura del pecho, empuja al frente y no dejes que el tronco gire. Es antirrotación: no hay rotación con peso.',['Pallof press con banda','Misma ejecución.'])],
+ E('lg6','Gemelos en prensa',4,'12–15',60,{i:1},'Pausa de 2 s abajo en estiramiento. Sin carga sobre los hombros.',['Gemelos sentado con mancuerna en las rodillas','Sobre un disco o escalón.'])],
 pushB:[
  E('pb1s','Press inclinado en Smith (con topes de seguridad)',4,'6–8',150,{},'Banco a 30°, glúteos en el banco, arco moderado. Pon los topes justo por debajo del pecho antes de empezar: así puedes ir pesado sin spotter.',['Press inclinado con mancuernas','Mismo rango; aplica la misma salida y entrega segura que en el press plano.']),
  E('pb2c','Press de pecho en polea, sentado en banco',3,'10–12',90,{},'Banco entre las poleas, poleas a la altura del pecho y espalda apoyada. Empuja hacia delante y un poco hacia dentro. Tensión constante y gran estiramiento.',['Press plano en máquina Hammer','8–12 reps, bajada lenta.']),
@@ -261,7 +266,7 @@ pullB:[
  E('lb5','Pájaros en máquina (pec deck invertido)',3,'12–15',60,{i:1},'Brazos casi rectos, abre hasta la línea de los hombros.',['Pájaros con mancuernas pecho apoyado en banco inclinado','Ligero y lento.']),
  E('lb6','Curl en banco predicador',3,'8–12',75,{p:1,i:1},'Barra Z o máquina; bajada lenta hasta casi extender.',['Curl predicador con mancuerna sobre banco inclinado','A una mano.']),
  E('lb7','Curl bayesiano en polea baja',3,'10–12',60,{i:1},'De espaldas a la polea, brazo detrás del cuerpo.',['Curl alterno con mancuernas sentado','Supina al subir.']),
- ...coreBack('b')],
+ E('lb8','Curl de muñeca + extensión de muñeca (superserie)',3,'15–20 c/u',60,{i:1},'Arrodíllate frente a un banco plano con el tronco recto y los antebrazos apoyados; solo se mueve la muñeca. Primero palmas arriba, sin descanso palmas abajo, y luego descansa.',['Curl y extensión de muñeca en polea baja','De pie, codos pegados al cuerpo; mismo orden y reps.'])],
 legsB:[
  E('lh1m','Hip thrust en máquina',4,'8–10',120,{},'Espalda alta apoyada en el respaldo, mentón metido y costillas abajo. Extiende la cadera, no la lumbar, y aguanta 1 s arriba.',['Hip thrust con barra','Espalda alta en el banco y almohadilla en la barra. No necesitas spotter: si no puedes subirla, baja la cadera y apoya la barra en el suelo.']),
  E('lh2','Curl femoral tumbado',4,'8–12',90,{i:1},'Cadera pegada al banco; si se levanta, baja el peso.',['Curl femoral con fitball o deslizadores','Cadera arriba todo el set.']),
@@ -270,9 +275,8 @@ legsB:[
  E('lh5','Abducción de cadera en máquina',3,'15–20',60,{i:1},'Ligera inclinación al frente, pausa fuera.',['Abducción con banda sentado','Banda sobre las rodillas.']),
  E('lh6','Gemelos sentado',4,'12–15',60,{i:1},'Pausa abajo de 2 s.',['Gemelos a una pierna con mancuerna en escalón','Apóyate en la pared, sin carga en los hombros.']),
  E('lh7','Jalón agarre neutro (frecuencia extra de dorsal)',3,'10–12',75,{p:1},'Tercer estímulo semanal de dorsal. Moderado, RIR indicado.',['Pullover en polea alta','Brazos casi rectos.']),
- C('lhpt','Pull-through en polea',[{s:2,r:'12 ligero'},{s:3,r:'12'},{s:3,r:'10 + carga'}],'Aprender la bisagra con poca carga: cadera atrás, columna neutra de principio a fin. Si la notas en la lumbar en vez de glúteo/femoral, acorta el rango.',['Puente de glúteo con pausa','3 s arriba.']),
- C('lhsc','Suitcase carry',[{s:2,r:'20 s/lado',h:20,k:2,g:10},{s:3,r:'30 s/lado',h:30,k:2,g:10},{s:3,r:'40 s/lado + carga',h:40,k:2,g:10}],'Una mancuerna pesada a un lado, camina erguido sin inclinarte. Anota el peso.',['Suitcase hold estático','De pie sin caminar, mismo tiempo.']),
- C('lhpf','Plancha frontal',[{s:3,r:'20 s',h:20,k:1},{s:3,r:'30 s',h:30,k:1},{s:3,r:'40 s',h:40,k:1}],'Aprieta glúteos y lleva los codos hacia los pies. Nada de cadera hundida.',['Plancha con rodillas apoyadas','Mismo tiempo.'])]
+ C('lhdb','Dead bug',[{s:2,r:'6/lado'},{s:3,r:'8/lado · 3 s pausa'},{s:3,r:'8/lado + banda en manos',c:'Fase 3: banda ligera sostenida arriba.'}],'Lumbar apoyada suave en el suelo, exhala al extender brazo y pierna contrarios. Si molesta, usa la alternativa.',['Dead bug solo piernas (talón al suelo)','Misma respiración.']),
+ C('lhpa','Pallof press (antirrotación)',[{s:2,r:'10/lado'},{s:3,r:'10/lado · 2 s'},{s:3,r:'12/lado · 2 s'}],'Polea a la altura del pecho, empuja al frente y no dejes que el tronco gire. Es antirrotación: no hay rotación con peso.',['Pallof press con banda','Misma ejecución.'])]
 };
 
 const MUS={pa1h:['Pectoral','Tríceps, deltoides anterior'],pa2h:['Pectoral superior','Deltoides anterior, tríceps'],pa3:['Deltoides anterior','Tríceps, deltoides lateral'],pa4:['Pectoral',''],pa5:['Deltoides lateral',''],pa6:['Tríceps (cabeza lateral)',''],pa7:['Tríceps (cabeza larga)',''],
@@ -281,11 +285,12 @@ lg1:['Cuádriceps','Glúteo'],lg2:['Cuádriceps','Glúteo, aductores'],lg3:['Cu�
 pb1s:['Pectoral superior','Deltoides anterior, tríceps'],pb2c:['Pectoral','Deltoides anterior, tríceps'],pb3:['Deltoides anterior','Tríceps, deltoides lateral'],pb4:['Pectoral superior',''],pb5:['Deltoides lateral',''],pb6:['Tríceps','' ],pb7:['Braquial y braquiorradial','Bíceps'],
 lb1:['Dorsal ancho','Bíceps, braquial, espalda media'],lb2:['Dorsal ancho','Espalda media, bíceps'],lb3:['Espalda media (romboides, trapecio medio)','Dorsal, bíceps'],lb4:['Dorsal ancho',''],lb5:['Deltoides posterior','Trapecio medio'],lb6:['Bíceps (cabeza corta)','Braquial'],lb7:['Bíceps (cabeza larga)',''],
 lh1m:['Glúteo mayor','Isquiotibiales'],lh2:['Isquiotibiales','Gemelos'],lh3:['Glúteo y cuádriceps','Isquiotibiales, aductores'],lh4:['Cuádriceps y glúteo','Aductores'],lh5:['Glúteo medio',''],lh6:['Sóleo','Gemelos'],lh7:['Dorsal ancho','Bíceps'],lhpt:['Glúteo e isquiotibiales','Erectores espinales (isométrico)'],lhsc:['Cuadrado lumbar y oblicuos','Agarre, trapecio'],lhpf:['Core anterior','Glúteo'],
+la8:['Braquiorradial y extensores del antebrazo','Braquial'],lb8:['Flexores y extensores del antebrazo','Agarre'],lhdb:['Core anterior (transverso, recto abdominal)','Flexores de cadera'],lhpa:['Oblicuos (antirrotación)','Transverso abdominal'],
 bd:['Erectores espinales y multífidos (estabilidad)','Glúteo, core'],pl:['Oblicuos y cuadrado lumbar','Glúteo medio'],ex:['Erectores espinales','Glúteo, isquiotibiales']};
 const musOf=id=>MUS[id]||MUS[id.slice(1)]||null;
-const WU_BASE=['Cardio suave 3–5 min (bici, elíptica o caminadora inclinada).','Respiración 90/90 tumbado con pies en la pared: 5 respiraciones lentas, costillas abajo.','Puente de glúteo 2×10 con 2 s arriba.','Bird dog 1×5 por lado, lento.','Dead bug 1×6 por lado.','Cat-camel suave ×5, solo en rango cómodo. La flexión es lo que te molesta, así que omite la fase de redondear si la notas.'];
+const WU_BASE=['Cardio suave 3–5 min (bici, elíptica o caminadora inclinada).','Respiración 90/90 tumbado con pies en la pared: 5 respiraciones lentas, costillas abajo.','Puente de glúteo 2×10 con 2 s arriba.','Bird dog 1×5 por lado, lento.','Dead bug 1×6 por lado.'];
 const WU_DAY={push:['Rotación externa con banda ×15 y flexiones inclinadas ×10.'],pull:['Colgarte de la barra 2×15–20 s si te sienta bien (si no, sáltalo).','Jalón ligero ×15 y face pull ligero ×15.'],legs:['Sentadilla al cajón sin peso ×10 y zancada inversa sin peso ×5/lado.','Hip airplane asistido (apoyado) ×3/lado, opcional.']};
-const warmup=d=>[...WU_BASE,...WU_DAY[d.replace(/[AB]$/,'')],'Series de aproximación del primer ejercicio: ~50 %×10, 70 %×5, 85 %×2–3.'];
+const warmup=d=>[...(EX[d].some(x=>x.core)?WU_BASE.filter(x=>!/^(Bird dog|Dead bug)/.test(x)):WU_BASE),...WU_DAY[d.replace(/[AB]$/,'')],'Series de aproximación del primer ejercicio: ~50 %×10, 70 %×5, 85 %×2–3.'];
 
 /* ---------- ESTADO ---------- */
 const KEY='ppl-lumbar-v1';
@@ -299,13 +304,18 @@ const L=(w,d,create)=>{const k=w+'|'+d;if(!S.log[k]&&create)S.log[k]={ex:{},alt:
 const cur=c=>L(S.w,S.d,c);
 const isAlt=(ex,l=cur())=>!!(l&&l.alt&&l.alt[ex.id]);
 const keyOf=(ex,l)=>ex.id+(isAlt(ex,l)?'~a':'');
-function spec(ex,w){
-  if(ex.core){const p=ex.ph[phase(w)];return{sets:p.s,reps:p.r,rest:ex.rest,rir:'Control, sin dolor',iso:p.h?{h:p.h,k:p.k||1,g:p.g||3}:null,name:p.n||ex.n,note:p.c||'',fase:phase(w)+1}}
-  const W=WEEKS[w];return{sets:W.dl?Math.max(1,Math.round(ex.s*.6)):ex.s+(ex.p?W.add:0),reps:ex.r,rest:ex.rest,rir:ex.i?W.rirI:W.rir,iso:null,name:ex.n,note:''};
+const MODES={normal:{t:'Sesión completa',c:'r'},ajustada:{t:'Sesión ajustada',c:'w'},recuperacion:{t:'Recuperación',c:'x'}};
+const modeOf=(w,d)=>{const l=L(w,d);return l&&MODES[l.mode]?l.mode:'normal'};
+const modeFor=(v,d)=>v==null||v<=2?'normal':v<=4?'ajustada':(/^(pull|legs)/.test(d)?'recuperacion':'ajustada');
+const phaseFor=(w,d)=>{const m=modeOf(w,d);return m==='normal'?phase(w):m==='ajustada'?Math.max(0,phase(w)-1):0};
+function spec(ex,w,d=S.d){
+  const m=modeOf(w,d);
+  if(ex.core){const ph=phaseFor(w,d),p=ex.ph[ph];return{sets:Math.min(p.s,2),reps:p.r,rest:ex.rest,rir:'Control, sin dolor',iso:p.h?{h:p.h,k:p.k||1,g:p.g||3}:null,name:p.n||ex.n,note:p.c||'',fase:ph+1}}
+  const W=WEEKS[w],adj=m!=='normal',l=L(w,d);return{sets:W.dl?Math.max(1,Math.round(ex.s*.6)):ex.s+(ex.p&&!adj?W.add:0),reps:ex.r,rest:ex.rest,rir:adj&&!W.dl?(ex.i?W.rirI:W.rir).replace(/\d/g,n=>+n+1)+' (hoy +1)':(ex.i?W.rirI:W.rir),iso:null,name:ex.n,note:'',hidden:m==='recuperacion'&&!(l&&l.showAll)};
 }
 function setsOf(w,d,ex){const l=L(w,d);const e=l&&l.ex[keyOf(ex,l)];return e?e.s:[]}
 function getSet(ex,i){const l=cur(true);const k=keyOf(ex,l);const e=l.ex[k]||(l.ex[k]={s:[]});while(e.s.length<=i)e.s.push({d:0,w:'',r:''});return e.s[i]}
-function prog(w,d){let t=0,n=0;for(const ex of EX[d]){const sp=spec(ex,w),s=setsOf(w,d,ex);t+=sp.sets;for(let i=0;i<sp.sets;i++)if(s[i]&&s[i].d)n++}return{t,n}}
+function prog(w,d){let t=0,n=0;for(const ex of EX[d]){const sp=spec(ex,w,d);if(sp.hidden)continue;const s=setsOf(w,d,ex);t+=sp.sets;for(let i=0;i<sp.sets;i++)if(s[i]&&s[i].d)n++}return{t,n}}
 function prev(ex){const k=keyOf(ex);for(let pw=S.w-1;pw>=1;pw--){const l=S.log[pw+'|'+S.d];const e=l&&l.ex[k];if(e&&e.s.some(x=>x.w||x.r))return{pw,s:e.s}}return null}
 
 /* ---------- AUDIO ---------- */
@@ -316,7 +326,7 @@ const buzz=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
 
 /* ---------- RENDER ENTRENO ---------- */
 function renderTrain(){
-  const W=WEEKS[S.w],l=cur(),list=EX[S.d],day=DAYS.find(d=>d.id===S.d),ph=phase(S.w)+1;
+  const W=WEEKS[S.w],l=cur(),list=EX[S.d],day=DAYS.find(d=>d.id===S.d),ph=phaseFor(S.w,S.d)+1,mode=modeOf(S.w,S.d);
   const pr=prog(S.w,S.d);
   let h=`<div class="lbl">Semana</div><div class="weeks">${[1,2,3,4,5,6,7,8].map(w=>`<button data-w="${w}" class="${WEEKS[w].dl?'dl':''}" aria-pressed="${w===S.w}" aria-label="Semana ${w}${WEEKS[w].dl?' (descarga)':''}">${w}</button>`).join('')}</div>
   <div class="lbl">Día</div><div class="days">${DAYS.map(d=>{const p=prog(S.w,d.id),lg=L(S.w,d.id);return`<button data-d="${d.id}" aria-pressed="${d.id===S.d}"><b>${d.n}</b><span>${d.d} · ${d.f}${lg&&lg.pain!=null?' · dolor '+lg.pain:''}</span><div class="mini"><i style="width:${p.t?Math.round(p.n/p.t*100):0}%"></i></div></button>`}).join('')}</div>
@@ -327,10 +337,17 @@ function renderTrain(){
    <p>${W.txt}</p>
    <div class="prog"><div class="bar"><i id="pbar" style="width:${pr.t?pr.n/pr.t*100:0}%"></i></div><b id="ptxt">${pr.n}/${pr.t}</b></div>
   </div>
-  ${lumbarDay(S.d)?`<div class="finish" style="margin-top:12px"><h2>Antes de empezar</h2><p class="note" style="margin:4px 0 0">Dolor lumbar ahora mismo (0–10). Tu basal es 0–2. Este día carga espalda o pierna.</p>${scale('pre',l&&l.pre)}${preMsg(l&&l.pre)}</div>`:''}
+  <div class="finish" style="margin-top:12px"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><h2 style="flex:1">${MODES[mode].t}</h2><button class="btn ghost sm" data-open-start="1">Cambiar día o dolor</button></div>
+   <p class="note" style="margin:4px 0 0">Dolor lumbar antes de empezar: <b>${l&&l.pre!=null?l.pre+'/10':'sin registrar'}</b>. Tócalo para corregirlo: la sesión se recalcula.</p>${scale('pre',l&&l.pre)}${preMsg(l&&l.pre)}
+   ${mode==='recuperacion'?`<div class="msg x">Hoy: calentamiento${list.some(x=>x.core)?', bloque lumbar en fase 1':''} y 15–20 min de cardio suave (bici o caminadora sin inclinación). La fuerza está oculta.</div><div class="row"><button class="btn ghost" data-showall="1">${l&&l.showAll?'Ocultar fuerza otra vez':'Mostrar la fuerza igualmente'}</button></div>`:''}
+   ${l&&l.autoAlt&&l.autoAlt.length?`<div class="msg w">Cambiados a su alternativa por molestias anteriores: ${l.autoAlt.map(id=>{const e=list.find(x=>x.id===id);return e?esc(e.n):''}).filter(Boolean).join(', ')}.</div>`:''}
+  </div>
   <details class="box"><summary>Calentamiento lumbar (~8 min)</summary><div class="in"><ol class="wu">${warmup(S.d).map(x=>`<li>${x}</li>`).join('')}</ol></div></details>`;
-  let coreStart=list.findIndex(x=>x.core);
-  h+=list.map((ex,xi)=>(xi===coreStart?`<div class="lbl" style="margin-top:22px">Bloque lumbar y core · fase ${ph}${W.dl?' (volumen de fase 1 por descarga)':''}</div>`:'')+card(ex,xi)).join('');
+  const order=[...list.keys()].filter(i=>!spec(list[i],S.w).hidden).sort((a,b)=>(list[b].core?1:0)-(list[a].core?1:0)||a-b);
+  const hasCore=order.some(i=>list[i].core);
+  h+=order.map((xi,pos)=>{const ex=list[xi],first=pos===0||list[order[pos-1]].core!==ex.core;
+    const lbl=!first||!hasCore?'':ex.core?`<div class="lbl" style="margin-top:22px">Bloque lumbar · justo después del calentamiento · fase ${ph}${mode!=='normal'?' (bajada por el dolor de hoy)':''}</div><p class="note" style="margin:0">2 series, sin llegar al temblor: termina sintiendo que podrías hacer el doble. Es activación, no agotamiento.</p>`:`<div class="lbl" style="margin-top:22px">Fuerza</div>`;
+    return lbl+card(ex,xi,pos)}).join('');
   const pain=l&&l.pain;
   h+=`<div class="finish"><h2>Cierre de la sesión</h2><p class="note" style="margin:4px 0 0">Dolor lumbar al terminar (0–10). Tu basal es 0–2.</p>
    <div class="pain">${[0,1,2,3,4,5,6,7,8,9,10].map(v=>`<button data-pain="${v}" class="${v<=2?'g':v<=4?'a':'x'}" aria-pressed="${pain===v}">${v}</button>`).join('')}</div>
@@ -349,7 +366,7 @@ function preMsg(p){
   if(p==null)return'';
   if(p<=2)return'<div class="msg ok">Dentro de tu basal: sesión completa según lo planeado.</div>';
   if(p<=4)return'<div class="msg w">Hoy estás por encima de tu basal. Haz la sesión, pero sin subir cargas, quita las series extra ★ y haz el bloque lumbar con la alternativa o con los números de la fase anterior. Si el dolor sube durante la sesión, para lo que lo provoque.</div>';
-  return'<div class="msg x">Dolor alto antes de empezar. Hoy no cargues espalda ni pierna: haz el calentamiento, el bloque lumbar en versión suave y cardio suave. Si sigue así varios días o notas síntomas hacia la pierna, consulta (mira «Señales de alerta» en la Guía).</div>';
+  return'<div class="msg x">Dolor alto antes de empezar. Hoy no cargues espalda ni pierna: haz el calentamiento y cardio suave (y el bloque lumbar suave si el día lo tiene). Si sigue así varios días o notas síntomas hacia la pierna, consulta (mira «Señales de alerta» en la Guía).</div>';
 }
 function molMsg(v){
   if(v==null)return'';
@@ -365,7 +382,7 @@ function painMsg(p){
   if(p<=4)return'<div class="msg w">Por encima de tu basal. Mañana comprueba que vuelva a 0–2. Si no vuelve, la próxima sesión repite cargas (no subas) y usa alternativas en lo que moleste.</div>';
   return'<div class="msg x">Dolor alto. Próxima sesión: baja cargas 20–30 % y quita las series extra ★. Si se repite dos sesiones seguidas, o aparece dolor hacia la pierna, hormigueo o debilidad, consulta con tu médico/fisio (mira «Señales de alerta» en la Guía).</div>';
 }
-function card(ex,xi){
+function card(ex,xi,pos=xi){
   const sp=spec(ex,S.w),alt=isAlt(ex),name=alt?ex.alt.n:sp.name,cue=alt?ex.alt.c:ex.cue+(sp.note?' '+sp.note:'');
   const pv=prev(ex),s=setsOf(S.w,S.d,ex),all=sp.sets&&[...Array(sp.sets).keys()].every(i=>s[i]&&s[i].d);
   const rows=[...Array(sp.sets).keys()].map(i=>{const st=s[i]||{},p=pv&&pv.s[i]||{},on=!!st.d;
@@ -375,10 +392,10 @@ function card(ex,xi){
   const molTxt=mh.length?`<div class="prev">Molestia en semanas anteriores: <b>${mh.map(x=>'S'+x.w+': '+x.m).join(' · ')}</b></div>`:'';
   const pvTxt=pv?`<div class="prev">Semana ${pv.pw}: <b>${pv.s.slice(0,Math.max(sp.sets,1)).map(x=>(x.w||'–')+(sp.iso?' kg':'×'+(x.r||'–'))).join(' · ')}</b></div>`:`<div class="prev">Sin registro previo${alt?' con la alternativa':''}.</div>`;
   return`<article class="ex ${all?'done':''}" id="ex${xi}"><div class="exh">
-   <div class="t"><span class="num">${xi+1}</span><h3>${esc(name)}</h3>${ex.p?'<span class="star">★ prioridad</span>':''}</div>
+   <div class="t"><span class="num">${pos+1}</span><h3>${esc(name)}</h3>${ex.p?'<span class="star">★ prioridad</span>':''}</div>
    ${(()=>{const m=musOf(ex.id);return m?`<div class="mus"><span class="m1">${esc(m[0])}</span>${m[1]?`<span class="m2">${esc(m[1])}</span>`:''}</div>`:''})()}
    <div class="meta"><span class="pill r">${sp.sets} × ${esc(sp.reps)}</span><span class="pill">${ex.core?esc(sp.rir):'RIR '+esc(sp.rir)}</span><span class="pill b">Descanso ${fmtRest(sp.rest)}</span></div>
-   <p class="cue">${esc(cue)}</p>${ex.opt&&!alt?`<div class="altinfo">${esc(ex.opt)}</div>`:''}${alt?`<div class="altinfo">Usando alternativa. Original: ${esc(sp.name)}</div>`:''}${pvTxt}${molTxt}</div>
+   <p class="cue">${esc(cue)}</p>${ex.opt&&!alt?`<div class="altinfo">${esc(ex.opt)}</div>`:''}${alt&&(cur()||{}).autoAlt&&cur().autoAlt.includes(ex.id)?`<div class="altinfo">Cambiada automáticamente por molestias en sesiones anteriores.</div>`:''}${alt?`<div class="altinfo">Usando alternativa. Original: ${esc(sp.name)}</div>`:''}${pvTxt}${molTxt}</div>
    <div class="sets">${!sp.iso?`<div class="set" style="padding:0"><span></span><span class="note" style="text-align:center">kg</span><span class="note" style="text-align:center">reps</span><span></span></div>`:''}${rows}</div>
    <div class="exf"><button class="btn ghost sm" data-alt="${xi}">${alt?'Volver al original':'Usar alternativa'}</button><button class="btn ghost sm molb ${mol==null?'':mol<=2?'g':mol<=4?'a':'x'}" data-mol="${xi}" aria-expanded="${om}">Molestia: ${mol==null?'–':mol+'/10'}</button></div>
    ${om?`<div class="molp"><p class="note" style="margin:0">¿Cuánto te molestó la lumbar con este ejercicio? (0 = nada). Toca el mismo número para borrarlo.</p>${scale('molv',mol,xi+'|')}${molMsg(mol)}</div>`:''}</article>`;
@@ -449,7 +466,9 @@ $('#v-train').addEventListener('click',async e=>{
   if(b.dataset.chk){const[xi,i]=b.dataset.chk.split('|').map(Number);markSet(xi,i);return}
   if(b.dataset.iso){const[xi,i]=b.dataset.iso.split('|').map(Number);runIso(xi,i);return}
   if(b.dataset.alt){const ex=EX[S.d][+b.dataset.alt],l=cur(true);l.alt[ex.id]=!l.alt[ex.id];save();renderTrain();document.getElementById('ex'+b.dataset.alt)?.scrollIntoView({block:'start'});return}
-  if(b.dataset.pre){const l=cur(true),v=+b.dataset.pre;l.pre=l.pre===v?null:v;save();const y=scrollY;renderTrain();scrollTo({top:y});return}
+  if(b.dataset.pre){const l=cur(true),v=+b.dataset.pre;l.pre=l.pre===v?null:v;l.mode=modeFor(l.pre,S.d);save();const y=scrollY;renderTrain();scrollTo({top:y});return}
+  if(b.dataset.openStart){openStart(true);return}
+  if(b.dataset.showall){const l=cur(true);l.showAll=!l.showAll;save();renderTrain();return}
   if(b.dataset.mol){const ex=EX[S.d][+b.dataset.mol];openMol.has(ex.id)?openMol.delete(ex.id):openMol.add(ex.id);const y=scrollY;renderTrain();scrollTo({top:y});return}
   if(b.dataset.molv){const[xi,v]=b.dataset.molv.split('|').map(Number),ex=EX[S.d][xi],l=cur(true),k=keyOf(ex,l),e=l.ex[k]||(l.ex[k]={s:[]});e.m=e.m===v?null:v;save();const y=scrollY;renderTrain();scrollTo({top:y});return}
   if(b.dataset.pain){const l=cur(true),v=+b.dataset.pain;l.pain=l.pain===v?null:v;save();renderTrain();document.querySelector('.finish').scrollIntoView({block:'start'});return}
@@ -458,7 +477,7 @@ $('#v-train').addEventListener('click',async e=>{
   if(b.id==='rstWeek'){if(await ask('Reiniciar semana',`Se borra todo lo registrado en los 6 días de la <b>semana ${S.w}</b>. No se puede deshacer.`,'Reiniciar semana')){for(const k of Object.keys(S.log))if(k.startsWith(S.w+'|'))delete S.log[k];stopRest();save();renderTrain()}return}
 });
 $('#v-train').addEventListener('input',e=>{const t=e.target;if(!t.dataset.in)return;const[xi,i,f]=t.dataset.in.split('|');const st=getSet(EX[S.d][+xi],+i);st[f]=t.value.slice(0,12);save()});
-$('#sessBtn').addEventListener('click',()=>{audio();const l=cur(true);if(!l.t0){l.t0=Date.now();l.t1=null;save();updateClock();return}if($('#v-train').hidden)showTab('train');document.querySelector('.finish')?.scrollIntoView({block:'start'})});
+$('#sessBtn').addEventListener('click',()=>{audio();const l=cur(true);if(!l.t0){openStart();return}if($('#v-train').hidden)showTab('train');document.querySelector('.finish')?.scrollIntoView({block:'start'})});
 $('#dock').addEventListener('click',e=>{const b=e.target.closest('[data-rest]');if(!b||!R)return;const v=b.dataset.rest;if(v==='skip'){stopRest();return}R.end+=(+v)*1000;R.total=Math.max(R.total,(R.end-Date.now())/1000);if(R.done&&R.end>Date.now()){R.done=false;$('#dock').classList.remove('end')}tick()});
 $('#isoX').onclick=()=>{ISO=null;$('#isoM').hidden=true};
 $('#isoDone').onclick=()=>{if(ISO)isoFinish(false)};
@@ -484,7 +503,7 @@ function clean(raw){
   if(!st||typeof st.log!=='object'||!st.log)throw new Error('El archivo no tiene el formato de esta app.');
   const log={};const str=v=>String(v??'').slice(0,12);const num=v=>typeof v==='number'&&isFinite(v)?v:null;
   for(const[k,l]of Object.entries(st.log)){if(!VALID.test(k)||!l||typeof l!=='object')continue;const o={ex:{},alt:{},pain:null,t0:num(l.t0),t1:num(l.t1)};
-    const p=num(l.pain);o.pain=p!=null&&p>=0&&p<=10?Math.round(p):null;const pr=num(l.pre);o.pre=pr!=null&&pr>=0&&pr<=10?Math.round(pr):null;
+    const p=num(l.pain);o.pain=p!=null&&p>=0&&p<=10?Math.round(p):null;const pr=num(l.pre);o.pre=pr!=null&&pr>=0&&pr<=10?Math.round(pr):null;if(MODES[l.mode])o.mode=l.mode;if(l.showAll)o.showAll=true;if(Array.isArray(l.autoAlt))o.autoAlt=l.autoAlt.filter(x=>/^[a-z0-9]{2,6}$/.test(x)).slice(0,20);
     for(const[a,v]of Object.entries(l.alt||{}))if(/^[a-z0-9]{2,6}$/.test(a))o.alt[a]=!!v;
     for(const[ek,e]of Object.entries(l.ex||{})){if(!/^[a-z0-9]{2,6}(~a)?$/.test(ek)||!e||!Array.isArray(e.s))continue;o.ex[ek]={s:e.s.slice(0,8).map(s=>({d:s&&s.d?1:0,w:str(s&&s.w),r:str(s&&s.r)}))};const m=num(e.m);if(m!=null&&m>=0&&m<=10)o.ex[ek].m=Math.round(m)}
     log[k]=o}
@@ -555,7 +574,8 @@ const DISC=[
  ['Remo en T (no hay máquina)','Falta la máquina.','Remo con mancuernas pecho apoyado en banco inclinado'],
  ['Hiperextensiones con disco','Extensión lumbar cargada hasta el final del rango (lo pediste fuera).','Extensión prona isométrica → extensión de cadera en banco hasta neutro'],
  ['Russian twist, leñadores con peso','Rotación (y flexión) con carga (lo pediste fuera).','Pallof press (antirrotación), suitcase carry'],
- ['Crunch y sit-ups','Flexión lumbar repetida: es tu patrón de dolor.','McGill curl-up, dead bug'],
+ ['Extensiones lumbares, pull-through, suitcase carry, curl-up y plancha frontal','Los reduje porque el trabajo lumbar directo te molestaba más que el resto.','Bird dog y plancha lateral (Pull A), dead bug y Pallof (Legs B), en 2 días por semana'],
+ ['Crunch y sit-ups','Flexión lumbar repetida: es tu patrón de dolor.','Dead bug'],
  ['Press militar de pie','No te duele. Lo cambio por precaución: es fácil arquear la lumbar para terminar reps.','Press de hombro sentado con respaldo o máquina'],
  ['Press de banca con barra','No tienes spotter y entrenas solo: fallar una rep con la barra sobre el pecho es un riesgo real.','Máquina Hammer plana e inclinada (Push A), Smith con topes y press en polea (Push B)'],
  ['Gemelos de pie en máquina','Carga axial sobre los hombros.','Gemelos en prensa y sentado'],
@@ -574,10 +594,11 @@ ${[1,2,3,4,5,6,7,8].map(w=>{const W=WEEKS[w];return`<tr><td>${w}</td><td>${W.t}<
 <h2>Calentamiento lumbar</h2>
 <ol class="wu">${WU_BASE.map(x=>`<li>${x}</li>`).join('')}<li>Específico del día y series de aproximación (en cada día).</li></ol>
 <h2>Bloque lumbar y core <span class="tag cr">Criterio</span></h2>
-<p>Va en Pull A, Legs A, Pull B y Legs B (~10 min). Prioriza resistencia y control con la columna en neutro, porque la flexión es lo que te molesta. La extensión solo llega hasta neutro, nunca más allá.</p>
-<ul><li><b>Fase 1 (sem 1–2 y 5):</b> isométricos cortos, bird dog 5 s, planchas 20 s, extensión prona isométrica, pull-through ligero para aprender la bisagra.</li>
-<li><b>Fase 2 (sem 3–4):</b> aguantes más largos, extensión de cadera en banco hasta neutro, Pallof con pausa, suitcase carry 30 s.</li>
-<li><b>Fase 3 (sem 6–8):</b> 10 s / 40 s, carga externa ligera (tobillera, banda, más peso en carry y pull-through).</li></ul>
+<p>Reducido a 2 días: <b>Pull A</b> (bird dog y plancha lateral) y <b>Legs B</b> (dead bug y Pallof). Va <b>al inicio</b>, justo después del calentamiento, con máximo 2 series y unos 5 minutos: así lo haces fresco y sirve de activación, en vez de cargar una zona ya cansada al final. La progresión es de tiempo de aguante, no de series. Quité las extensiones lumbares, el pull-through, el suitcase carry, el curl-up y la plancha frontal porque te molestaban más de lo que aportaban. Prioriza resistencia y control con la columna en neutro, porque la flexión es lo que te molesta. La extensión solo llega hasta neutro, nunca más allá.</p>
+<ul><li><b>Fase 1 (sem 1–2 y 5):</b> bird dog con pausa de 5 s, plancha lateral de 20 s, dead bug lento, Pallof sin pausa.</li>
+<li><b>Fase 2 (sem 3–4):</b> pausas de 8 s, planchas de 30 s, dead bug y Pallof con 2–3 s de pausa.</li>
+<li><b>Fase 3 (sem 6–8):</b> pausas de 10 s, planchas de 40 s y banda ligera en el dead bug.</li></ul>
+<p>Si alguno de estos cuatro también te molesta (marca la molestia), usa su alternativa. Si la alternativa también molesta, quítalo y coméntaselo al fisio.</p>
 <p><b>Para pasar de fase</b> deben cumplirse las tres condiciones: dolor durante los ejercicios ≤2/10, dolor al terminar la sesión dentro de tu basal (0–2) y a la mañana siguiente no peor que antes. Si no se cumplen, repite la fase. La app avanza la fase por semana; si no cumples, usa la alternativa o los números de la fase anterior.</p>
 <h2>Sentadilla con barra: opcional <span class="tag cr">Criterio</span></h2>
 <p>Solo desde la semana 6 y solo si cumples <b>todo</b> esto: dolor basal 0–2 las últimas 2 semanas, ningún registro post-sesión de Legs por encima de 2, hack squat y búlgara sin molestia, y ese día 0–1/10 tras calentar.</p>
@@ -591,7 +612,8 @@ ${[1,2,3,4,5,6,7,8].map(w=>{const W=WEEKS[w];return`<tr><td>${w}</td><td>${W.t}<
 <ul><li>Dolor punzante o «pinchazo» en lugar de fatiga muscular.</li><li>Dolor durante la serie por encima de 3/10 o más de 2 puntos sobre tu basal.</li><li>Dolor que sube serie a serie.</li><li>Para terminar las reps tienes que redondear o arquear la lumbar: corta la serie.</li><li>Al día siguiente estás peor que tu basal o te dura más de 24 h.</li></ul>
 <p><b>Qué hacer, en orden:</b> 1) baja la carga 20–30 % o acorta el rango; 2) cambia a la alternativa; 3) quita ese ejercicio esa sesión; 4) si te pasa dos sesiones seguidas, consulta con tu fisio.</p>
 <h2>Medidores de dolor <span class="tag cr">Criterio</span></h2>
-<ul><li><b>Antes de empezar</b> (días Pull y Legs): 0–2 es sesión normal. 3–4: no subas cargas, quita las series extra ★ y baja una fase el bloque lumbar. 5 o más: solo calentamiento, bloque lumbar suave y cardio. Al cerrar, la app compara el dolor de antes con el de después.</li>
+<ul><li><b>Al abrir la app</b> eliges día y dolor lumbar, y la sesión se arma sola. Con 0–2 hay <b>sesión completa</b>. Con 3–4 hay <b>sesión ajustada</b>: sin series extra ★, RIR +1, sin subir cargas y el bloque lumbar una fase más abajo. Con 5 o más en Pull o Legs hay <b>recuperación</b>: calentamiento, bloque lumbar fase 1 y cardio suave. En Push, con 5 o más, la sesión es ajustada: los empujes van sentados o apoyados. Al cerrar, la app compara el dolor de antes con el de después.</li>
+<li><b>Cambio automático a alternativa</b>: al empezar, un ejercicio pasa a su alternativa si marcó molestia de 3 o más en dos sesiones, o si la última vez marcó 3 o más y hoy empiezas con dolor de 3 o más.</li>
 <li><b>Molestia por ejercicio</b>: anótala al terminar el ejercicio, solo si notaste algo en la lumbar. Con 3 o más dos veces, ese ejercicio pasa a su alternativa. En «Datos» tienes el mapa de los que más te alborotan.</li>
 <li>La molestia de un ejercicio que se nota al día siguiente no se ve en el momento: si amaneces peor que tu basal, revisa en el mapa qué ejercicios marcaron algo.</li></ul>
 <h2>Ejercicios descartados y su reemplazo</h2>
@@ -620,7 +642,48 @@ setInterval(wake,3000);document.addEventListener('visibilitychange',()=>{if(docu
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 if('serviceWorker'in navigator&&location.protocol==='https:'){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})})}
 
+/* ---------- PANTALLA DE INICIO ---------- */
+let P=null;
+function suggest(){let best=null;for(const[k,l]of Object.entries(S.log))if(l.t1&&(!best||l.t1>best.t)){const[w,d]=k.split('|');best={w:+w,d,t:l.t1}}
+  if(!best)return{w:1,d:'pushA'};let w=best.w,i=DAYS.findIndex(x=>x.id===best.d);for(let n=0;n<48;n++){i++;if(i>=DAYS.length){i=0;w++}if(w>8)return{w:8,d:'legsB'};const l=L(w,DAYS[i].id);if(!l||!l.t1)return{w,d:DAYS[i].id}}return{w:8,d:'legsB'}}
+function ongoing(){for(const[k,l]of Object.entries(S.log))if(l.t0&&!l.t1&&Date.now()-l.t0<5*3600e3){const[w,d]=k.split('|');return{w:+w,d,l}}return null}
+function autoAlts(w,d,pre){const out=[];for(const ex of EX[d]){const v=[];for(let pw=1;pw<=8;pw++){if(pw===w)continue;const l=L(pw,d),e=l&&l.ex[ex.id];if(e&&e.m!=null)v.push(e.m)}const hi=v.filter(x=>x>=3).length,last=v[v.length-1];if(hi>=2||(pre!=null&&pre>=3&&last>=3))out.push({ex,last})}return out}
+function openStart(keep){const sg=suggest();P={w:S.w,d:S.d,pain:null,sg};const l=cur();if(!keep&&!(l&&l.t0)){P.w=sg.w;P.d=sg.d}if(keep&&l&&l.pre!=null)P.pain=l.pre;renderStart();$('#startM').hidden=false;$('#startM').scrollTop=0}
+function renderStart(){
+  const og=ongoing(),m=modeFor(P.pain,P.d),W=WEEKS[P.w],ex=EX[P.d],lumb=/^(pull|legs)/.test(P.d);
+  const alts=P.pain==null?[]:autoAlts(P.w,P.d,P.pain);
+  const ph=m==='normal'?phase(P.w):m==='ajustada'?Math.max(0,phase(P.w)-1):0;
+  const strength=ex.filter(x=>!x.core).length,core=ex.filter(x=>x.core).length;
+  const done=L(P.w,P.d)&&L(P.w,P.d).t1;
+  let pv='';
+  if(P.pain==null)pv='<p class="note" style="margin:0">Marca tu dolor lumbar de ahora para armar la sesión.</p>';
+  else{const items=m==='normal'?[`${strength} ejercicios de fuerza${core?' + bloque lumbar fase '+(ph+1):''}.`,`RIR de la semana: ${W.rir} en compuestos, ${W.rirI} en aislamiento.`,W.add&&!W.dl?'Incluye las series extra ★ de espalda y bíceps.':'']
+     :m==='ajustada'?['Sin series extra ★ y RIR +1 en todo.','No subas cargas hoy: repite las de la semana anterior o baja un 10 %.',core?`Bloque lumbar en fase ${ph+1} (una por debajo de la de esta semana).`:'',!lumb?'Push: todo sentado o apoyado. Si la extensión de tríceps de pie te hace arquear, usa su alternativa sentada.':'']
+     :[core?'Solo calentamiento lumbar, bloque lumbar en fase 1 y 15–20 min de cardio suave.':'Solo calentamiento lumbar y 15–20 min de cardio suave.','La fuerza queda oculta; puedes mostrarla desde la sesión si al calentar el dolor baja a 0–2.','Si el dolor no baja en unos días o va hacia la pierna, consulta (Guía → Señales de alerta).'];
+   pv=`<h3>${MODES[m].t}</h3><ul>${items.filter(Boolean).map(x=>`<li>${x}</li>`).join('')}${alts.map(a=>`<li>Cambio a alternativa: <b>${esc(a.ex.n)}</b> → ${esc(a.ex.alt.n)} (última molestia ${a.last}/10).</li>`).join('')}</ul>`}
+  $('#startBody').innerHTML=`${og?`<div class="msg w" style="margin-top:12px">Tienes <b>${dayName(og.d)} · semana ${og.w}</b> en curso (${fmt((Date.now()-og.l.t0)/1000)}).</div><div class="row"><button class="btn blue" data-st-cont="1">Continuar esa sesión</button></div>`:''}
+   <div class="lbl">Semana</div><div class="weeks">${[1,2,3,4,5,6,7,8].map(w=>`<button data-st-w="${w}" class="${WEEKS[w].dl?'dl':''}" aria-pressed="${w===P.w}">${w}</button>`).join('')}</div>
+   <div class="lbl">Día</div><div class="days">${DAYS.map(d=>{const lg=L(P.w,d.id),sg=P.sg.w===P.w&&P.sg.d===d.id;return`<button data-st-d="${d.id}" class="${sg?'sug':''}" aria-pressed="${d.id===P.d}"><b>${d.n}</b><span>${d.f}${lg&&lg.t1?' · hecho':''}</span>${sg?'<span class="sugt">Sugerido</span>':''}</button>`}).join('')}</div>
+   <div class="lbl">Dolor lumbar ahora (0–10) · tu basal es 0–2</div>${scale('st-p',P.pain)}
+   <div class="prev2">${pv}</div>
+   ${done?'<div class="msg w">Ya cerraste este día en esta semana. Si lo empiezas, se reabre con lo que tenías anotado.</div>':''}
+   <div class="row"><button class="btn" data-st-go="1" ${P.pain==null?'disabled':''}>Empezar sesión</button></div>
+   <div class="row"><button class="btn ghost" data-st-close="1">Solo ver la rutina</button></div>`;
+}
+$('#startM').addEventListener('click',e=>{
+  audio();const b=e.target.closest('button');if(!b)return;const D=b.dataset;
+  if(D.stW){P.w=+D.stW;renderStart();return}
+  if(D.stD){P.d=D.stD;renderStart();return}
+  if(D.stP!=null){const v=+D.stP;P.pain=P.pain===v?null:v;renderStart();return}
+  if(D.stCont){const og=ongoing();S.w=og.w;S.d=og.d;save();$('#startM').hidden=true;showTab('train');return}
+  if(D.stClose){$('#startM').hidden=true;renderTrain();return}
+  if(D.stGo&&P.pain!=null){S.w=P.w;S.d=P.d;const l=cur(true);l.pre=P.pain;l.mode=modeFor(P.pain,P.d);l.showAll=false;
+    const al=autoAlts(P.w,P.d,P.pain);l.autoAlt=al.map(a=>a.ex.id);for(const a of al)l.alt[a.ex.id]=true;
+    if(l.t1)l.t1=null;if(!l.t0)l.t0=Date.now();save();$('#startM').hidden=true;showTab('train')}
+});
+
 renderTrain();
+openStart();
 }
 </script>
 </body>
