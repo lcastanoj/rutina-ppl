@@ -94,8 +94,7 @@ ol.wu{margin:0;padding-left:20px}ol.wu li{margin:6px 0}
 .exf{display:flex;gap:6px;padding:0 10px 12px}
 .exf .btn{flex:1}
 .molp{padding:0 12px 12px}.molb.g{color:#7fd6a1}.molb.a{color:#f3c77a;border-color:#5f4718}.molb.x{color:#ff8a83;border-color:#5a2420}
-.start{position:fixed;inset:0;z-index:45;background:var(--bg);overflow-y:auto;padding:env(safe-area-inset-top) 0 calc(24px + env(safe-area-inset-bottom))}.start[hidden]{display:none}
-.start .days button.sug{border-color:#5f4718}.sugt{font-size:11px;color:#f3c77a;font-weight:700}
+#startM .days button.sug{border-color:#5f4718}.sugt{font-size:11px;color:#f3c77a;font-weight:700}
 .prev2{margin-top:14px;padding:14px;border-radius:14px;background:var(--panel);border:1px solid var(--line)}.prev2 h3{font-size:26px}.prev2 ul{margin:8px 0 0;padding-left:20px}.prev2 li{margin:4px 0;color:#d3d6d8}
 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:10px}.stats>div{background:#0f1214;border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center}.stats b{display:block;font:700 22px/1.1 var(--hd);font-variant-numeric:tabular-nums}.stats small{font-size:12px;color:var(--mute)}
 .finish{margin-top:18px;padding:16px;border-radius:16px;background:var(--panel);border:1px solid var(--line)}
@@ -155,6 +154,10 @@ textarea{width:100%;min-height:130px;border-radius:10px;border:1px solid var(--l
 </div></header>
 
 <main class="wrap">
+  <section id="startM" hidden>
+    <div style="display:flex;align-items:flex-end;gap:10px;margin-top:18px"><h2 style="font-size:40px;flex:1">¿Qué toca hoy?</h2><button class="btn ghost sm" data-st-close="1">Ver rutina</button></div>
+    <div id="startBody"></div>
+  </section>
   <section id="v-train"></section>
   <section id="v-guide" class="guide" hidden></section>
   <section id="v-data" hidden></section>
@@ -177,10 +180,6 @@ textarea{width:100%;min-height:130px;border-radius:10px;border:1px solid var(--l
   <div class="row"><button class="btn ghost" id="isoX">Cancelar</button><button class="btn" id="isoDone">Terminar serie</button></div>
 </div></div>
 
-<div class="start" id="startM" hidden><div class="wrap">
-  <h2 style="font-size:40px;margin-top:18px">¿Qué toca hoy?</h2>
-  <div id="startBody"></div>
-</div></div>
 <div class="modal" id="endM" hidden><div class="sheet" id="endS"></div></div>
 <div class="modal" id="dlg" hidden><div class="sheet">
   <h3 id="dlgT"></h3><div id="dlgB" style="margin-top:8px;color:#d3d6d8"></div>
@@ -491,7 +490,11 @@ $('#isoX').onclick=()=>{ISO=null;$('#isoM').hidden=true};
 $('#isoDone').onclick=()=>{if(ISO)isoFinish(false)};
 
 /* ---------- TABS ---------- */
-function showTab(t){for(const b of document.querySelectorAll('[data-tab]'))b.setAttribute('aria-selected',b.dataset.tab===t);for(const v of['train','guide','data'])$('#v-'+v).hidden=v!==t;if(t==='data')renderData();if(t==='train')renderTrain();scrollTo({top:0})}
+let START=false;
+function closeStart(){START=false;$('#startM').hidden=true;$('#v-train').hidden=!(document.querySelector('[data-tab=train]').getAttribute('aria-selected')==='true')}
+function showTab(t){for(const b of document.querySelectorAll('[data-tab]'))b.setAttribute('aria-selected',b.dataset.tab===t);for(const v of['train','guide','data'])$('#v-'+v).hidden=v!==t;
+  const st=t==='train'&&START;$('#startM').hidden=!st;if(st){$('#v-train').hidden=true;renderStart()}
+  if(t==='data')renderData();if(t==='train'&&!st)renderTrain();scrollTo({top:0})}
 document.querySelector('.tabs').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(b)showTab(b.dataset.tab)});
 
 /* ---------- DATOS: exportar / importar ---------- */
@@ -697,7 +700,7 @@ function suggest(){let best=null;for(const[k,l]of Object.entries(S.log))if(l.t1&
   if(!best)return{w:1,d:'pushA'};let w=best.w,i=DAYS.findIndex(x=>x.id===best.d);for(let n=0;n<48;n++){i++;if(i>=DAYS.length){i=0;w++}if(w>8)return{w:8,d:'legsB'};const l=L(w,DAYS[i].id);if(!l||!l.t1)return{w,d:DAYS[i].id}}return{w:8,d:'legsB'}}
 function ongoing(){for(const[k,l]of Object.entries(S.log))if(l.t0&&!l.t1&&Date.now()-l.t0<5*3600e3){const[w,d]=k.split('|');return{w:+w,d,l}}return null}
 function autoAlts(w,d,pre){const out=[];for(const ex of EX[d]){const v=[];for(let pw=1;pw<=8;pw++){if(pw===w)continue;const l=L(pw,d),e=l&&l.ex[ex.id];if(e&&e.m!=null)v.push(e.m)}const hi=v.filter(x=>x>=3).length,last=v[v.length-1];if(hi>=2||(pre!=null&&pre>=3&&last>=3))out.push({ex,last})}return out}
-function openStart(keep){const sg=suggest();P={w:S.w,d:S.d,pain:null,sg};const l=cur();if(!keep&&!(l&&l.t0&&!l.t1)){P.w=sg.w;P.d=sg.d}if(keep&&l&&l.pre!=null)P.pain=l.pre;renderStart();$('#startM').hidden=false;$('#startM').scrollTop=0}
+function openStart(keep){const sg=suggest();P={w:S.w,d:S.d,pain:null,sg};const l=cur();if(!keep&&!(l&&l.t0&&!l.t1)){P.w=sg.w;P.d=sg.d}if(keep&&l&&l.pre!=null)P.pain=l.pre;renderStart();START=true;showTab('train')}
 function renderStart(){
   const og=ongoing(),m=modeFor(P.pain,P.d),W=WEEKS[P.w],ex=EX[P.d],lumb=/^(pull|legs)/.test(P.d);
   const alts=P.pain==null?[]:autoAlts(P.w,P.d,P.pain);
@@ -725,12 +728,12 @@ $('#startM').addEventListener('click',e=>{
   if(D.stW){P.w=+D.stW;renderStart();return}
   if(D.stD){P.d=D.stD;renderStart();return}
   if(D.stP!=null){const v=+D.stP;P.pain=P.pain===v?null:v;renderStart();return}
-  if(D.stView){const[w,d]=D.stView.split('|');S.w=+w;S.d=d;save();$('#startM').hidden=true;showTab('train');setTimeout(()=>$('#sumBox')?.scrollIntoView({block:'start'}),60);return}
-  if(D.stCont){const og=ongoing();S.w=og.w;S.d=og.d;save();$('#startM').hidden=true;showTab('train');return}
-  if(D.stClose){$('#startM').hidden=true;renderTrain();return}
+  if(D.stView){const[w,d]=D.stView.split('|');S.w=+w;S.d=d;save();closeStart();showTab('train');setTimeout(()=>$('#sumBox')?.scrollIntoView({block:'start'}),60);return}
+  if(D.stCont){const og=ongoing();S.w=og.w;S.d=og.d;save();closeStart();showTab('train');return}
+  if(D.stClose){closeStart();renderTrain();return}
   if(D.stGo&&P.pain!=null){S.w=P.w;S.d=P.d;const l=cur(true);l.pre=P.pain;l.mode=modeFor(P.pain,P.d);l.showAll=false;
     const al=autoAlts(P.w,P.d,P.pain);l.autoAlt=al.map(a=>a.ex.id);for(const a of al)l.alt[a.ex.id]=true;
-    if(l.t1)l.t1=null;if(!l.t0)l.t0=Date.now();save();$('#startM').hidden=true;showTab('train')}
+    if(l.t1)l.t1=null;if(!l.t0)l.t0=Date.now();save();closeStart();showTab('train')}
 });
 
 renderTrain();
