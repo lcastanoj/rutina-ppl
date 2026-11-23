@@ -373,8 +373,7 @@ function renderTrain(){
    <div class="chips"><span class="chip">RIR compuestos ${W.rir}</span><span class="chip">RIR aislamiento ${W.rirI}</span><span class="chip">Lumbar fase ${ph}</span></div></div></details>
   <details class="box" data-p="nav" ${OPENP.has('nav')?'open':''}><summary>Ver otra semana u otro día</summary><div class="in">
    <div class="weeks">${[1,2,3,4,5,6,7,8].map(w=>`<button data-w="${w}" class="${WEEKS[w].dl?'dl':''}" aria-pressed="${w===S.w}" aria-label="Semana ${w}${WEEKS[w].dl?' (descarga)':''}">${w}</button>`).join('')}</div>
-   <div class="days" style="margin-top:8px">${DAYS.map(d=>{const p=prog(S.w,d.id),lg=L(S.w,d.id);return`<button data-d="${d.id}" aria-pressed="${d.id===S.d}"><b>${d.n}</b><span>${d.f}${lg&&lg.t1?' · ✓':''}</span><div class="mini"><i style="width:${p.t?Math.round(p.n/p.t*100):0}%"></i></div></button>`}).join('')}</div></div></details>
-  <details class="box" data-p="wu" ${OPENP.has('wu')?'open':''}><summary>Calentamiento (~6 min)</summary><div class="in"><ol class="wu">${warmup(S.d).map(x=>`<li>${x}</li>`).join('')}</ol></div></details>`;
+   <div class="days" style="margin-top:8px">${DAYS.map(d=>{const p=prog(S.w,d.id),lg=L(S.w,d.id);return`<button data-d="${d.id}" aria-pressed="${d.id===S.d}"><b>${d.n}</b><span>${d.f}${lg&&lg.t1?' · ✓':''}</span><div class="mini"><i style="width:${p.t?Math.round(p.n/p.t*100):0}%"></i></div></button>`}).join('')}</div></div></details>`;
   const order=[...list.keys()].filter(i=>!spec(list[i],S.w).hidden).sort((a,b)=>(list[b].core?1:0)-(list[a].core?1:0)||a-b);
   const hasCore=order.some(i=>list[i].core);
   const doneEx=xi=>{const ex=list[xi],sp=spec(ex,S.w),s=setsOf(S.w,S.d,ex);return[...Array(sp.sets).keys()].every(i=>s[i]&&s[i].d)};
