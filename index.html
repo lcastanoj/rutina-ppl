@@ -219,11 +219,11 @@ const fmtRest=s=>s>=60?(Math.floor(s/60)+':'+String(s%60).padStart(2,'0')):s+' s
 
 /* ---------- PROGRAMA ---------- */
 const DAYS=[
- {id:'pushA',n:'Push A',d:'Lun',f:'Pecho',fp:'Pectoral (máquina Hammer y poleas)',fs:'Tríceps, sobre todo la cabeza larga · deltoides lateral',fx:'Día de pecho: máquina Hammer pesada y poleas, donde mejor lo notas. Puedes apretar cerca del fallo sin spotter.'},
- {id:'pullA',n:'Pull A',d:'Mar',f:'Dorsal',fp:'Dorsal ancho (tirones verticales y pullover)',fs:'Bíceps cabeza larga · braquial · deltoides posterior',fx:'Día de amplitud: jalón y pullover para el dorsal; remo con apoyo de pecho como complemento.'},
+ {id:'pullA',n:'Pull A',d:'Lun',f:'Dorsal',fp:'Dorsal ancho (tirones verticales y pullover)',fs:'Bíceps cabeza larga · braquial · deltoides posterior',fx:'Día de amplitud: jalón y pullover para el dorsal; remo con apoyo de pecho como complemento.'},
+ {id:'pushA',n:'Push A',d:'Mar',f:'Pecho',fp:'Pectoral (máquina Hammer y poleas)',fs:'Tríceps, sobre todo la cabeza larga · deltoides lateral',fx:'Día de pecho: máquina Hammer pesada y poleas, donde mejor lo notas. Puedes apretar cerca del fallo sin spotter.'},
  {id:'legsA',n:'Legs A',d:'Mié',f:'Cuádriceps',fp:'Cuádriceps',fs:'Glúteo · isquiotibiales (solo un ejercicio de curl) · gemelos',fx:'Día dominante de rodilla: hack, prensa, búlgara y extensiones.'},
- {id:'pushB',n:'Push B',d:'Jue',f:'Pecho alto · hombro',fp:'Pectoral superior y deltoides',fs:'Tríceps · braquial (curl martillo extra)',fx:'Inclinado pesado en Smith con topes para abrir y más volumen de deltoides lateral.'},
- {id:'pullB',n:'Pull B',d:'Vie',f:'Espalda media',fp:'Espalda media (romboides, trapecio medio) y dorsal',fs:'Bíceps cabeza corta · deltoides posterior',fx:'Día de grosor: dominadas y remos horizontales; el dorsal sigue trabajando, pero con más tirón horizontal que el Pull A.'},
+ {id:'pullB',n:'Pull B',d:'Jue',f:'Espalda media',fp:'Espalda media (romboides, trapecio medio) y dorsal',fs:'Bíceps cabeza corta · deltoides posterior',fx:'Día de grosor: dominadas y remos horizontales; el dorsal sigue trabajando, pero con más tirón horizontal que el Pull A.'},
+ {id:'pushB',n:'Push B',d:'Vie',f:'Pecho alto · hombro',fp:'Pectoral superior y deltoides',fs:'Tríceps · braquial (curl martillo extra)',fx:'Inclinado pesado en Smith con topes para abrir y más volumen de deltoides lateral.'},
  {id:'legsB',n:'Legs B',d:'Sáb',f:'Glúteo · femoral',fp:'Glúteo mayor e isquiotibiales',fs:'Cuádriceps (prensa con pies altos y zancadas) · glúteo medio · dorsal (jalón extra)',fx:'Día dominante de cadera, pero sin bisagras cargadas: hip thrust y curl femoral sustituyen al peso muerto rumano.'}];
 const dayName=id=>(DAYS.find(d=>d.id===id)||{}).n||id;
 const WEEKS=[null,
@@ -698,7 +698,7 @@ const sameDay=t=>{const a=new Date(t),b=new Date();return a.toDateString()===b.t
 /* ---------- PANTALLA DE INICIO ---------- */
 let P=null;
 function suggest(){let best=null;for(const[k,l]of Object.entries(S.log))if(l.t1&&(!best||l.t1>best.t)){const[w,d]=k.split('|');best={w:+w,d,t:l.t1}}
-  if(!best)return{w:1,d:'pushA'};let w=best.w,i=DAYS.findIndex(x=>x.id===best.d);for(let n=0;n<48;n++){i++;if(i>=DAYS.length){i=0;w++}if(w>8)return{w:8,d:'legsB'};const l=L(w,DAYS[i].id);if(!l||!l.t1)return{w,d:DAYS[i].id}}return{w:8,d:'legsB'}}
+  if(!best)return{w:1,d:DAYS[0].id};for(let w=best.w;w<=8;w++)for(const d of DAYS){const l=L(w,d.id);if(!l||!l.t1)return{w,d:d.id}}return{w:8,d:DAYS[DAYS.length-1].id}}
 function ongoing(){for(const[k,l]of Object.entries(S.log))if(l.t0&&!l.t1&&Date.now()-l.t0<5*3600e3){const[w,d]=k.split('|');return{w:+w,d,l}}return null}
 function autoAlts(w,d,pre){const out=[];for(const ex of EX[d]){const v=[];for(let pw=1;pw<=8;pw++){if(pw===w)continue;const l=L(pw,d),e=l&&l.ex[ex.id];if(e&&e.m!=null)v.push(e.m)}const hi=v.filter(x=>x>=3).length,last=v[v.length-1];if(hi>=2||(pre!=null&&pre>=3&&last>=3))out.push({ex,last})}return out}
 function openStart(keep){const sg=suggest();P={w:S.w,d:S.d,pain:null,sg};const l=cur();if(!keep&&!(l&&l.t0&&!l.t1)){P.w=sg.w;P.d=sg.d}if(keep&&l&&l.pre!=null)P.pain=l.pre;renderStart();START=true;showTab('train')}

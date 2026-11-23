@@ -1,5 +1,5 @@
 // Cambia la versión cada vez que actualices los archivos para forzar la recarga.
-const VERSION = 'ppl-lumbar-v9';
+const VERSION = 'ppl-lumbar-v10';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
