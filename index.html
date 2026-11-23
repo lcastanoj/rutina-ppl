@@ -97,6 +97,7 @@ ol.wu{margin:0;padding-left:20px}ol.wu li{margin:6px 0}
 .start{position:fixed;inset:0;z-index:45;background:var(--bg);overflow-y:auto;padding:env(safe-area-inset-top) 0 calc(24px + env(safe-area-inset-bottom))}.start[hidden]{display:none}
 .start .days button.sug{border-color:#5f4718}.sugt{font-size:11px;color:#f3c77a;font-weight:700}
 .prev2{margin-top:14px;padding:14px;border-radius:14px;background:var(--panel);border:1px solid var(--line)}.prev2 h3{font-size:26px}.prev2 ul{margin:8px 0 0;padding-left:20px}.prev2 li{margin:4px 0;color:#d3d6d8}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:10px}.stats>div{background:#0f1214;border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center}.stats b{display:block;font:700 22px/1.1 var(--hd);font-variant-numeric:tabular-nums}.stats small{font-size:12px;color:var(--mute)}
 .finish{margin-top:18px;padding:16px;border-radius:16px;background:var(--panel);border:1px solid var(--line)}
 .finish h2{font-size:28px}
 .pain{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin-top:10px}
@@ -180,6 +181,7 @@ textarea{width:100%;min-height:130px;border-radius:10px;border:1px solid var(--l
   <h2 style="font-size:40px;margin-top:18px">¿Qué toca hoy?</h2>
   <div id="startBody"></div>
 </div></div>
+<div class="modal" id="endM" hidden><div class="sheet" id="endS"></div></div>
 <div class="modal" id="dlg" hidden><div class="sheet">
   <h3 id="dlgT"></h3><div id="dlgB" style="margin-top:8px;color:#d3d6d8"></div>
   <div class="row"><button class="btn ghost" id="dlgNo">Cancelar</button><button class="btn" id="dlgOk">Confirmar</button></div>
@@ -337,7 +339,8 @@ function renderTrain(){
    <p>${W.txt}</p>
    <div class="prog"><div class="bar"><i id="pbar" style="width:${pr.t?pr.n/pr.t*100:0}%"></i></div><b id="ptxt">${pr.n}/${pr.t}</b></div>
   </div>
-  <div class="finish" style="margin-top:12px"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><h2 style="flex:1">${MODES[mode].t}</h2><button class="btn ghost sm" data-open-start="1">Cambiar día o dolor</button></div>
+  ${l&&l.t1?summaryBox(S.w,S.d):''}
+  <div class="finish" id="modeBox" style="margin-top:12px"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><h2 style="flex:1">${MODES[mode].t}</h2><button class="btn ghost sm" data-open-start="1">Cambiar día o dolor</button></div>
    <p class="note" style="margin:4px 0 0">Dolor lumbar antes de empezar: <b>${l&&l.pre!=null?l.pre+'/10':'sin registrar'}</b>. Tócalo para corregirlo: la sesión se recalcula.</p>${scale('pre',l&&l.pre)}${preMsg(l&&l.pre)}
    ${mode==='recuperacion'?`<div class="msg x">Hoy: calentamiento${list.some(x=>x.core)?', bloque lumbar en fase 1':''} y 15–20 min de cardio suave (bici o caminadora sin inclinación). La fuerza está oculta.</div><div class="row"><button class="btn ghost" data-showall="1">${l&&l.showAll?'Ocultar fuerza otra vez':'Mostrar la fuerza igualmente'}</button></div>`:''}
    ${l&&l.autoAlt&&l.autoAlt.length?`<div class="msg w">Cambiados a su alternativa por molestias anteriores: ${l.autoAlt.map(id=>{const e=list.find(x=>x.id===id);return e?esc(e.n):''}).filter(Boolean).join(', ')}.</div>`:''}
@@ -349,11 +352,11 @@ function renderTrain(){
     const lbl=!first||!hasCore?'':ex.core?`<div class="lbl" style="margin-top:22px">Bloque lumbar · justo después del calentamiento · fase ${ph}${mode!=='normal'?' (bajada por el dolor de hoy)':''}</div><p class="note" style="margin:0">2 series, sin llegar al temblor: termina sintiendo que podrías hacer el doble. Es activación, no agotamiento.</p>`:`<div class="lbl" style="margin-top:22px">Fuerza</div>`;
     return lbl+card(ex,xi,pos)}).join('');
   const pain=l&&l.pain;
-  h+=`<div class="finish"><h2>Cierre de la sesión</h2><p class="note" style="margin:4px 0 0">Dolor lumbar al terminar (0–10). Tu basal es 0–2.</p>
+  h+=`<div class="finish" id="endBox"><h2>Cierre de la sesión</h2><p class="note" style="margin:4px 0 0">Dolor lumbar al terminar (0–10). Tu basal es 0–2.</p>
    <div class="pain">${[0,1,2,3,4,5,6,7,8,9,10].map(v=>`<button data-pain="${v}" class="${v<=2?'g':v<=4?'a':'x'}" aria-pressed="${pain===v}">${v}</button>`).join('')}</div>
    ${painMsg(pain)}
    ${l&&l.pre!=null&&pain!=null?`<div class="msg ${pain-l.pre>=2?'x':pain>l.pre?'w':'ok'}">Antes ${l.pre} → después ${pain} (${pain-l.pre>0?'+':''}${pain-l.pre}). ${pain-l.pre>=2?'La sesión subió el dolor 2 puntos o más: revisa qué ejercicios marcaron molestia.':pain>l.pre?'Subida leve: confirma mañana que vuelva a tu basal.':'La sesión no subió el dolor.'}</div>`:''}
-   <div class="row"><button class="btn blue" id="finBtn">${l&&l.t1?'Reanudar sesión':'Terminar sesión'}</button></div>
+   <div class="row"><button class="btn blue" id="finBtn">${l&&l.t1?'Reabrir sesión (seguir anotando)':'Terminar sesión'}</button></div>
    <div class="row"><button class="btn ghost" id="rstDay">Reiniciar día</button><button class="btn ghost" id="rstWeek">Reiniciar semana ${S.w}</button></div>
    ${storeOK?'':'<div class="msg x">Este navegador no está dejando guardar datos. Exporta tu historial en «Datos» antes de cerrar.</div>'}
   </div>`;
@@ -410,7 +413,7 @@ function stopRest(){R=null;$('#dock').classList.remove('show','end')}
 function updateClock(){
   const l=cur(),c=$('#clock'),b=$('#sessBtn');
   if(!l||!l.t0){c.textContent='0:00';c.className='clock off';b.textContent='Iniciar';return}
-  const end=l.t1||Date.now();c.textContent=fmt((end-l.t0)/1000);c.className='clock '+(l.t1?'off':'run');b.textContent=l.t1?'Hecha':'Terminar';
+  const end=l.t1||Date.now();c.textContent=fmt((end-l.t0)/1000);c.className='clock '+(l.t1?'off':'run');b.textContent=l.t1?'Nueva':'Terminar';
 }
 function tick(){
   updateClock();
@@ -471,13 +474,14 @@ $('#v-train').addEventListener('click',async e=>{
   if(b.dataset.showall){const l=cur(true);l.showAll=!l.showAll;save();renderTrain();return}
   if(b.dataset.mol){const ex=EX[S.d][+b.dataset.mol];openMol.has(ex.id)?openMol.delete(ex.id):openMol.add(ex.id);const y=scrollY;renderTrain();scrollTo({top:y});return}
   if(b.dataset.molv){const[xi,v]=b.dataset.molv.split('|').map(Number),ex=EX[S.d][xi],l=cur(true),k=keyOf(ex,l),e=l.ex[k]||(l.ex[k]={s:[]});e.m=e.m===v?null:v;save();const y=scrollY;renderTrain();scrollTo({top:y});return}
-  if(b.dataset.pain){const l=cur(true),v=+b.dataset.pain;l.pain=l.pain===v?null:v;save();renderTrain();document.querySelector('.finish').scrollIntoView({block:'start'});return}
-  if(b.id==='finBtn'){const l=cur(true);if(l.t1)l.t1=null;else{if(!l.t0)l.t0=Date.now();l.t1=Date.now();stopRest()}save();renderTrain();document.querySelector('.finish').scrollIntoView({block:'start'});return}
+  if(b.dataset.pain){const l=cur(true),v=+b.dataset.pain;l.pain=l.pain===v?null:v;save();renderTrain();$('#endBox').scrollIntoView({block:'start'});return}
+  if(b.id==='finBtn'){const l=cur(true);if(l.t1){l.t1=null;save();renderTrain();return}openEnd();return}
+  if(b.dataset.sumNew){openStart();return}
   if(b.id==='rstDay'){if(await ask('Reiniciar día',`Se borran checks, pesos, reps, alternativas, cronómetro y dolor de <b>${dayName(S.d)} · semana ${S.w}</b>. No se puede deshacer (salvo que tengas una exportación).`,'Reiniciar día')){delete S.log[S.w+'|'+S.d];stopRest();save();renderTrain()}return}
   if(b.id==='rstWeek'){if(await ask('Reiniciar semana',`Se borra todo lo registrado en los 6 días de la <b>semana ${S.w}</b>. No se puede deshacer.`,'Reiniciar semana')){for(const k of Object.keys(S.log))if(k.startsWith(S.w+'|'))delete S.log[k];stopRest();save();renderTrain()}return}
 });
 $('#v-train').addEventListener('input',e=>{const t=e.target;if(!t.dataset.in)return;const[xi,i,f]=t.dataset.in.split('|');const st=getSet(EX[S.d][+xi],+i);st[f]=t.value.slice(0,12);save()});
-$('#sessBtn').addEventListener('click',()=>{audio();const l=cur(true);if(!l.t0){openStart();return}if($('#v-train').hidden)showTab('train');document.querySelector('.finish')?.scrollIntoView({block:'start'})});
+$('#sessBtn').addEventListener('click',()=>{audio();const l=cur();if(!l||!l.t0||l.t1){openStart();return}openEnd()});
 $('#dock').addEventListener('click',e=>{const b=e.target.closest('[data-rest]');if(!b||!R)return;const v=b.dataset.rest;if(v==='skip'){stopRest();return}R.end+=(+v)*1000;R.total=Math.max(R.total,(R.end-Date.now())/1000);if(R.done&&R.end>Date.now()){R.done=false;$('#dock').classList.remove('end')}tick()});
 $('#isoX').onclick=()=>{ISO=null;$('#isoM').hidden=true};
 $('#isoDone').onclick=()=>{if(ISO)isoFinish(false)};
@@ -642,13 +646,54 @@ setInterval(wake,3000);document.addEventListener('visibilitychange',()=>{if(docu
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 if('serviceWorker'in navigator&&location.protocol==='https:'){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})})}
 
+/* ---------- TERMINAR SESIÓN ---------- */
+let EP=null;
+function sessStats(w,d){
+  const l=L(w,d)||{},pr=prog(w,d),exs=EX[d].filter(ex=>!spec(ex,w,d).hidden);
+  const full=exs.filter(ex=>{const sp=spec(ex,w,d),s=setsOf(w,d,ex);return[...Array(sp.sets).keys()].every(i=>s[i]&&s[i].d)}).length;
+  const mol=[],up=[];
+  for(const ex of exs){const k=keyOf(ex,l),e=l.ex&&l.ex[k],nm=isAlt(ex,l)?ex.alt.n:spec(ex,w,d).name;
+    if(e&&e.m!=null&&e.m>=3)mol.push(nm+' ('+e.m+')');
+    const mx=a=>Math.max(0,...(a||[]).map(x=>parseFloat(String(x.w).replace(',','.'))||0));
+    const now=mx(e&&e.s);if(now>0){let before=0;for(let pw=1;pw<w;pw++){const pl=L(pw,d),pe=pl&&pl.ex[k];before=Math.max(before,mx(pe&&pe.s))}if(before>0&&now>before)up.push(nm+' '+before+' → '+now+' kg')}}
+  return{dur:l.t0?((l.t1||Date.now())-l.t0)/1000:0,n:pr.n,t:pr.t,full,total:exs.length,pre:l.pre,pain:l.pain,mol,up};
+}
+function summaryBox(w,d){
+  const st=sessStats(w,d),dn=dayName(d),sg=suggest();
+  return`<div class="finish" id="sumBox" style="margin-top:12px;border-color:#25553a;background:#10241a">
+   <h2>✓ ${dn} terminada</h2>
+   <div class="stats"><div><b>${fmt(st.dur)}</b><small>duración</small></div><div><b>${st.n}/${st.t}</b><small>series</small></div><div><b>${st.pre!=null?st.pre:'–'} → ${st.pain!=null?st.pain:'–'}</b><small>dolor antes → después</small></div></div>
+   ${st.up.length?`<p style="margin:10px 0 0"><b>Subiste carga:</b> ${esc(st.up.join(' · '))}</p>`:''}
+   ${st.mol.length?`<p style="margin:6px 0 0;color:#f3c77a"><b>Molestia ≥3:</b> ${esc(st.mol.join(' · '))}</p>`:''}
+   ${st.n<st.t?`<p class="note" style="margin:6px 0 0">Quedaron ${st.t-st.n} series sin marcar.</p>`:''}
+   <p class="note" style="margin:8px 0 0">Siguiente: <b>${dayName(sg.d)} · semana ${sg.w}</b>. Puedes seguir viendo esta sesión aquí abajo.</p>
+   <div class="row"><button class="btn blue" data-sum-new="1">Empezar la siguiente</button></div></div>`;
+}
+function openEnd(){const l=cur(true);EP=l.pain!=null?l.pain:null;renderEnd();$('#endM').hidden=false}
+function renderEnd(){
+  const st=sessStats(S.w,S.d),miss=st.t-st.n;
+  $('#endS').innerHTML=`<h3>Terminar ${dayName(S.d)}</h3>
+   <div class="stats" style="margin-top:10px"><div><b>${fmt(st.dur)}</b><small>duración</small></div><div><b>${st.n}/${st.t}</b><small>series</small></div><div><b>${st.full}/${st.total}</b><small>ejercicios completos</small></div></div>
+   ${miss?`<div class="msg w">Te faltan ${miss} series. Si terminas ahora, quedan guardadas como no hechas; puedes reabrir la sesión después.</div>`:''}
+   <div class="lbl">Dolor lumbar ahora (0–10)${st.pre!=null?' · antes de empezar: '+st.pre:''}</div>${scale('end-p',EP)}
+   ${painMsg(EP)}
+   <div class="row"><button class="btn" data-end-go="1">Terminar sesión</button></div>
+   <div class="row"><button class="btn ghost" data-end-no="1">Seguir entrenando</button></div>`;
+}
+$('#endM').addEventListener('click',e=>{const b=e.target.closest('button');if(!b){if(e.target.id==='endM')$('#endM').hidden=true;return}const D=b.dataset;
+  if(D.endP!=null){const v=+D.endP;EP=EP===v?null:v;renderEnd();return}
+  if(D.endNo){$('#endM').hidden=true;return}
+  if(D.endGo){const l=cur(true);if(EP!=null)l.pain=EP;if(!l.t0)l.t0=Date.now();l.t1=Date.now();stopRest();save();$('#endM').hidden=true;if($('#v-train').hidden)showTab('train');else renderTrain();setTimeout(()=>$('#sumBox')?.scrollIntoView({block:'start'}),60);beep(2,700,.15)}
+});
+const sameDay=t=>{const a=new Date(t),b=new Date();return a.toDateString()===b.toDateString()};
+
 /* ---------- PANTALLA DE INICIO ---------- */
 let P=null;
 function suggest(){let best=null;for(const[k,l]of Object.entries(S.log))if(l.t1&&(!best||l.t1>best.t)){const[w,d]=k.split('|');best={w:+w,d,t:l.t1}}
   if(!best)return{w:1,d:'pushA'};let w=best.w,i=DAYS.findIndex(x=>x.id===best.d);for(let n=0;n<48;n++){i++;if(i>=DAYS.length){i=0;w++}if(w>8)return{w:8,d:'legsB'};const l=L(w,DAYS[i].id);if(!l||!l.t1)return{w,d:DAYS[i].id}}return{w:8,d:'legsB'}}
 function ongoing(){for(const[k,l]of Object.entries(S.log))if(l.t0&&!l.t1&&Date.now()-l.t0<5*3600e3){const[w,d]=k.split('|');return{w:+w,d,l}}return null}
 function autoAlts(w,d,pre){const out=[];for(const ex of EX[d]){const v=[];for(let pw=1;pw<=8;pw++){if(pw===w)continue;const l=L(pw,d),e=l&&l.ex[ex.id];if(e&&e.m!=null)v.push(e.m)}const hi=v.filter(x=>x>=3).length,last=v[v.length-1];if(hi>=2||(pre!=null&&pre>=3&&last>=3))out.push({ex,last})}return out}
-function openStart(keep){const sg=suggest();P={w:S.w,d:S.d,pain:null,sg};const l=cur();if(!keep&&!(l&&l.t0)){P.w=sg.w;P.d=sg.d}if(keep&&l&&l.pre!=null)P.pain=l.pre;renderStart();$('#startM').hidden=false;$('#startM').scrollTop=0}
+function openStart(keep){const sg=suggest();P={w:S.w,d:S.d,pain:null,sg};const l=cur();if(!keep&&!(l&&l.t0&&!l.t1)){P.w=sg.w;P.d=sg.d}if(keep&&l&&l.pre!=null)P.pain=l.pre;renderStart();$('#startM').hidden=false;$('#startM').scrollTop=0}
 function renderStart(){
   const og=ongoing(),m=modeFor(P.pain,P.d),W=WEEKS[P.w],ex=EX[P.d],lumb=/^(pull|legs)/.test(P.d);
   const alts=P.pain==null?[]:autoAlts(P.w,P.d,P.pain);
@@ -661,7 +706,8 @@ function renderStart(){
      :m==='ajustada'?['Sin series extra ★ y RIR +1 en todo.','No subas cargas hoy: repite las de la semana anterior o baja un 10 %.',core?`Bloque lumbar en fase ${ph+1} (una por debajo de la de esta semana).`:'',!lumb?'Push: todo sentado o apoyado. Si la extensión de tríceps de pie te hace arquear, usa su alternativa sentada.':'']
      :[core?'Solo calentamiento lumbar, bloque lumbar en fase 1 y 15–20 min de cardio suave.':'Solo calentamiento lumbar y 15–20 min de cardio suave.','La fuerza queda oculta; puedes mostrarla desde la sesión si al calentar el dolor baja a 0–2.','Si el dolor no baja en unos días o va hacia la pierna, consulta (Guía → Señales de alerta).'];
    pv=`<h3>${MODES[m].t}</h3><ul>${items.filter(Boolean).map(x=>`<li>${x}</li>`).join('')}${alts.map(a=>`<li>Cambio a alternativa: <b>${esc(a.ex.n)}</b> → ${esc(a.ex.alt.n)} (última molestia ${a.last}/10).</li>`).join('')}</ul>`}
-  $('#startBody').innerHTML=`${og?`<div class="msg w" style="margin-top:12px">Tienes <b>${dayName(og.d)} · semana ${og.w}</b> en curso (${fmt((Date.now()-og.l.t0)/1000)}).</div><div class="row"><button class="btn blue" data-st-cont="1">Continuar esa sesión</button></div>`:''}
+  const today=Object.entries(S.log).filter(([k,l])=>l.t1&&sameDay(l.t1)).map(([k,l])=>{const[w,d]=k.split('|');return{w:+w,d,l}});
+  $('#startBody').innerHTML=`${today.map(t=>`<div class="msg ok" style="margin-top:12px">Hoy terminaste <b>${dayName(t.d)} · semana ${t.w}</b> (${fmt((t.l.t1-t.l.t0)/1000)}).</div><div class="row"><button class="btn ghost" data-st-view="${t.w}|${t.d}">Ver resumen de hoy</button></div>`).join('')}${og?`<div class="msg w" style="margin-top:12px">Tienes <b>${dayName(og.d)} · semana ${og.w}</b> en curso (${fmt((Date.now()-og.l.t0)/1000)}).</div><div class="row"><button class="btn blue" data-st-cont="1">Continuar esa sesión</button></div>`:''}
    <div class="lbl">Semana</div><div class="weeks">${[1,2,3,4,5,6,7,8].map(w=>`<button data-st-w="${w}" class="${WEEKS[w].dl?'dl':''}" aria-pressed="${w===P.w}">${w}</button>`).join('')}</div>
    <div class="lbl">Día</div><div class="days">${DAYS.map(d=>{const lg=L(P.w,d.id),sg=P.sg.w===P.w&&P.sg.d===d.id;return`<button data-st-d="${d.id}" class="${sg?'sug':''}" aria-pressed="${d.id===P.d}"><b>${d.n}</b><span>${d.f}${lg&&lg.t1?' · hecho':''}</span>${sg?'<span class="sugt">Sugerido</span>':''}</button>`}).join('')}</div>
    <div class="lbl">Dolor lumbar ahora (0–10) · tu basal es 0–2</div>${scale('st-p',P.pain)}
@@ -675,6 +721,7 @@ $('#startM').addEventListener('click',e=>{
   if(D.stW){P.w=+D.stW;renderStart();return}
   if(D.stD){P.d=D.stD;renderStart();return}
   if(D.stP!=null){const v=+D.stP;P.pain=P.pain===v?null:v;renderStart();return}
+  if(D.stView){const[w,d]=D.stView.split('|');S.w=+w;S.d=d;save();$('#startM').hidden=true;showTab('train');setTimeout(()=>$('#sumBox')?.scrollIntoView({block:'start'}),60);return}
   if(D.stCont){const og=ongoing();S.w=og.w;S.d=og.d;save();$('#startM').hidden=true;showTab('train');return}
   if(D.stClose){$('#startM').hidden=true;renderTrain();return}
   if(D.stGo&&P.pain!=null){S.w=P.w;S.d=P.d;const l=cur(true);l.pre=P.pain;l.mode=modeFor(P.pain,P.d);l.showAll=false;
