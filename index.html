@@ -330,7 +330,9 @@ const buzz=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
 function renderTrain(){
   const W=WEEKS[S.w],l=cur(),list=EX[S.d],day=DAYS.find(d=>d.id===S.d),ph=phaseFor(S.w,S.d)+1,mode=modeOf(S.w,S.d);
   const pr=prog(S.w,S.d);
-  let h=`<div class="lbl">Semana</div><div class="weeks">${[1,2,3,4,5,6,7,8].map(w=>`<button data-w="${w}" class="${WEEKS[w].dl?'dl':''}" aria-pressed="${w===S.w}" aria-label="Semana ${w}${WEEKS[w].dl?' (descarga)':''}">${w}</button>`).join('')}</div>
+  let h='';
+  if(LAST&&!(LAST.w===S.w&&LAST.d===S.d)){const st=sessStats(LAST.w,LAST.d);h+=`<div class="msg ok" style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center"><span style="flex:1 1 200px">✓ <b>${dayName(LAST.d)} · semana ${LAST.w}</b> terminada: ${fmt(st.dur)} · ${st.n}/${st.t} series · dolor ${st.pre!=null?st.pre:'–'} → ${st.pain!=null?st.pain:'–'}${st.up.length?' · subiste carga en '+st.up.length:''}. Ahora toca <b>${dayName(S.d)}</b>.</span><button class="btn ghost sm" data-view-done="1">Ver resumen</button></div>`}
+  h+=`<div class="lbl">Semana</div><div class="weeks">${[1,2,3,4,5,6,7,8].map(w=>`<button data-w="${w}" class="${WEEKS[w].dl?'dl':''}" aria-pressed="${w===S.w}" aria-label="Semana ${w}${WEEKS[w].dl?' (descarga)':''}">${w}</button>`).join('')}</div>
   <div class="lbl">Día</div><div class="days">${DAYS.map(d=>{const p=prog(S.w,d.id),lg=L(S.w,d.id);return`<button data-d="${d.id}" aria-pressed="${d.id===S.d}"><b>${d.n}</b><span>${d.d} · ${d.f}${lg&&lg.pain!=null?' · dolor '+lg.pain:''}</span><div class="mini"><i style="width:${p.t?Math.round(p.n/p.t*100):0}%"></i></div></button>`}).join('')}</div>
   <div class="dayhead"><h2>${day.n} · Semana ${S.w}</h2>
    <div class="meta"><span class="pill ${W.dl?'w':'r'}">${W.t}</span><span class="pill">RIR compuestos ${W.rir}</span><span class="pill">RIR aislamiento ${W.rirI}</span><span class="pill b">Lumbar fase ${ph}</span></div>
@@ -477,6 +479,8 @@ $('#v-train').addEventListener('click',async e=>{
   if(b.dataset.pain){const l=cur(true),v=+b.dataset.pain;l.pain=l.pain===v?null:v;save();renderTrain();$('#endBox').scrollIntoView({block:'start'});return}
   if(b.id==='finBtn'){const l=cur(true);if(l.t1){l.t1=null;save();renderTrain();return}openEnd();return}
   if(b.dataset.sumNew){openStart();return}
+  if(b.dataset.goNext){const sg=suggest();S.w=sg.w;S.d=sg.d;save();renderTrain();scrollTo({top:0});return}
+  if(b.dataset.viewDone&&LAST){S.w=LAST.w;S.d=LAST.d;save();renderTrain();setTimeout(()=>$('#sumBox')?.scrollIntoView({block:'start'}),60);return}
   if(b.id==='rstDay'){if(await ask('Reiniciar día',`Se borran checks, pesos, reps, alternativas, cronómetro y dolor de <b>${dayName(S.d)} · semana ${S.w}</b>. No se puede deshacer (salvo que tengas una exportación).`,'Reiniciar día')){delete S.log[S.w+'|'+S.d];stopRest();save();renderTrain()}return}
   if(b.id==='rstWeek'){if(await ask('Reiniciar semana',`Se borra todo lo registrado en los 6 días de la <b>semana ${S.w}</b>. No se puede deshacer.`,'Reiniciar semana')){for(const k of Object.keys(S.log))if(k.startsWith(S.w+'|'))delete S.log[k];stopRest();save();renderTrain()}return}
 });
@@ -647,7 +651,7 @@ try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}ca
 if('serviceWorker'in navigator&&location.protocol==='https:'){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})})}
 
 /* ---------- TERMINAR SESIÓN ---------- */
-let EP=null;
+let EP=null,LAST=null;
 function sessStats(w,d){
   const l=L(w,d)||{},pr=prog(w,d),exs=EX[d].filter(ex=>!spec(ex,w,d).hidden);
   const full=exs.filter(ex=>{const sp=spec(ex,w,d),s=setsOf(w,d,ex);return[...Array(sp.sets).keys()].every(i=>s[i]&&s[i].d)}).length;
@@ -666,8 +670,8 @@ function summaryBox(w,d){
    ${st.up.length?`<p style="margin:10px 0 0"><b>Subiste carga:</b> ${esc(st.up.join(' · '))}</p>`:''}
    ${st.mol.length?`<p style="margin:6px 0 0;color:#f3c77a"><b>Molestia ≥3:</b> ${esc(st.mol.join(' · '))}</p>`:''}
    ${st.n<st.t?`<p class="note" style="margin:6px 0 0">Quedaron ${st.t-st.n} series sin marcar.</p>`:''}
-   <p class="note" style="margin:8px 0 0">Siguiente: <b>${dayName(sg.d)} · semana ${sg.w}</b>. Puedes seguir viendo esta sesión aquí abajo.</p>
-   <div class="row"><button class="btn blue" data-sum-new="1">Empezar la siguiente</button></div></div>`;
+   <p class="note" style="margin:8px 0 0">Siguiente: <b>${dayName(sg.d)} · semana ${sg.w}</b>.</p>
+   <div class="row"><button class="btn blue" data-go-next="1">Ir a ${dayName(sg.d)}</button></div></div>`;
 }
 function openEnd(){const l=cur(true);EP=l.pain!=null?l.pain:null;renderEnd();$('#endM').hidden=false}
 function renderEnd(){
@@ -683,7 +687,7 @@ function renderEnd(){
 $('#endM').addEventListener('click',e=>{const b=e.target.closest('button');if(!b){if(e.target.id==='endM')$('#endM').hidden=true;return}const D=b.dataset;
   if(D.endP!=null){const v=+D.endP;EP=EP===v?null:v;renderEnd();return}
   if(D.endNo){$('#endM').hidden=true;return}
-  if(D.endGo){const l=cur(true);if(EP!=null)l.pain=EP;if(!l.t0)l.t0=Date.now();l.t1=Date.now();stopRest();save();$('#endM').hidden=true;if($('#v-train').hidden)showTab('train');else renderTrain();setTimeout(()=>$('#sumBox')?.scrollIntoView({block:'start'}),60);beep(2,700,.15)}
+  if(D.endGo){const l=cur(true);if(EP!=null)l.pain=EP;if(!l.t0)l.t0=Date.now();l.t1=Date.now();stopRest();LAST={w:S.w,d:S.d};const sg=suggest();S.w=sg.w;S.d=sg.d;save();$('#endM').hidden=true;showTab('train');beep(2,700,.15)}
 });
 const sameDay=t=>{const a=new Date(t),b=new Date();return a.toDateString()===b.toDateString()};
 
