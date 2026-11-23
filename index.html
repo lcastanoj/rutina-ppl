@@ -24,7 +24,7 @@
 :root[data-theme=light],:root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}
 html{scroll-padding-top:130px;-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Barlow,system-ui,sans-serif;overflow-x:clip;padding-bottom:calc(110px + env(safe-area-inset-bottom))}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Barlow,system-ui,sans-serif;overflow-x:clip;padding-bottom:calc(140px + env(safe-area-inset-bottom))}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;-webkit-tap-highlight-color:transparent}
 button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 h1,h2,h3{font-family:var(--hd);font-weight:700;line-height:1.05;margin:0;letter-spacing:.01em}
@@ -97,6 +97,32 @@ ol.wu{margin:0;padding-left:20px}ol.wu li{margin:6px 0}
 #startM .days button.sug{border-color:#5f4718}.sugt{font-size:11px;color:#f3c77a;font-weight:700}
 .prev2{margin-top:14px;padding:14px;border-radius:14px;background:var(--panel);border:1px solid var(--line)}.prev2 h3{font-size:26px}.prev2 ul{margin:8px 0 0;padding-left:20px}.prev2 li{margin:4px 0;color:#d3d6d8}
 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:10px}.stats>div{background:#0f1214;border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center}.stats b{display:block;font:700 22px/1.1 var(--hd);font-variant-numeric:tabular-nums}.stats small{font-size:12px;color:var(--mute)}
+.hero{margin-top:14px;padding:16px;border-radius:20px;background:radial-gradient(120% 140% at 100% 0%,#3a1715 0%,#1b1f22 45%,#15181b 100%);border:1px solid var(--line)}
+.ht{display:flex;align-items:center;gap:12px}.ht h2{font-size:clamp(40px,12vw,54px)}.ht small{color:var(--mute);font-weight:600;font-size:13px}.foc{display:inline-block;margin-top:2px;font-weight:600;color:#cfd3d6}
+.ring{width:84px;height:84px;flex:none;position:relative}.ring svg{width:100%;height:100%;transform:rotate(-90deg)}.ring b{position:absolute;inset:0;display:grid;place-items:center;font:700 24px/1 var(--hd)}.ring b small{font-size:14px;color:var(--mute)}
+.ring b{grid-auto-flow:column;align-content:center;justify-content:center}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}.chip{min-height:36px;display:inline-flex;align-items:center;padding:0 12px;border-radius:99px;background:rgba(255,255,255,.06);border:1px solid var(--line);font-size:14px;font-weight:600;white-space:nowrap}
+.chip.ok{color:#a6e7bf;border-color:#25553a}.chip.w{color:#f6d79b;border-color:#5f4718}.chip.x{color:#ffc2bd;border-color:#5a2420}
+.sec{margin:24px 2px 0;display:flex;flex-direction:column;gap:2px}.sec b{font:700 24px/1 var(--hd)}.sec span{font-size:13px;color:var(--mute)}
+.ex{transition:border-color .2s}.ex.cur{border:2px solid var(--red);box-shadow:0 8px 24px rgba(224,52,43,.12)}
+.ex.col.done{background:#141a17;border-color:#21402e}
+.exhd{display:flex;width:100%;align-items:center;gap:12px;padding:12px 14px;text-align:left;min-height:66px}
+.exhd h3{font-size:21px;line-height:1.1}.exhd .sub{display:block;font-size:13.5px;color:var(--mute);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bn{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--panel);border:1px solid var(--line);font:700 17px/1 var(--hd);flex:none;color:var(--mute)}
+.ex.cur .bn{background:var(--red);border-color:var(--red);color:#fff}.ex.done .bn{background:var(--ok);border-color:var(--ok);color:#fff}
+.now{font-size:12px;font-weight:700;color:#fff;background:var(--red);padding:3px 8px;border-radius:99px}
+.chev{font-size:22px;color:var(--mute);width:16px;text-align:center}
+.dots{display:flex;gap:4px;margin-top:6px}.dots i{width:18px;height:5px;border-radius:3px;background:var(--line)}.dots i.on{background:var(--ok)}
+.exb{padding:0 14px 4px}
+.last{margin-top:10px;padding:10px 12px;border-radius:12px;background:#121518;border:1px solid var(--line);font-size:14px;color:var(--mute)}.last b{color:var(--ink);font-size:15px}.last span{font-size:12.5px}
+details.tech{margin-top:8px}details.tech summary{cursor:pointer;color:#9cc4f2;font-weight:600;font-size:14px;min-height:36px;display:flex;align-items:center}
+.sets{padding:6px 0 10px}.set.hd span{font-size:12px;color:var(--mute);text-align:center}
+.set.nx input{border-color:#2f5f97;background:#101a26}.set.nx .chk{border-color:var(--blue);color:#9cc4f2;background:#101a26}
+.set.on input{color:#a6e7bf}
+.chk.pop{animation:pop .4s ease}@keyframes pop{0%{transform:scale(.7)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+.exf{padding:0 0 14px}
+.dnx{display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;color:#e6e8ea!important;font-size:14px!important;font-weight:600;margin-top:4px;white-space:normal!important;overflow:hidden}
+@media(prefers-reduced-motion:reduce){.chk.pop{animation:none}}
 .finish{margin-top:18px;padding:16px;border-radius:16px;background:var(--panel);border:1px solid var(--line)}
 .finish h2{font-size:28px}
 .pain{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin-top:10px}
@@ -148,7 +174,6 @@ textarea{width:100%;min-height:130px;border-radius:10px;border:1px solid var(--l
   </div>
   <nav class="tabs" role="tablist">
     <button role="tab" aria-selected="true" data-tab="train">Entreno</button>
-    <button role="tab" aria-selected="false" data-tab="guide">Guía</button>
     <button role="tab" aria-selected="false" data-tab="data">Datos</button>
   </nav>
 </div></header>
@@ -159,14 +184,13 @@ textarea{width:100%;min-height:130px;border-radius:10px;border:1px solid var(--l
     <div id="startBody"></div>
   </section>
   <section id="v-train"></section>
-  <section id="v-guide" class="guide" hidden></section>
   <section id="v-data" hidden></section>
 </main>
 
 <div class="dock" id="dock" aria-live="polite">
   <div class="rb"><i id="dockBar"></i></div>
   <div class="dockin">
-    <div class="dockt"><small id="dockName">Descanso</small><b id="dockTime">0:00</b></div>
+    <div class="dockt"><small id="dockName">Descanso</small><b id="dockTime">0:00</b><small id="dockNext" class="dnx"></small></div>
     <button class="btn ghost sm" data-rest="-15">−15</button>
     <button class="btn ghost sm" data-rest="15">+15</button>
     <button class="btn sm" data-rest="skip">Listo</button>
@@ -209,7 +233,7 @@ const WEEKS=[null,
  {t:'Pico bloque 1',rir:'1–2',rirI:'1',add:1,txt:'Semana más dura del bloque 1. Si el dolor sube, quita primero las series extra ★.'},
  {t:'Descarga',rir:'3–4',rirI:'3',add:0,dl:1,txt:'≈60 % de las series y cargas −10–15 %. Bloque lumbar vuelve al volumen de fase 1. No es opcional: aquí se consolida.'},
  {t:'Bloque 2',rir:'2',rirI:'1–2',add:1,txt:'Retoma con las cargas de semana 3–4. Bloque lumbar fase 3 si las semanas 3–4 fueron sin dolor.'},
- {t:'Bloque 2 +',rir:'1–2',rirI:'1',add:1,txt:'Empuja la doble progresión. Sentadilla con barra opcional solo si cumples los criterios (Guía).'},
+ {t:'Bloque 2 +',rir:'1–2',rirI:'1',add:1,txt:'Empuja la doble progresión. Sentadilla con barra opcional: mira la nota del hack squat en Legs A.'},
  {t:'Pico final',rir:'1',rirI:'0–1',add:1,txt:'Última serie de aislamiento cerca del fallo. Nunca al fallo en compuestos ni en el bloque lumbar. Después: semana de descarga.'}];
 const phase=w=>w<=2?0:w<=4?1:w===5?0:2;
 
@@ -245,7 +269,7 @@ pullA:[
  E('la8','Curl inverso con barra Z',3,'12–15',60,{i:1},'Agarre prono (palmas abajo), codos pegados y sin balanceo. Sube controlado y baja en 2 s.',['Curl inverso en polea baja con barra recta','Mismo agarre y tempo.']),
  ...coreBack('a').slice(0,2)],
 legsA:[
- E('lg1','Hack squat (o péndulo / belt squat)',4,'6–10',150,{opt:'Desde la semana 6, puedes cambiarla por sentadilla con barra solo si cumples los criterios de la Guía.'},'Espalda pegada al respaldo. Baja hasta donde la pelvis no se despega ni se redondea la lumbar.',['Sentadilla goblet con mancuerna','Carga delante, tronco erguido; si hace falta, a un cajón.']),
+ E('lg1','Hack squat (o péndulo / belt squat)',4,'6–10',150,{opt:'Opcional desde la semana 6: cámbiala por sentadilla con barra (en rack, con barras de seguridad) solo si llevas 2 semanas con dolor de 0–2, ninguna sesión de pierna cerró por encima de 2 y hoy marcaste 0–1. Empieza con ~50 % de tu carga de antes, 3×6–8 a RIR 3. Déjala si durante la serie pasas de 3/10 o al día siguiente estás peor que tu basal.'},'Espalda pegada al respaldo. Baja hasta donde la pelvis no se despega ni se redondea la lumbar.',['Sentadilla goblet con mancuerna','Carga delante, tronco erguido; si hace falta, a un cajón.']),
  E('lg2','Prensa de piernas (carga moderada)',3,'10–15',120,{},'La prensa pesada te molesta: trabaja en 10–15 reps y frena antes de que el coxis se despegue del asiento.',['Step-up a cajón con mancuernas','Cajón a la altura de la rodilla, sube con la pierna de arriba.']),
  E('lg3','Sentadilla búlgara con mancuernas',3,'8–10/pierna',90,{},'Mancuernas a los lados, tronco algo inclinado y columna neutra.',['Zancada inversa con mancuernas','Paso atrás controlado.']),
  E('lg4','Extensión de cuádriceps',3,'12–15',75,{i:1},'Pausa de 1 s arriba.',['Sentadilla española con banda','Banda tras las rodillas anclada delante.']),
@@ -328,49 +352,56 @@ const buzz=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
 /* ---------- RENDER ENTRENO ---------- */
 function renderTrain(){
   const W=WEEKS[S.w],l=cur(),list=EX[S.d],day=DAYS.find(d=>d.id===S.d),ph=phaseFor(S.w,S.d)+1,mode=modeOf(S.w,S.d);
-  const pr=prog(S.w,S.d);
+  const pr=prog(S.w,S.d),pct=pr.t?pr.n/pr.t:0,C=2*Math.PI*30;
   let h='';
   if(LAST&&!(LAST.w===S.w&&LAST.d===S.d)){const st=sessStats(LAST.w,LAST.d);h+=`<div class="msg ok" style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center"><span style="flex:1 1 200px">✓ <b>${dayName(LAST.d)} · semana ${LAST.w}</b> terminada: ${fmt(st.dur)} · ${st.n}/${st.t} series · dolor ${st.pre!=null?st.pre:'–'} → ${st.pain!=null?st.pain:'–'}${st.up.length?' · subiste carga en '+st.up.length:''}. Ahora toca <b>${dayName(S.d)}</b>.</span><button class="btn ghost sm" data-view-done="1">Ver resumen</button></div>`}
-  h+=`<div class="lbl">Semana</div><div class="weeks">${[1,2,3,4,5,6,7,8].map(w=>`<button data-w="${w}" class="${WEEKS[w].dl?'dl':''}" aria-pressed="${w===S.w}" aria-label="Semana ${w}${WEEKS[w].dl?' (descarga)':''}">${w}</button>`).join('')}</div>
-  <div class="lbl">Día</div><div class="days">${DAYS.map(d=>{const p=prog(S.w,d.id),lg=L(S.w,d.id);return`<button data-d="${d.id}" aria-pressed="${d.id===S.d}"><b>${d.n}</b><span>${d.d} · ${d.f}${lg&&lg.pain!=null?' · dolor '+lg.pain:''}</span><div class="mini"><i style="width:${p.t?Math.round(p.n/p.t*100):0}%"></i></div></button>`}).join('')}</div>
-  <div class="dayhead"><h2>${day.n} · Semana ${S.w}</h2>
-   <div class="meta"><span class="pill ${W.dl?'w':'r'}">${W.t}</span><span class="pill">RIR compuestos ${W.rir}</span><span class="pill">RIR aislamiento ${W.rirI}</span><span class="pill b">Lumbar fase ${ph}</span></div>
-   <div class="focus"><div><small>Enfoque principal</small><b>${day.fp}</b></div><div><small>Secundario</small><span>${day.fs}</span></div></div>
-   <p class="note" style="margin-top:6px">${day.fx}</p>
-   <p>${W.txt}</p>
-   <div class="prog"><div class="bar"><i id="pbar" style="width:${pr.t?pr.n/pr.t*100:0}%"></i></div><b id="ptxt">${pr.n}/${pr.t}</b></div>
-  </div>
+  const mc=mode==='normal'?'ok':mode==='ajustada'?'w':'x';
+  h+=`<section class="hero">
+   <div class="ht"><div style="flex:1"><small>Semana ${S.w} · ${W.t}</small><h2>${day.n}</h2><span class="foc">${day.f}</span></div>
+    <div class="ring" aria-label="${pr.n} de ${pr.t} series"><svg viewBox="0 0 72 72"><circle cx="36" cy="36" r="30" fill="none" stroke="#2c3237" stroke-width="7"/><circle cx="36" cy="36" r="30" fill="none" stroke="${pct>=1?'#36a865':'#e0342b'}" stroke-width="7" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}" style="transition:stroke-dashoffset .5s"/></svg><b>${pr.n}<small>/${pr.t}</small></b></div></div>
+   <div class="chips"><button class="chip ${mc}" data-tg="pmode">Dolor ${l&&l.pre!=null?l.pre+'/10':'–'} · ${MODES[mode].t}</button><span class="chip">RIR ${W.rir} · ${W.rirI}</span><button class="chip" data-open-start="1">Cambiar ⇄</button></div>
+  </section>
   ${l&&l.t1?summaryBox(S.w,S.d):''}
-  <div class="finish" id="modeBox" style="margin-top:12px"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><h2 style="flex:1">${MODES[mode].t}</h2><button class="btn ghost sm" data-open-start="1">Cambiar día o dolor</button></div>
-   <p class="note" style="margin:4px 0 0">Dolor lumbar antes de empezar: <b>${l&&l.pre!=null?l.pre+'/10':'sin registrar'}</b>. Tócalo para corregirlo: la sesión se recalcula.</p>${scale('pre',l&&l.pre)}${preMsg(l&&l.pre)}
+  <details class="box" data-p="pmode" id="modeBox" ${OPENP.has('pmode')||(l&&l.pre==null)||mode!=='normal'?'open':''}><summary>Dolor antes de empezar</summary><div class="in">
+   <p class="note" style="margin:0">Tócalo para corregirlo: la sesión se recalcula.</p>${scale('pre',l&&l.pre)}${preMsg(l&&l.pre)}
    ${mode==='recuperacion'?`<div class="msg x">Hoy: calentamiento${list.some(x=>x.core)?', bloque lumbar en fase 1':''} y 15–20 min de cardio suave (bici o caminadora sin inclinación). La fuerza está oculta.</div><div class="row"><button class="btn ghost" data-showall="1">${l&&l.showAll?'Ocultar fuerza otra vez':'Mostrar la fuerza igualmente'}</button></div>`:''}
    ${l&&l.autoAlt&&l.autoAlt.length?`<div class="msg w">Cambiados a su alternativa por molestias anteriores: ${l.autoAlt.map(id=>{const e=list.find(x=>x.id===id);return e?esc(e.n):''}).filter(Boolean).join(', ')}.</div>`:''}
-  </div>
-  <details class="box"><summary>Calentamiento lumbar (~8 min)</summary><div class="in"><ol class="wu">${warmup(S.d).map(x=>`<li>${x}</li>`).join('')}</ol></div></details>`;
+  </div></details>
+  <details class="box" data-p="focus" ${OPENP.has('focus')?'open':''}><summary>Enfoque del día y objetivo de la semana</summary><div class="in">
+   <div class="focus" style="margin-top:0"><div><small>Enfoque principal</small><b>${day.fp}</b></div><div><small>Secundario</small><span>${day.fs}</span></div></div>
+   <p class="note" style="margin:8px 0 0">${day.fx}</p><p style="margin:8px 0 0;color:#d3d6d8">${W.txt}</p>
+   <div class="chips"><span class="chip">RIR compuestos ${W.rir}</span><span class="chip">RIR aislamiento ${W.rirI}</span><span class="chip">Lumbar fase ${ph}</span></div></div></details>
+  <details class="box" data-p="nav" ${OPENP.has('nav')?'open':''}><summary>Ver otra semana u otro día</summary><div class="in">
+   <div class="weeks">${[1,2,3,4,5,6,7,8].map(w=>`<button data-w="${w}" class="${WEEKS[w].dl?'dl':''}" aria-pressed="${w===S.w}" aria-label="Semana ${w}${WEEKS[w].dl?' (descarga)':''}">${w}</button>`).join('')}</div>
+   <div class="days" style="margin-top:8px">${DAYS.map(d=>{const p=prog(S.w,d.id),lg=L(S.w,d.id);return`<button data-d="${d.id}" aria-pressed="${d.id===S.d}"><b>${d.n}</b><span>${d.f}${lg&&lg.t1?' · ✓':''}</span><div class="mini"><i style="width:${p.t?Math.round(p.n/p.t*100):0}%"></i></div></button>`}).join('')}</div></div></details>
+  <details class="box" data-p="wu" ${OPENP.has('wu')?'open':''}><summary>Calentamiento (~6 min)</summary><div class="in"><ol class="wu">${warmup(S.d).map(x=>`<li>${x}</li>`).join('')}</ol></div></details>`;
   const order=[...list.keys()].filter(i=>!spec(list[i],S.w).hidden).sort((a,b)=>(list[b].core?1:0)-(list[a].core?1:0)||a-b);
   const hasCore=order.some(i=>list[i].core);
+  const doneEx=xi=>{const ex=list[xi],sp=spec(ex,S.w),s=setsOf(S.w,S.d,ex);return[...Array(sp.sets).keys()].every(i=>s[i]&&s[i].d)};
+  CURX=l&&l.t1?-1:(order.find(xi=>!doneEx(xi))??-1);
   h+=order.map((xi,pos)=>{const ex=list[xi],first=pos===0||list[order[pos-1]].core!==ex.core;
-    const lbl=!first||!hasCore?'':ex.core?`<div class="lbl" style="margin-top:22px">Bloque lumbar · justo después del calentamiento · fase ${ph}${mode!=='normal'?' (bajada por el dolor de hoy)':''}</div><p class="note" style="margin:0">2 series, sin llegar al temblor: termina sintiendo que podrías hacer el doble. Es activación, no agotamiento.</p>`:`<div class="lbl" style="margin-top:22px">Fuerza</div>`;
-    return lbl+card(ex,xi,pos)}).join('');
+    const lbl=!first||!hasCore?'':ex.core?`<div class="sec"><b>Bloque lumbar</b><span>Fase ${ph}${mode!=='normal'?' (bajada por el dolor de hoy)':''} · 2 series sin llegar al temblor: es activación, no agotamiento.</span></div>`:`<div class="sec"><b>Fuerza</b></div>`;
+    return lbl+card(ex,xi,pos,doneEx(xi))}).join('');
   const pain=l&&l.pain;
   h+=`<div class="finish" id="endBox"><h2>Cierre de la sesión</h2><p class="note" style="margin:4px 0 0">Dolor lumbar al terminar (0–10). Tu basal es 0–2.</p>
-   <div class="pain">${[0,1,2,3,4,5,6,7,8,9,10].map(v=>`<button data-pain="${v}" class="${v<=2?'g':v<=4?'a':'x'}" aria-pressed="${pain===v}">${v}</button>`).join('')}</div>
+   ${scale('pain',pain)}
    ${painMsg(pain)}
    ${l&&l.pre!=null&&pain!=null?`<div class="msg ${pain-l.pre>=2?'x':pain>l.pre?'w':'ok'}">Antes ${l.pre} → después ${pain} (${pain-l.pre>0?'+':''}${pain-l.pre}). ${pain-l.pre>=2?'La sesión subió el dolor 2 puntos o más: revisa qué ejercicios marcaron molestia.':pain>l.pre?'Subida leve: confirma mañana que vuelva a tu basal.':'La sesión no subió el dolor.'}</div>`:''}
    <div class="row"><button class="btn blue" id="finBtn">${l&&l.t1?'Reabrir sesión (seguir anotando)':'Terminar sesión'}</button></div>
    <div class="row"><button class="btn ghost" id="rstDay">Reiniciar día</button><button class="btn ghost" id="rstWeek">Reiniciar semana ${S.w}</button></div>
    ${storeOK?'':'<div class="msg x">Este navegador no está dejando guardar datos. Exporta tu historial en «Datos» antes de cerrar.</div>'}
   </div>`;
-  $('#v-train').innerHTML=h;
+  $('#v-train').innerHTML=h;JUST=null;
   updateClock();
 }
+let CURX=-1,JUST=null;const OPENP=new Set(),EXP=new Set(),COL=new Set();
 const lumbarDay=d=>/^(pull|legs)/.test(d);
 const scale=(attr,val,extra='')=>`<div class="pain">${[0,1,2,3,4,5,6,7,8,9,10].map(v=>`<button data-${attr}="${extra}${v}" class="${v<=2?'g':v<=4?'a':'x'}" aria-pressed="${val===v}">${v}</button>`).join('')}</div>`;
 function preMsg(p){
   if(p==null)return'';
   if(p<=2)return'<div class="msg ok">Dentro de tu basal: sesión completa según lo planeado.</div>';
   if(p<=4)return'<div class="msg w">Hoy estás por encima de tu basal. Haz la sesión, pero sin subir cargas, quita las series extra ★ y haz el bloque lumbar con la alternativa o con los números de la fase anterior. Si el dolor sube durante la sesión, para lo que lo provoque.</div>';
-  return'<div class="msg x">Dolor alto antes de empezar. Hoy no cargues espalda ni pierna: haz el calentamiento y cardio suave (y el bloque lumbar suave si el día lo tiene). Si sigue así varios días o notas síntomas hacia la pierna, consulta (mira «Señales de alerta» en la Guía).</div>';
+  return'<div class="msg x">Dolor alto antes de empezar. Hoy no cargues espalda ni pierna: haz el calentamiento y cardio suave (y el bloque lumbar suave si el día lo tiene). Si sigue así varios días o notas síntomas hacia la pierna, consulta. Ve a urgencias si pierdes el control de la orina o las heces, o se te adormece la zona genital.</div>';
 }
 function molMsg(v){
   if(v==null)return'';
@@ -384,30 +415,38 @@ function painMsg(p){
   if(p==null)return'';
   if(p<=2)return'<div class="msg ok">Dentro de tu basal. Sigue con la progresión.</div>';
   if(p<=4)return'<div class="msg w">Por encima de tu basal. Mañana comprueba que vuelva a 0–2. Si no vuelve, la próxima sesión repite cargas (no subas) y usa alternativas en lo que moleste.</div>';
-  return'<div class="msg x">Dolor alto. Próxima sesión: baja cargas 20–30 % y quita las series extra ★. Si se repite dos sesiones seguidas, o aparece dolor hacia la pierna, hormigueo o debilidad, consulta con tu médico/fisio (mira «Señales de alerta» en la Guía).</div>';
+  return'<div class="msg x">Dolor alto. Próxima sesión: baja cargas 20–30 % y quita las series extra ★. Si se repite dos sesiones seguidas, o aparece dolor hacia la pierna, hormigueo o debilidad, consulta con tu médico o fisio. Ve a urgencias si pierdes el control de la orina o las heces, o se te adormece la zona genital.</div>';
 }
-function card(ex,xi,pos=xi){
+function bestTxt(s,iso){const d=(s||[]).filter(x=>x&&(x.w||x.r));if(!d.length)return'';return d.map(x=>(x.w||'–')+(iso?' kg':'×'+(x.r||'–'))).join(' · ')}
+function card(ex,xi,pos=xi,all=false){
   const sp=spec(ex,S.w),alt=isAlt(ex),name=alt?ex.alt.n:sp.name,cue=alt?ex.alt.c:ex.cue+(sp.note?' '+sp.note:'');
-  const pv=prev(ex),s=setsOf(S.w,S.d,ex),all=sp.sets&&[...Array(sp.sets).keys()].every(i=>s[i]&&s[i].d);
-  const rows=[...Array(sp.sets).keys()].map(i=>{const st=s[i]||{},p=pv&&pv.s[i]||{},on=!!st.d;
-    if(sp.iso)return`<div class="set iso ${on?'on':''}"><span class="n">${i+1}</span><button class="isob" data-iso="${xi}|${i}">▶ ${sp.iso.k>1?sp.iso.k+' × ':''}${sp.iso.h} s</button><input inputmode="decimal" data-in="${xi}|${i}|w" value="${esc(st.w)}" placeholder="${esc(p.w||'kg')}" aria-label="Carga serie ${i+1}"><button class="chk" data-chk="${xi}|${i}" aria-pressed="${on}" aria-label="Serie ${i+1} hecha">✓</button></div>`;
-    return`<div class="set ${on?'on':''}"><span class="n">${i+1}</span><input inputmode="decimal" data-in="${xi}|${i}|w" value="${esc(st.w)}" placeholder="${esc(p.w||'kg')}" aria-label="Peso serie ${i+1}"><input inputmode="numeric" data-in="${xi}|${i}|r" value="${esc(st.r)}" placeholder="${esc(p.r||'reps')}" aria-label="Reps serie ${i+1}"><button class="chk" data-chk="${xi}|${i}" aria-pressed="${on}" aria-label="Serie ${i+1} hecha">✓</button></div>`}).join('');
+  const pv=prev(ex),s=setsOf(S.w,S.d,ex),isCur=xi===CURX;
+  const open=(isCur&&!COL.has(ex.id))||EXP.has(ex.id);
+  const nDone=[...Array(sp.sets).keys()].filter(i=>s[i]&&s[i].d).length,nx=[...Array(sp.sets).keys()].find(i=>!(s[i]&&s[i].d));
+  const sub=all?(bestTxt(s.slice(0,sp.sets),sp.iso)||`${sp.sets} series hechas`):`${sp.sets} × ${esc(sp.reps)} · ${ex.core?'control':'RIR '+esc(sp.rir)} · ${fmtRest(sp.rest)}`;
+  const dots=`<span class="dots">${[...Array(sp.sets).keys()].map(i=>`<i class="${s[i]&&s[i].d?'on':''}"></i>`).join('')}</span>`;
+  const head=`<button class="exhd" data-tog="${xi}" aria-expanded="${open}"><span class="bn">${all?'✓':pos+1}</span><span style="flex:1;min-width:0"><h3>${esc(name)}${ex.p?' <span class="star">★</span>':''}</h3><span class="sub">${sub}</span>${dots}</span>${isCur?'<span class="now">Ahora</span>':''}<span class="chev">${open?'–':'+'}</span></button>`;
+  if(!open)return`<article class="ex col ${all?'done':''} ${isCur?'cur':''}" id="ex${xi}">${head}</article>`;
+  const rows=[...Array(sp.sets).keys()].map(i=>{const st=s[i]||{},p=pv&&pv.s[i]||{},on=!!st.d,cls=`${on?'on':''} ${i===nx&&!all?'nx':''}`,pop=JUST===xi+'|'+i?'pop':'';
+    if(sp.iso)return`<div class="set iso ${cls}"><span class="n">${i+1}</span><button class="isob" data-iso="${xi}|${i}">▶ ${sp.iso.k>1?sp.iso.k+' × ':''}${sp.iso.h} s</button><input inputmode="decimal" data-in="${xi}|${i}|w" value="${esc(st.w)}" placeholder="${esc(p.w||'kg')}" aria-label="Carga serie ${i+1}"><button class="chk ${pop}" data-chk="${xi}|${i}" aria-pressed="${on}" aria-label="Serie ${i+1} hecha">✓</button></div>`;
+    return`<div class="set ${cls}"><span class="n">${i+1}</span><input inputmode="decimal" data-in="${xi}|${i}|w" value="${esc(st.w)}" placeholder="${esc(p.w||'kg')}" aria-label="Peso serie ${i+1}"><input inputmode="numeric" data-in="${xi}|${i}|r" value="${esc(st.r)}" placeholder="${esc(p.r||'reps')}" aria-label="Reps serie ${i+1}"><button class="chk ${pop}" data-chk="${xi}|${i}" aria-pressed="${on}" aria-label="Serie ${i+1} hecha">✓</button></div>`}).join('');
   const ek=cur()&&cur().ex[keyOf(ex)],mol=ek&&ek.m!=null?ek.m:null,mh=molHist(ex).filter(x=>x.w!==S.w),om=openMol.has(ex.id);
-  const molTxt=mh.length?`<div class="prev">Molestia en semanas anteriores: <b>${mh.map(x=>'S'+x.w+': '+x.m).join(' · ')}</b></div>`:'';
-  const pvTxt=pv?`<div class="prev">Semana ${pv.pw}: <b>${pv.s.slice(0,Math.max(sp.sets,1)).map(x=>(x.w||'–')+(sp.iso?' kg':'×'+(x.r||'–'))).join(' · ')}</b></div>`:`<div class="prev">Sin registro previo${alt?' con la alternativa':''}.</div>`;
-  return`<article class="ex ${all?'done':''}" id="ex${xi}"><div class="exh">
-   <div class="t"><span class="num">${pos+1}</span><h3>${esc(name)}</h3>${ex.p?'<span class="star">★ prioridad</span>':''}</div>
-   ${(()=>{const m=musOf(ex.id);return m?`<div class="mus"><span class="m1">${esc(m[0])}</span>${m[1]?`<span class="m2">${esc(m[1])}</span>`:''}</div>`:''})()}
-   <div class="meta"><span class="pill r">${sp.sets} × ${esc(sp.reps)}</span><span class="pill">${ex.core?esc(sp.rir):'RIR '+esc(sp.rir)}</span><span class="pill b">Descanso ${fmtRest(sp.rest)}</span></div>
-   <p class="cue">${esc(cue)}</p>${ex.opt&&!alt?`<div class="altinfo">${esc(ex.opt)}</div>`:''}${alt&&(cur()||{}).autoAlt&&cur().autoAlt.includes(ex.id)?`<div class="altinfo">Cambiada automáticamente por molestias en sesiones anteriores.</div>`:''}${alt?`<div class="altinfo">Usando alternativa. Original: ${esc(sp.name)}</div>`:''}${pvTxt}${molTxt}</div>
-   <div class="sets">${!sp.iso?`<div class="set" style="padding:0"><span></span><span class="note" style="text-align:center">kg</span><span class="note" style="text-align:center">reps</span><span></span></div>`:''}${rows}</div>
-   <div class="exf"><button class="btn ghost sm" data-alt="${xi}">${alt?'Volver al original':'Usar alternativa'}</button><button class="btn ghost sm molb ${mol==null?'':mol<=2?'g':mol<=4?'a':'x'}" data-mol="${xi}" aria-expanded="${om}">Molestia: ${mol==null?'–':mol+'/10'}</button></div>
-   ${om?`<div class="molp"><p class="note" style="margin:0">¿Cuánto te molestó la lumbar con este ejercicio? (0 = nada). Toca el mismo número para borrarlo.</p>${scale('molv',mol,xi+'|')}${molMsg(mol)}</div>`:''}</article>`;
+  const m=musOf(ex.id);
+  const last=pv?`<div class="last">Última vez (S${pv.pw}): <b>${bestTxt(pv.s.slice(0,Math.max(sp.sets,1)),sp.iso)}</b>${!sp.iso?'<br><span>Si dejas un campo vacío, al marcar la serie se rellena con lo de la última vez.</span>':''}</div>`:`<div class="last">Primera vez${alt?' con la alternativa':''}: anota peso y reps para tener referencia la próxima semana.</div>`;
+  return`<article class="ex open ${all?'done':''} ${isCur?'cur':''}" id="ex${xi}">${head}<div class="exb">
+   ${m?`<div class="mus"><span class="m1">${esc(m[0])}</span>${m[1]?`<span class="m2">${esc(m[1])}</span>`:''}</div>`:''}
+   ${alt&&(cur()||{}).autoAlt&&cur().autoAlt.includes(ex.id)?`<div class="altinfo">Cambiada automáticamente por molestias en sesiones anteriores.</div>`:''}${alt?`<div class="altinfo">Usando alternativa. Original: ${esc(sp.name)}</div>`:''}
+   ${last}
+   ${mh.length?`<div class="prev">Molestia en semanas anteriores: <b>${mh.map(x=>'S'+x.w+': '+x.m).join(' · ')}</b></div>`:''}
+   <details class="tech"><summary>Técnica</summary><p class="cue" style="margin:6px 0 0">${esc(cue)}</p>${ex.opt&&!alt?`<div class="altinfo">${esc(ex.opt)}</div>`:''}</details>
+   <div class="sets">${!sp.iso?`<div class="set hd"><span></span><span>kg</span><span>reps</span><span></span></div>`:''}${rows}</div>
+   <div class="exf"><button class="btn ghost sm" data-alt="${xi}">${alt?'↺ Original':'⇄ Alternativa'}</button><button class="btn ghost sm molb ${mol==null?'':mol<=2?'g':mol<=4?'a':'x'}" data-mol="${xi}" aria-expanded="${om}">Molestia ${mol==null?'–':mol+'/10'}</button></div>
+   ${om?`<div class="molp"><p class="note" style="margin:0">¿Cuánto te molestó la lumbar con este ejercicio? (0 = nada). Toca el mismo número para borrarlo.</p>${scale('molv',mol,xi+'|')}${molMsg(mol)}</div>`:''}</div></article>`;
 }
 
 /* ---------- DESCANSO ---------- */
 let R=null,hideT=null;
-function startRest(sec,name){clearTimeout(hideT);R={end:Date.now()+sec*1000,total:sec,name,done:false};$('#dock').classList.add('show');$('#dock').classList.remove('end');tick()}
+function startRest(sec,name,next=''){clearTimeout(hideT);R={end:Date.now()+sec*1000,total:sec,name,done:false};$('#dockNext').textContent=next;$('#dock').classList.add('show');$('#dock').classList.remove('end');tick()}
 function stopRest(){R=null;$('#dock').classList.remove('show','end')}
 
 /* ---------- SESIÓN ---------- */
@@ -450,23 +489,37 @@ function isoFinish(complete){
 }
 
 /* ---------- ACCIONES ---------- */
+function nextInfo(xi,i){
+  const list=EX[S.d],order=[...list.keys()].filter(k=>!spec(list[k],S.w).hidden).sort((a,b)=>(list[b].core?1:0)-(list[a].core?1:0)||a-b);
+  const fmtSet=(ex,k)=>{const sp=spec(ex,S.w),pv=prev(ex),p=pv&&pv.s[k]||{},ss=setsOf(S.w,S.d,ex),st=ss[k]||{},b=k>0&&ss[k-1]||{};const w=st.w||p.w||b.w,r=st.r||p.r||b.r;return(w?w+' kg':'')+(!sp.iso&&r?(w?' × ':'')+r:'')};
+  const ex=list[xi],sp=spec(ex,S.w),s=setsOf(S.w,S.d,ex),k=[...Array(sp.sets).keys()].find(j=>!(s[j]&&s[j].d));
+  if(k!=null){const f=fmtSet(ex,k);return`Luego: serie ${k+1}/${sp.sets}${f?' · '+f:''}`}
+  for(const o of order){const e=list[o],p2=spec(e,S.w),s2=setsOf(S.w,S.d,e),k2=[...Array(p2.sets).keys()].find(j=>!(s2[j]&&s2[j].d));if(k2!=null){const f=fmtSet(e,k2);return`Siguiente ejercicio: ${isAlt(e)?e.alt.n:p2.name}${f?' · '+f:''}`}}
+  return'Era la última serie: ¡a cerrar la sesión!';
+}
 function markSet(xi,i,force){
   const ex=EX[S.d][xi],sp=spec(ex,S.w),l=cur(true),st=getSet(ex,i);
   st.d=force?1:(st.d?0:1);
-  if(st.d){if(!l.t0)l.t0=Date.now();if(l.t1)l.t1=null;const last=i===sp.sets-1;startRest(sp.rest,(isAlt(ex)?ex.alt.n:sp.name)+(last?' (siguiente ejercicio)':''))}
+  if(st.d){
+    const s=setsOf(S.w,S.d,ex),pv=prev(ex),p=pv&&pv.s[i]||{},b=i>0&&s[i-1]||{};
+    if(!st.w)st.w=b.w||p.w||'';if(!sp.iso&&!st.r)st.r=p.r||b.r||'';
+    if(!l.t0)l.t0=Date.now();if(l.t1)l.t1=null;JUST=xi+'|'+i;buzz(40);
+  }
   save();
-  const row=document.querySelector(`[data-chk="${xi}|${i}"]`);
-  if(row){row.setAttribute('aria-pressed',!!st.d);row.parentElement.classList.toggle('on',!!st.d)}
-  const s=setsOf(S.w,S.d,ex);document.getElementById('ex'+xi).classList.toggle('done',[...Array(sp.sets).keys()].every(k=>s[k]&&s[k].d));
-  const p=prog(S.w,S.d);$('#pbar').style.width=(p.t?p.n/p.t*100:0)+'%';$('#ptxt').textContent=p.n+'/'+p.t;
-  const db=document.querySelector(`[data-d="${S.d}"] .mini i`);if(db)db.style.width=(p.t?Math.round(p.n/p.t*100):0)+'%';
+  const wasCur=CURX===xi,y=scrollY;
+  if(st.d)startRest(sp.rest,(isAlt(ex)?ex.alt.n:sp.name),nextInfo(xi,i));
+  renderTrain();scrollTo({top:y});
+  if(st.d&&wasCur&&CURX!==xi&&CURX>=0){EXP.delete(ex.id);setTimeout(()=>document.getElementById('ex'+CURX)?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'}),450)}
 }
 function ask(title,body,ok='Confirmar'){return new Promise(res=>{$('#dlgT').textContent=title;$('#dlgB').innerHTML=body;$('#dlgOk').textContent=ok;$('#dlg').hidden=false;const done=v=>{$('#dlg').hidden=true;$('#dlgOk').onclick=$('#dlgNo').onclick=null;res(v)};$('#dlgOk').onclick=()=>done(true);$('#dlgNo').onclick=()=>done(false)})}
 
 $('#v-train').addEventListener('click',async e=>{
   audio();const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.tog){const ex=EX[S.d][+b.dataset.tog],isCur=+b.dataset.tog===CURX,open=b.getAttribute('aria-expanded')==='true';
+    if(isCur){open?COL.add(ex.id):COL.delete(ex.id)}else{open?EXP.delete(ex.id):EXP.add(ex.id)}const y=scrollY;renderTrain();scrollTo({top:y});return}
+  if(b.dataset.tg){OPENP.add(b.dataset.tg);renderTrain();document.querySelector(`[data-p="${b.dataset.tg}"]`)?.scrollIntoView({block:'start',behavior:'smooth'});return}
   if(b.dataset.w){S.w=+b.dataset.w;save();renderTrain();return}
-  if(b.dataset.d){S.d=b.dataset.d;save();renderTrain();scrollTo({top:0});return}
+  if(b.dataset.d){S.d=b.dataset.d;EXP.clear();COL.clear();save();renderTrain();scrollTo({top:0});return}
   if(b.dataset.chk){const[xi,i]=b.dataset.chk.split('|').map(Number);markSet(xi,i);return}
   if(b.dataset.iso){const[xi,i]=b.dataset.iso.split('|').map(Number);runIso(xi,i);return}
   if(b.dataset.alt){const ex=EX[S.d][+b.dataset.alt],l=cur(true);l.alt[ex.id]=!l.alt[ex.id];save();renderTrain();document.getElementById('ex'+b.dataset.alt)?.scrollIntoView({block:'start'});return}
@@ -483,6 +536,7 @@ $('#v-train').addEventListener('click',async e=>{
   if(b.id==='rstDay'){if(await ask('Reiniciar día',`Se borran checks, pesos, reps, alternativas, cronómetro y dolor de <b>${dayName(S.d)} · semana ${S.w}</b>. No se puede deshacer (salvo que tengas una exportación).`,'Reiniciar día')){delete S.log[S.w+'|'+S.d];stopRest();save();renderTrain()}return}
   if(b.id==='rstWeek'){if(await ask('Reiniciar semana',`Se borra todo lo registrado en los 6 días de la <b>semana ${S.w}</b>. No se puede deshacer.`,'Reiniciar semana')){for(const k of Object.keys(S.log))if(k.startsWith(S.w+'|'))delete S.log[k];stopRest();save();renderTrain()}return}
 });
+$('#v-train').addEventListener('toggle',e=>{const d=e.target;if(d.dataset&&d.dataset.p){d.open?OPENP.add(d.dataset.p):OPENP.delete(d.dataset.p)}},true);
 $('#v-train').addEventListener('input',e=>{const t=e.target;if(!t.dataset.in)return;const[xi,i,f]=t.dataset.in.split('|');const st=getSet(EX[S.d][+xi],+i);st[f]=t.value.slice(0,12);save()});
 $('#sessBtn').addEventListener('click',()=>{audio();const l=cur();if(!l||!l.t0||l.t1){openStart();return}openEnd()});
 $('#dock').addEventListener('click',e=>{const b=e.target.closest('[data-rest]');if(!b||!R)return;const v=b.dataset.rest;if(v==='skip'){stopRest();return}R.end+=(+v)*1000;R.total=Math.max(R.total,(R.end-Date.now())/1000);if(R.done&&R.end>Date.now()){R.done=false;$('#dock').classList.remove('end')}tick()});
@@ -492,7 +546,7 @@ $('#isoDone').onclick=()=>{if(ISO)isoFinish(false)};
 /* ---------- TABS ---------- */
 let START=false;
 function closeStart(){START=false;$('#startM').hidden=true;$('#v-train').hidden=!(document.querySelector('[data-tab=train]').getAttribute('aria-selected')==='true')}
-function showTab(t){for(const b of document.querySelectorAll('[data-tab]'))b.setAttribute('aria-selected',b.dataset.tab===t);for(const v of['train','guide','data'])$('#v-'+v).hidden=v!==t;
+function showTab(t){for(const b of document.querySelectorAll('[data-tab]'))b.setAttribute('aria-selected',b.dataset.tab===t);for(const v of['train','data'])$('#v-'+v).hidden=v!==t;
   const st=t==='train'&&START;$('#startM').hidden=!st;if(st){$('#v-train').hidden=true;renderStart()}
   if(t==='data')renderData();if(t==='train'&&!st)renderTrain();scrollTo({top:0})}
 document.querySelector('.tabs').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(b)showTab(b.dataset.tab)});
@@ -591,60 +645,7 @@ const DISC=[
  ['Press de banca con barra','No tienes spotter y entrenas solo: fallar una rep con la barra sobre el pecho es un riesgo real.','Máquina Hammer plana e inclinada (Push A), Smith con topes y press en polea (Push B)'],
  ['Gemelos de pie en máquina','Carga axial sobre los hombros.','Gemelos en prensa y sentado'],
  ['Prensa muy pesada','La notas cuando va pesada; la pelvis tiende a rodar.','Prensa a 10–15 reps con rango controlado']];
-$('#v-guide').innerHTML=`
-<h2>Cómo usarla</h2>
-<p>Instalada en la pantalla de inicio funciona sin conexión. Mientras la sesión está en marcha, la pantalla se mantiene encendida para que el aviso de descanso suene. Si la bloqueas, iOS pausa la app y el aviso puede no sonar. Exporta el historial de vez en cuando: es tu copia de seguridad.</p>
-<p>Elige semana y día. Al marcar una serie arranca el descanso de ese ejercicio y suena (y vibra en Android) al terminar. Los isométricos tienen botón ▶ que guía cada aguante y marca la serie al acabar. En los campos vacíos aparece en gris lo que anotaste la semana anterior. Si tienes el móvil bloqueado o la pestaña en segundo plano puede que no suene: el iPhone no vibra desde el navegador.</p>
-<h2>Progresión de 8 semanas <span class="tag cr">Criterio</span></h2>
-<div class="scroll"><table class="stack"><thead><tr><th>Sem</th><th>Fase</th><th>RIR comp. / aisl.</th><th>Series ★</th><th>Lumbar</th></tr></thead><tbody>
-${[1,2,3,4,5,6,7,8].map(w=>{const W=WEEKS[w];return`<tr><td>${w}</td><td>${W.t}</td><td>${W.rir} / ${W.rirI}</td><td>${W.dl?'≈60 % de todo':W.add?'+1':'base'}</td><td>Fase ${phase(w)+1}</td></tr>`}).join('')}
-</tbody></table></div>
-<h3>Cargas: doble progresión</h3>
-<p>Trabaja dentro del rango de reps. Cuando completes <b>todas</b> las series en el tope del rango con el RIR de la semana, sube la carga lo mínimo (2,5 kg en barra/máquina, siguiente mancuerna) y vuelve al mínimo del rango. En la semana 5 baja las cargas 10–15 %. Después de la semana 8 conviene otra descarga antes del siguiente bloque.</p>
-<p class="note">RIR = repeticiones que te quedan en reserva. RIR 2 = podrías hacer 2 más con buena técnica.</p>
-<h2>Calentamiento lumbar</h2>
-<ol class="wu">${WU_BASE.map(x=>`<li>${x}</li>`).join('')}<li>Específico del día y series de aproximación (en cada día).</li></ol>
-<h2>Bloque lumbar y core <span class="tag cr">Criterio</span></h2>
-<p>Reducido a 2 días: <b>Pull A</b> (bird dog y plancha lateral) y <b>Legs B</b> (dead bug y Pallof). Va <b>al inicio</b>, justo después del calentamiento, con máximo 2 series y unos 5 minutos: así lo haces fresco y sirve de activación, en vez de cargar una zona ya cansada al final. La progresión es de tiempo de aguante, no de series. Quité las extensiones lumbares, el pull-through, el suitcase carry, el curl-up y la plancha frontal porque te molestaban más de lo que aportaban. Prioriza resistencia y control con la columna en neutro, porque la flexión es lo que te molesta. La extensión solo llega hasta neutro, nunca más allá.</p>
-<ul><li><b>Fase 1 (sem 1–2 y 5):</b> bird dog con pausa de 5 s, plancha lateral de 20 s, dead bug lento, Pallof sin pausa.</li>
-<li><b>Fase 2 (sem 3–4):</b> pausas de 8 s, planchas de 30 s, dead bug y Pallof con 2–3 s de pausa.</li>
-<li><b>Fase 3 (sem 6–8):</b> pausas de 10 s, planchas de 40 s y banda ligera en el dead bug.</li></ul>
-<p>Si alguno de estos cuatro también te molesta (marca la molestia), usa su alternativa. Si la alternativa también molesta, quítalo y coméntaselo al fisio.</p>
-<p><b>Para pasar de fase</b> deben cumplirse las tres condiciones: dolor durante los ejercicios ≤2/10, dolor al terminar la sesión dentro de tu basal (0–2) y a la mañana siguiente no peor que antes. Si no se cumplen, repite la fase. La app avanza la fase por semana; si no cumples, usa la alternativa o los números de la fase anterior.</p>
-<h2>Sentadilla con barra: opcional <span class="tag cr">Criterio</span></h2>
-<p>Solo desde la semana 6 y solo si cumples <b>todo</b> esto: dolor basal 0–2 las últimas 2 semanas, ningún registro post-sesión de Legs por encima de 2, hack squat y búlgara sin molestia, y ese día 0–1/10 tras calentar.</p>
-<ul><li>Sustituye al hack squat como primer ejercicio de Legs A. Empieza con ~50 % de lo que movías antes, 3×6–8 a RIR 3, y sube como máximo 5 kg/semana.</li><li>Siempre en rack con las barras de seguridad a la altura de tu punto más bajo, porque entrenas sin spotter.</li><li>Barra alta, profundidad hasta donde la pelvis no se mete (sin «butt wink»).</li><li>Abandónala si durante la serie pasas de 3/10, si al día siguiente estás por encima de tu basal o si notas que la lumbar se redondea al bajar.</li></ul>
-<h2>Señales de alerta</h2>
-<h3>Para y consulta (urgencias si es lo primero)</h3>
-<ul><li>Pérdida de control de orina o heces, adormecimiento en la zona genital o entre las piernas, debilidad que avanza en una pierna: <b>urgencias</b>. <span class="tag ev">Evidencia</span></li>
-<li>Dolor que baja por la pierna (sobre todo por debajo de la rodilla), hormigueo o entumecimiento. <span class="tag ev">Evidencia</span></li>
-<li>Dolor nocturno constante que no cambia con la postura, o con fiebre o pérdida de peso sin explicación. <span class="tag ev">Evidencia</span></li></ul>
-<h3>Para el ejercicio y modifícalo <span class="tag cr">Criterio</span></h3>
-<ul><li>Dolor punzante o «pinchazo» en lugar de fatiga muscular.</li><li>Dolor durante la serie por encima de 3/10 o más de 2 puntos sobre tu basal.</li><li>Dolor que sube serie a serie.</li><li>Para terminar las reps tienes que redondear o arquear la lumbar: corta la serie.</li><li>Al día siguiente estás peor que tu basal o te dura más de 24 h.</li></ul>
-<p><b>Qué hacer, en orden:</b> 1) baja la carga 20–30 % o acorta el rango; 2) cambia a la alternativa; 3) quita ese ejercicio esa sesión; 4) si te pasa dos sesiones seguidas, consulta con tu fisio.</p>
-<h2>Medidores de dolor <span class="tag cr">Criterio</span></h2>
-<ul><li><b>Al abrir la app</b> eliges día y dolor lumbar, y la sesión se arma sola. Con 0–2 hay <b>sesión completa</b>. Con 3–4 hay <b>sesión ajustada</b>: sin series extra ★, RIR +1, sin subir cargas y el bloque lumbar una fase más abajo. Con 5 o más en Pull o Legs hay <b>recuperación</b>: calentamiento, bloque lumbar fase 1 y cardio suave. En Push, con 5 o más, la sesión es ajustada: los empujes van sentados o apoyados. Al cerrar, la app compara el dolor de antes con el de después.</li>
-<li><b>Cambio automático a alternativa</b>: al empezar, un ejercicio pasa a su alternativa si marcó molestia de 3 o más en dos sesiones, o si la última vez marcó 3 o más y hoy empiezas con dolor de 3 o más.</li>
-<li><b>Molestia por ejercicio</b>: anótala al terminar el ejercicio, solo si notaste algo en la lumbar. Con 3 o más dos veces, ese ejercicio pasa a su alternativa. En «Datos» tienes el mapa de los que más te alborotan.</li>
-<li>La molestia de un ejercicio que se nota al día siguiente no se ve en el momento: si amaneces peor que tu basal, revisa en el mapa qué ejercicios marcaron algo.</li></ul>
-<h2>Ejercicios descartados y su reemplazo</h2>
-<table class="stack"><thead><tr><th>Ejercicio típico</th><th>Por qué</th><th>Lo reemplaza</th></tr></thead><tbody>${DISC.map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')}</tbody></table>
-<h2>Qué es evidencia y qué es criterio</h2>
-<p class="note">Lo marcado como evidencia sale de conocimiento general de guías y revisiones, no de fuentes que haya consultado para esta rutina. Contrástalo con tu fisio.</p>
-<h3><span class="tag ev">Evidencia general</span></h3>
-<ul><li>Las guías clínicas recomiendan el ejercicio para el dolor lumbar crónico. No hay un tipo de ejercicio claramente superior: funciona el que toleras y haces con constancia.</li>
-<li>Para hipertrofia es habitual un rango de ~10–20 series semanales por músculo, con cada músculo entrenado al menos 2 veces por semana. Por encima de eso los beneficios son decrecientes.</li>
-<li>Entrenar a 0–3 RIR produce hipertrofia comparable. No hace falta llegar al fallo.</li>
-<li>Recomposición: proteína de ~1,6–2,2 g/kg/día, déficit calórico moderado y fuerza mantenida o en aumento.</li>
-<li>La artrosis facetaria se asocia a menudo con dolor en extensión. A ti te duele la flexión y los ejercicios de bisagra cargada. Puede que haya otro componente, o simplemente que tú respondes así: la rutina sigue tus síntomas, no el patrón «típico». Coméntalo con tu médico.</li></ul>
-<h3><span class="tag cr">Mi criterio / estimación</span></h3>
-<ul><li>Que los remos con apoyo de pecho descarguen la lumbar es razonamiento biomecánico, no un ensayo clínico concreto.</li>
-<li>La selección concreta de ejercicios, series, orden y descansos.</li>
-<li>La descarga en la semana 5 y las 3 fases del bloque lumbar. Los ejercicios tipo McGill tienen sobre todo respaldo biomecánico y clínico, con pocos ensayos que los comparen con otras opciones.</li>
-<li>Los umbrales de dolor (≤3/10, +2 sobre basal, 24 h) son una adaptación del «modelo de monitorización del dolor», que se estudió sobre todo en tendinopatías.</li>
-<li>El volumen de espalda (~30 series/semana contando deltoides posterior) está en la parte alta. Si no recuperas o las sesiones pasan de 75 min, quita primero las series extra ★ y el jalón de Legs B.</li></ul>
-<h3>Lo que no sé</h3>
-<ul><li>Tu edad, peso, cargas y el plan exacto de tu fisio. Si te dio ejercicios concretos, esos mandan sobre el bloque lumbar de aquí.</li></ul>`;
+
 
 /* ---------- APP: pantalla encendida, offline, almacenamiento ---------- */
 let WL=null;
@@ -711,7 +712,7 @@ function renderStart(){
   if(P.pain==null)pv='<p class="note" style="margin:0">Marca tu dolor lumbar de ahora para armar la sesión.</p>';
   else{const items=m==='normal'?[`${strength} ejercicios de fuerza${core?' + bloque lumbar fase '+(ph+1):''}.`,`RIR de la semana: ${W.rir} en compuestos, ${W.rirI} en aislamiento.`,W.add&&!W.dl?'Incluye las series extra ★ de espalda y bíceps.':'']
      :m==='ajustada'?['Sin series extra ★ y RIR +1 en todo.','No subas cargas hoy: repite las de la semana anterior o baja un 10 %.',core?`Bloque lumbar en fase ${ph+1} (una por debajo de la de esta semana).`:'',!lumb?'Push: todo sentado o apoyado. Si la extensión de tríceps de pie te hace arquear, usa su alternativa sentada.':'']
-     :[core?'Solo calentamiento lumbar, bloque lumbar en fase 1 y 15–20 min de cardio suave.':'Solo calentamiento lumbar y 15–20 min de cardio suave.','La fuerza queda oculta; puedes mostrarla desde la sesión si al calentar el dolor baja a 0–2.','Si el dolor no baja en unos días o va hacia la pierna, consulta (Guía → Señales de alerta).'];
+     :[core?'Solo calentamiento lumbar, bloque lumbar en fase 1 y 15–20 min de cardio suave.':'Solo calentamiento lumbar y 15–20 min de cardio suave.','La fuerza queda oculta; puedes mostrarla desde la sesión si al calentar el dolor baja a 0–2.','Si el dolor no baja en unos días o va hacia la pierna, consulta con tu médico o fisio.'];
    pv=`<h3>${MODES[m].t}</h3><ul>${items.filter(Boolean).map(x=>`<li>${x}</li>`).join('')}${alts.map(a=>`<li>Cambio a alternativa: <b>${esc(a.ex.n)}</b> → ${esc(a.ex.alt.n)} (última molestia ${a.last}/10).</li>`).join('')}</ul>`}
   const today=Object.entries(S.log).filter(([k,l])=>l.t1&&sameDay(l.t1)).map(([k,l])=>{const[w,d]=k.split('|');return{w:+w,d,l}});
   $('#startBody').innerHTML=`${today.map(t=>`<div class="msg ok" style="margin-top:12px">Hoy terminaste <b>${dayName(t.d)} · semana ${t.w}</b> (${fmt((t.l.t1-t.l.t0)/1000)}).</div><div class="row"><button class="btn ghost" data-st-view="${t.w}|${t.d}">Ver resumen de hoy</button></div>`).join('')}${og?`<div class="msg w" style="margin-top:12px">Tienes <b>${dayName(og.d)} · semana ${og.w}</b> en curso (${fmt((Date.now()-og.l.t0)/1000)}).</div><div class="row"><button class="btn blue" data-st-cont="1">Continuar esa sesión</button></div>`:''}
