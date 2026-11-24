@@ -123,6 +123,10 @@ details.tech{margin-top:8px}details.tech summary{cursor:pointer;color:#9cc4f2;fo
 .exf{padding:0 0 14px}
 .dnx{display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;color:#e6e8ea!important;font-size:14px!important;font-weight:600;margin-top:4px;white-space:normal!important;overflow:hidden}
 @media(prefers-reduced-motion:reduce){.chk.pop{animation:none}}
+.eqr{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:10px}.eqr .note{margin-right:2px}
+.qc{min-height:36px;padding:0 12px;border-radius:99px;background:var(--panel);border:1px solid var(--line);font-size:14px;font-weight:600}
+.qc[aria-pressed=true]{background:var(--blue);border-color:var(--blue);color:#fff}.qc.add{color:#9cc4f2;border-style:dashed}
+.qadd{display:flex;gap:6px;flex:1 1 100%}.qadd input{flex:1;height:40px;border-radius:10px;border:1px solid var(--line);background:#0f1214;color:var(--ink);font:500 16px Barlow,sans-serif;padding:0 10px}
 .finish{margin-top:18px;padding:16px;border-radius:16px;background:var(--panel);border:1px solid var(--line)}
 .finish h2{font-size:28px}
 .pain{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin-top:10px}
@@ -339,9 +343,15 @@ function spec(ex,w,d=S.d){
   const W=WEEKS[w],adj=m!=='normal',l=L(w,d);return{sets:W.dl?Math.max(1,Math.round(ex.s*.6)):ex.s+(ex.p&&!adj?W.add:0),reps:ex.r,rest:ex.rest,rir:adj&&!W.dl?(ex.i?W.rirI:W.rir).replace(/\d/g,n=>+n+1)+' (hoy +1)':(ex.i?W.rirI:W.rir),iso:null,name:ex.n,note:'',hidden:m==='recuperacion'&&!(l&&l.showAll)};
 }
 function setsOf(w,d,ex){const l=L(w,d);const e=l&&l.ex[keyOf(ex,l)];return e?e.s:[]}
-function getSet(ex,i){const l=cur(true);const k=keyOf(ex,l);const e=l.ex[k]||(l.ex[k]={s:[]});while(e.s.length<=i)e.s.push({d:0,w:'',r:''});return e.s[i]}
+function getSet(ex,i){const e=entry(ex);while(e.s.length<=i)e.s.push({d:0,w:'',r:''});return e.s[i]}
 function prog(w,d){let t=0,n=0;for(const ex of EX[d]){const sp=spec(ex,w,d);if(sp.hidden)continue;const s=setsOf(w,d,ex);t+=sp.sets;for(let i=0;i<sp.sets;i++)if(s[i]&&s[i].d)n++}return{t,n}}
-function prev(ex){const k=keyOf(ex);for(let pw=S.w-1;pw>=1;pw--){const l=S.log[pw+'|'+S.d];const e=l&&l.ex[k];if(e&&e.s.some(x=>x.w||x.r))return{pw,s:e.s}}return null}
+const qn=v=>v||null;
+function stations(ex){const k=keyOf(ex);return(S.eq&&S.eq[k])||[]}
+function gymNow(){const l=cur();if(l&&'g'in l)return qn(l.g);return qn(S.lastGym)}
+const qOf=()=>gymNow();
+function prev(ex){const k=keyOf(ex),g=gymNow();for(let pw=S.w-1;pw>=1;pw--){const l=S.log[pw+'|'+S.d];const e=l&&l.ex[k];if(e&&e.s.some(x=>x.w||x.r)&&qn(l.g)===g)return{pw,s:e.s,q:g}}return null}
+function prevOther(ex){const k=keyOf(ex),g=gymNow();for(let pw=S.w-1;pw>=1;pw--){const l=S.log[pw+'|'+S.d];const e=l&&l.ex[k];if(e&&e.s.some(x=>x.w||x.r)&&qn(l.g)!==g)return{pw,s:e.s,q:qn(l.g)}}return null}
+function entry(ex){const l=cur(true),k=keyOf(ex,l);return l.ex[k]||(l.ex[k]={s:[]})}
 
 /* ---------- AUDIO ---------- */
 let ac=null;
@@ -359,7 +369,7 @@ function renderTrain(){
   h+=`<section class="hero">
    <div class="ht"><div style="flex:1"><small>Semana ${S.w} · ${W.t}</small><h2>${day.n}</h2><span class="foc">${day.f}</span></div>
     <div class="ring" aria-label="${pr.n} de ${pr.t} series"><svg viewBox="0 0 72 72"><circle cx="36" cy="36" r="30" fill="none" stroke="#2c3237" stroke-width="7"/><circle cx="36" cy="36" r="30" fill="none" stroke="${pct>=1?'#36a865':'#e0342b'}" stroke-width="7" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}" style="transition:stroke-dashoffset .5s"/></svg><b>${pr.n}<small>/${pr.t}</small></b></div></div>
-   <div class="chips"><button class="chip ${mc}" data-tg="pmode">Dolor ${l&&l.pre!=null?l.pre+'/10':'–'} · ${MODES[mode].t}</button><span class="chip">RIR ${W.rir} · ${W.rirI}</span><button class="chip" data-open-start="1">Cambiar ⇄</button></div>
+   <div class="chips"><button class="chip ${mc}" data-tg="pmode">Dolor ${l&&l.pre!=null?l.pre+'/10':'–'} · ${MODES[mode].t}</button><span class="chip">RIR ${W.rir} · ${W.rirI}</span><button class="chip" data-tg="gym">${gymNow()?esc(gymNow()):'Elegir gimnasio'}</button><button class="chip" data-open-start="1">Cambiar ⇄</button></div>
   </section>
   ${l&&l.t1?summaryBox(S.w,S.d):''}
   <details class="box" data-p="pmode" id="modeBox" ${OPENP.has('pmode')||(l&&l.pre==null)||mode!=='normal'?'open':''}><summary>Dolor antes de empezar</summary><div class="in">
@@ -367,6 +377,9 @@ function renderTrain(){
    ${mode==='recuperacion'?`<div class="msg x">Hoy: calentamiento${list.some(x=>x.core)?', bloque lumbar en fase 1':''} y 15–20 min de cardio suave (bici o caminadora sin inclinación). La fuerza está oculta.</div><div class="row"><button class="btn ghost" data-showall="1">${l&&l.showAll?'Ocultar fuerza otra vez':'Mostrar la fuerza igualmente'}</button></div>`:''}
    ${l&&l.autoAlt&&l.autoAlt.length?`<div class="msg w">Cambiados a su alternativa por molestias anteriores: ${l.autoAlt.map(id=>{const e=list.find(x=>x.id===id);return e?esc(e.n):''}).filter(Boolean).join(', ')}.</div>`:''}
   </div></details>
+  <details class="box" data-p="gym" ${OPENP.has('gym')?'open':''}><summary>Gimnasio: ${gymNow()?esc(gymNow()):'sin marcar'}</summary><div class="in">
+   <p class="note" style="margin:0">Cada gimnasio lleva su propio historial de pesos, porque las máquinas y poleas no son comparables entre uno y otro.</p>
+   <div class="eqr">${(S.gyms||[]).map((n,j)=>`<button class="qc" data-gy="${j}" aria-pressed="${gymNow()===n}">${esc(n)}</button>`).join('')}${ADDQ==='gym'?`<span class="qadd"><input id="qgym" maxlength="24" placeholder="Nombre del gimnasio" aria-label="Nombre del gimnasio"><button class="qc" data-gsave="1">Guardar</button></span>`:`<button class="qc add" data-gadd="1">+ Gimnasio</button>`}</div></div></details>
   <details class="box" data-p="focus" ${OPENP.has('focus')?'open':''}><summary>Enfoque del día y objetivo de la semana</summary><div class="in">
    <div class="focus" style="margin-top:0"><div><small>Enfoque principal</small><b>${day.fp}</b></div><div><small>Secundario</small><span>${day.fs}</span></div></div>
    <p class="note" style="margin:8px 0 0">${day.fx}</p><p style="margin:8px 0 0;color:#d3d6d8">${W.txt}</p>
@@ -393,7 +406,11 @@ function renderTrain(){
   $('#v-train').innerHTML=h;JUST=null;
   updateClock();
 }
-let CURX=-1,JUST=null;const OPENP=new Set(),EXP=new Set(),COL=new Set();
+let CURX=-1,JUST=null,ADDQ=null;
+function saveGym(id,apply){const inp=$('#'+id),n=(inp&&inp.value||'').trim().slice(0,24);ADDQ=null;if(!n)return;S.gyms=S.gyms||[];if(!S.gyms.includes(n)&&S.gyms.length<8)S.gyms.push(n);apply(n);save()}
+function saveQ(xi){const ex=EX[S.d][xi],inp=$('#qin'+xi),n=(inp&&inp.value||'').trim().slice(0,24);ADDQ=null;
+  if(n){S.eq=S.eq||{};const k=keyOf(ex),a=S.eq[k]||(S.eq[k]=[]);if(!a.includes(n)&&a.length<6)a.push(n);entry(ex).q=n;save()}
+  const y=scrollY;renderTrain();scrollTo({top:y})}const OPENP=new Set(),EXP=new Set(),COL=new Set();
 const lumbarDay=d=>/^(pull|legs)/.test(d);
 const scale=(attr,val,extra='')=>`<div class="pain">${[0,1,2,3,4,5,6,7,8,9,10].map(v=>`<button data-${attr}="${extra}${v}" class="${v<=2?'g':v<=4?'a':'x'}" aria-pressed="${val===v}">${v}</button>`).join('')}</div>`;
 function preMsg(p){
@@ -431,11 +448,13 @@ function card(ex,xi,pos=xi,all=false){
     return`<div class="set ${cls}"><span class="n">${i+1}</span><input inputmode="decimal" data-in="${xi}|${i}|w" value="${esc(st.w)}" placeholder="${esc(p.w||'kg')}" aria-label="Peso serie ${i+1}"><input inputmode="numeric" data-in="${xi}|${i}|r" value="${esc(st.r)}" placeholder="${esc(p.r||'reps')}" aria-label="Reps serie ${i+1}"><button class="chk ${pop}" data-chk="${xi}|${i}" aria-pressed="${on}" aria-label="Serie ${i+1} hecha">✓</button></div>`}).join('');
   const ek=cur()&&cur().ex[keyOf(ex)],mol=ek&&ek.m!=null?ek.m:null,mh=molHist(ex).filter(x=>x.w!==S.w),om=openMol.has(ex.id);
   const m=musOf(ex.id);
-  const last=pv?`<div class="last">Última vez (S${pv.pw}): <b>${bestTxt(pv.s.slice(0,Math.max(sp.sets,1)),sp.iso)}</b>${!sp.iso?'<br><span>Si dejas un campo vacío, al marcar la serie se rellena con lo de la última vez.</span>':''}</div>`:`<div class="last">Primera vez${alt?' con la alternativa':''}: anota peso y reps para tener referencia la próxima semana.</div>`;
+  const q=qOf(ex),sts=stations(ex),po=!pv&&prevOther(ex);
+  const eqRow='';
+  const last=po?`<div class="last">${q?'En <b>'+esc(q)+'</b>':'Sin gimnasio marcado'} no tienes registro de este ejercicio. La última vez fue en <b>${esc(po.q||'otro gimnasio')}</b> (S${po.pw}: ${bestTxt(po.s.slice(0,Math.max(sp.sets,1)),sp.iso)}), que no es comparable: <span>arranca con el RIR indicado y anota.</span></div>`:pv?`<div class="last">Última vez${pv.q?' en '+esc(pv.q):''} (S${pv.pw}): <b>${bestTxt(pv.s.slice(0,Math.max(sp.sets,1)),sp.iso)}</b>${!sp.iso?'<br><span>Si dejas un campo vacío, al marcar la serie se rellena con lo de la última vez.</span>':''}</div>`:`<div class="last">Primera vez${alt?' con la alternativa':''}: anota peso y reps para tener referencia la próxima semana.</div>`;
   return`<article class="ex open ${all?'done':''} ${isCur?'cur':''}" id="ex${xi}">${head}<div class="exb">
    ${m?`<div class="mus"><span class="m1">${esc(m[0])}</span>${m[1]?`<span class="m2">${esc(m[1])}</span>`:''}</div>`:''}
    ${alt&&(cur()||{}).autoAlt&&cur().autoAlt.includes(ex.id)?`<div class="altinfo">Cambiada automáticamente por molestias en sesiones anteriores.</div>`:''}${alt?`<div class="altinfo">Usando alternativa. Original: ${esc(sp.name)}</div>`:''}
-   ${last}
+   ${eqRow}${last}
    ${mh.length?`<div class="prev">Molestia en semanas anteriores: <b>${mh.map(x=>'S'+x.w+': '+x.m).join(' · ')}</b></div>`:''}
    <details class="tech"><summary>Técnica</summary><p class="cue" style="margin:6px 0 0">${esc(cue)}</p>${ex.opt&&!alt?`<div class="altinfo">${esc(ex.opt)}</div>`:''}</details>
    <div class="sets">${!sp.iso?`<div class="set hd"><span></span><span>kg</span><span>reps</span><span></span></div>`:''}${rows}</div>
@@ -526,6 +545,12 @@ $('#v-train').addEventListener('click',async e=>{
   if(b.dataset.openStart){openStart(true);return}
   if(b.dataset.showall){const l=cur(true);l.showAll=!l.showAll;save();renderTrain();return}
   if(b.dataset.mol){const ex=EX[S.d][+b.dataset.mol];openMol.has(ex.id)?openMol.delete(ex.id):openMol.add(ex.id);const y=scrollY;renderTrain();scrollTo({top:y});return}
+  if(b.dataset.q){const[xi,j]=b.dataset.q.split('|').map(Number),ex=EX[S.d][xi],n=stations(ex)[j],e=entry(ex);e.q=qOf(ex)===n?null:n;save();const y=scrollY;renderTrain();scrollTo({top:y});return}
+  if(b.dataset.qadd){ADDQ=EX[S.d][+b.dataset.qadd].id;const y=scrollY;renderTrain();scrollTo({top:y});$('#qin'+b.dataset.qadd)?.focus();return}
+  if(b.dataset.qsave){const xi=+b.dataset.qsave;saveQ(xi);return}
+  if(b.dataset.gy){const n=(S.gyms||[])[+b.dataset.gy],l=cur(true);l.g=gymNow()===n?null:n;if(l.g)S.lastGym=l.g;save();const y=scrollY;renderTrain();scrollTo({top:y});return}
+  if(b.dataset.gadd){ADDQ='gym';OPENP.add('gym');const y=scrollY;renderTrain();scrollTo({top:y});$('#qgym')?.focus();return}
+  if(b.dataset.gsave){saveGym('qgym',n=>{const l=cur(true);l.g=n;S.lastGym=n});const y=scrollY;renderTrain();scrollTo({top:y});return}
   if(b.dataset.molv){const[xi,v]=b.dataset.molv.split('|').map(Number),ex=EX[S.d][xi],l=cur(true),k=keyOf(ex,l),e=l.ex[k]||(l.ex[k]={s:[]});e.m=e.m===v?null:v;save();const y=scrollY;renderTrain();scrollTo({top:y});return}
   if(b.dataset.pain){const l=cur(true),v=+b.dataset.pain;l.pain=l.pain===v?null:v;save();renderTrain();$('#endBox').scrollIntoView({block:'start'});return}
   if(b.id==='finBtn'){const l=cur(true);if(l.t1){l.t1=null;save();renderTrain();return}openEnd();return}
@@ -536,6 +561,7 @@ $('#v-train').addEventListener('click',async e=>{
   if(b.id==='rstWeek'){if(await ask('Reiniciar semana',`Se borra todo lo registrado en los 6 días de la <b>semana ${S.w}</b>. No se puede deshacer.`,'Reiniciar semana')){for(const k of Object.keys(S.log))if(k.startsWith(S.w+'|'))delete S.log[k];stopRest();save();renderTrain()}return}
 });
 $('#v-train').addEventListener('toggle',e=>{const d=e.target;if(d.dataset&&d.dataset.p){d.open?OPENP.add(d.dataset.p):OPENP.delete(d.dataset.p)}},true);
+$('#v-train').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='qgym'){e.preventDefault();saveGym('qgym',n=>{const l=cur(true);l.g=n;S.lastGym=n});renderTrain();return}if(e.key==='Enter'&&e.target.id&&e.target.id.startsWith('qin')){e.preventDefault();saveQ(+e.target.id.slice(3))}});
 $('#v-train').addEventListener('input',e=>{const t=e.target;if(!t.dataset.in)return;const[xi,i,f]=t.dataset.in.split('|');const st=getSet(EX[S.d][+xi],+i);st[f]=t.value.slice(0,12);save()});
 $('#sessBtn').addEventListener('click',()=>{audio();const l=cur();if(!l||!l.t0||l.t1){openStart();return}openEnd()});
 $('#dock').addEventListener('click',e=>{const b=e.target.closest('[data-rest]');if(!b||!R)return;const v=b.dataset.rest;if(v==='skip'){stopRest();return}R.end+=(+v)*1000;R.total=Math.max(R.total,(R.end-Date.now())/1000);if(R.done&&R.end>Date.now()){R.done=false;$('#dock').classList.remove('end')}tick()});
@@ -567,11 +593,13 @@ function clean(raw){
   if(!st||typeof st.log!=='object'||!st.log)throw new Error('El archivo no tiene el formato de esta app.');
   const log={};const str=v=>String(v??'').slice(0,12);const num=v=>typeof v==='number'&&isFinite(v)?v:null;
   for(const[k,l]of Object.entries(st.log)){if(!VALID.test(k)||!l||typeof l!=='object')continue;const o={ex:{},alt:{},pain:null,t0:num(l.t0),t1:num(l.t1)};
-    const p=num(l.pain);o.pain=p!=null&&p>=0&&p<=10?Math.round(p):null;const pr=num(l.pre);o.pre=pr!=null&&pr>=0&&pr<=10?Math.round(pr):null;if(MODES[l.mode])o.mode=l.mode;if(l.showAll)o.showAll=true;if(Array.isArray(l.autoAlt))o.autoAlt=l.autoAlt.filter(x=>/^[a-z0-9]{2,6}$/.test(x)).slice(0,20);
+    const p=num(l.pain);o.pain=p!=null&&p>=0&&p<=10?Math.round(p):null;if(typeof l.g==='string'&&l.g.trim())o.g=l.g.trim().slice(0,24);const pr=num(l.pre);o.pre=pr!=null&&pr>=0&&pr<=10?Math.round(pr):null;if(MODES[l.mode])o.mode=l.mode;if(l.showAll)o.showAll=true;if(Array.isArray(l.autoAlt))o.autoAlt=l.autoAlt.filter(x=>/^[a-z0-9]{2,6}$/.test(x)).slice(0,20);
     for(const[a,v]of Object.entries(l.alt||{}))if(/^[a-z0-9]{2,6}$/.test(a))o.alt[a]=!!v;
-    for(const[ek,e]of Object.entries(l.ex||{})){if(!/^[a-z0-9]{2,6}(~a)?$/.test(ek)||!e||!Array.isArray(e.s))continue;o.ex[ek]={s:e.s.slice(0,8).map(s=>({d:s&&s.d?1:0,w:str(s&&s.w),r:str(s&&s.r)}))};const m=num(e.m);if(m!=null&&m>=0&&m<=10)o.ex[ek].m=Math.round(m)}
+    for(const[ek,e]of Object.entries(l.ex||{})){if(!/^[a-z0-9]{2,6}(~a)?$/.test(ek)||!e||!Array.isArray(e.s))continue;o.ex[ek]={s:e.s.slice(0,8).map(s=>({d:s&&s.d?1:0,w:str(s&&s.w),r:str(s&&s.r)}))};if(typeof e.q==='string'&&e.q.trim())o.ex[ek].q=e.q.trim().slice(0,24);const m=num(e.m);if(m!=null&&m>=0&&m<=10)o.ex[ek].m=Math.round(m)}
     log[k]=o}
-  return{v:1,w:+st.w>=1&&+st.w<=8?+st.w:1,d:EX[st.d]?st.d:'pushA',log,exportedAt:raw&&raw.exportedAt};
+  const eq={};for(const[k,a]of Object.entries(st.eq||{}))if(/^[a-z0-9]{2,6}(~a)?$/.test(k)&&Array.isArray(a))eq[k]=a.filter(x=>typeof x==='string'&&x.trim()).map(x=>x.trim().slice(0,24)).slice(0,6);
+  const gyms=Array.isArray(st.gyms)?st.gyms.filter(x=>typeof x==='string'&&x.trim()).map(x=>x.trim().slice(0,24)).slice(0,8):[];
+  return{v:1,w:+st.w>=1&&+st.w<=8?+st.w:1,d:EX[st.d]?st.d:'pushA',log,eq,gyms,lastGym:typeof st.lastGym==='string'?st.lastGym.slice(0,24):null,exportedAt:raw&&raw.exportedAt};
 }
 let PENDING=null;
 function renderData(){
@@ -622,7 +650,7 @@ $('#v-data').addEventListener('click',async e=>{
   if(b.id==='impCancel'){PENDING=null;$('#impSum').innerHTML='';return}
   if((b.id==='impRep'||b.id==='impMerge')&&PENDING){const rep=b.id==='impRep';
     if(!await ask(rep?'Reemplazar todo':'Combinar datos',rep?'Se borrará <b>todo</b> lo que hay en este navegador y se cargará el archivo. ¿Seguro?':'Las sesiones del archivo sustituirán a las mismas sesiones de este navegador. El resto se conserva.',rep?'Reemplazar':'Combinar'))return;
-    if(rep){S.log=PENDING.log;S.w=PENDING.w;S.d=PENDING.d}else Object.assign(S.log,PENDING.log);
+    if(rep){S.log=PENDING.log;S.w=PENDING.w;S.d=PENDING.d;S.eq=PENDING.eq;S.gyms=PENDING.gyms;S.lastGym=PENDING.lastGym}else{S.gyms=S.gyms||[];for(const n of PENDING.gyms||[])if(!S.gyms.includes(n))S.gyms.push(n);Object.assign(S.log,PENDING.log);S.eq=S.eq||{};for(const[k,a]of Object.entries(PENDING.eq||{})){const c=S.eq[k]||(S.eq[k]=[]);for(const n of a)if(!c.includes(n)&&c.length<6)c.push(n)}}
     PENDING=null;save();renderData();$('#impSum').innerHTML='<div class="msg ok">Historial importado.</div>';return}
   if(b.id==='dRstW'){if(await ask('Reiniciar semana',`Se borra todo lo registrado en la <b>semana ${S.w}</b>.`,'Reiniciar')){for(const k of Object.keys(S.log))if(k.startsWith(S.w+'|'))delete S.log[k];save();renderData()}return}
   if(b.id==='dRstAll'){if(await ask('Borrar todo','Se borran las 8 semanas: pesos, reps, checks y dolor. Exporta antes si quieres conservarlo.','Borrar todo')){S={v:1,w:1,d:'pushA',log:{}};stopRest();save();renderData()}return}
@@ -662,7 +690,7 @@ function sessStats(w,d){
   for(const ex of exs){const k=keyOf(ex,l),e=l.ex&&l.ex[k],nm=isAlt(ex,l)?ex.alt.n:spec(ex,w,d).name;
     if(e&&e.m!=null&&e.m>=3)mol.push(nm+' ('+e.m+')');
     const mx=a=>Math.max(0,...(a||[]).map(x=>parseFloat(String(x.w).replace(',','.'))||0));
-    const now=mx(e&&e.s);if(now>0){let before=0;for(let pw=1;pw<w;pw++){const pl=L(pw,d),pe=pl&&pl.ex[k];before=Math.max(before,mx(pe&&pe.s))}if(before>0&&now>before)up.push(nm+' '+before+' → '+now+' kg')}}
+    const now=mx(e&&e.s);if(now>0){let before=0;for(let pw=1;pw<w;pw++){const pl=L(pw,d),pe=pl&&pl.ex[k];if(pe&&qn(pl.g)===qn(l.g))before=Math.max(before,mx(pe.s))}if(before>0&&now>before)up.push(nm+' '+before+' → '+now+' kg')}}
   return{dur:l.t0?((l.t1||Date.now())-l.t0)/1000:0,n:pr.n,t:pr.t,full,total:exs.length,pre:l.pre,pain:l.pain,mol,up};
 }
 function summaryBox(w,d){
@@ -700,7 +728,7 @@ function suggest(){let best=null;for(const[k,l]of Object.entries(S.log))if(l.t1&
   if(!best)return{w:1,d:DAYS[0].id};for(let w=best.w;w<=8;w++)for(const d of DAYS){const l=L(w,d.id);if(!l||!l.t1)return{w,d:d.id}}return{w:8,d:DAYS[DAYS.length-1].id}}
 function ongoing(){for(const[k,l]of Object.entries(S.log))if(l.t0&&!l.t1&&Date.now()-l.t0<5*3600e3){const[w,d]=k.split('|');return{w:+w,d,l}}return null}
 function autoAlts(w,d,pre){const out=[];for(const ex of EX[d]){const v=[];for(let pw=1;pw<=8;pw++){if(pw===w)continue;const l=L(pw,d),e=l&&l.ex[ex.id];if(e&&e.m!=null)v.push(e.m)}const hi=v.filter(x=>x>=3).length,last=v[v.length-1];if(hi>=2||(pre!=null&&pre>=3&&last>=3))out.push({ex,last})}return out}
-function openStart(keep){const sg=suggest();P={w:S.w,d:S.d,pain:null,sg};const l=cur();if(!keep&&!(l&&l.t0&&!l.t1)){P.w=sg.w;P.d=sg.d}if(keep&&l&&l.pre!=null)P.pain=l.pre;renderStart();START=true;showTab('train')}
+function openStart(keep){const sg=suggest();P={w:S.w,d:S.d,pain:null,sg,g:qn(S.lastGym)};const l=cur();if(!keep&&!(l&&l.t0&&!l.t1)){P.w=sg.w;P.d=sg.d}if(keep&&l&&l.pre!=null)P.pain=l.pre;renderStart();START=true;showTab('train')}
 function renderStart(){
   const og=ongoing(),m=modeFor(P.pain,P.d),W=WEEKS[P.w],ex=EX[P.d],lumb=/^(pull|legs)/.test(P.d);
   const alts=P.pain==null?[]:autoAlts(P.w,P.d,P.pain);
@@ -717,12 +745,14 @@ function renderStart(){
   $('#startBody').innerHTML=`${today.map(t=>`<div class="msg ok" style="margin-top:12px">Hoy terminaste <b>${dayName(t.d)} · semana ${t.w}</b> (${fmt((t.l.t1-t.l.t0)/1000)}).</div><div class="row"><button class="btn ghost" data-st-view="${t.w}|${t.d}">Ver resumen de hoy</button></div>`).join('')}${og?`<div class="msg w" style="margin-top:12px">Tienes <b>${dayName(og.d)} · semana ${og.w}</b> en curso (${fmt((Date.now()-og.l.t0)/1000)}).</div><div class="row"><button class="btn blue" data-st-cont="1">Continuar esa sesión</button></div>`:''}
    <div class="lbl">Semana</div><div class="weeks">${[1,2,3,4,5,6,7,8].map(w=>`<button data-st-w="${w}" class="${WEEKS[w].dl?'dl':''}" aria-pressed="${w===P.w}">${w}</button>`).join('')}</div>
    <div class="lbl">Día</div><div class="days">${DAYS.map(d=>{const lg=L(P.w,d.id),sg=P.sg.w===P.w&&P.sg.d===d.id;return`<button data-st-d="${d.id}" class="${sg?'sug':''}" aria-pressed="${d.id===P.d}"><b>${d.n}</b><span>${d.f}${lg&&lg.t1?' · hecho':''}</span>${sg?'<span class="sugt">Sugerido</span>':''}</button>`}).join('')}</div>
+   <div class="lbl">Gimnasio</div><div class="eqr" style="margin-top:0">${(S.gyms||[]).map((n,j)=>`<button class="qc" data-st-gy="${j}" aria-pressed="${P.g===n}">${esc(n)}</button>`).join('')}${ADDQ==='stgym'?`<span class="qadd"><input id="stgin" maxlength="24" placeholder="Nombre del gimnasio" aria-label="Nombre del gimnasio"><button class="qc" data-st-gsave="1">Guardar</button></span>`:`<button class="qc add" data-st-gadd="1">+ Gimnasio</button>`}</div>
    <div class="lbl">Dolor lumbar ahora (0–10) · tu basal es 0–2</div>${scale('st-p',P.pain)}
    <div class="prev2">${pv}</div>
    ${done?'<div class="msg w">Ya cerraste este día en esta semana. Si lo empiezas, se reabre con lo que tenías anotado.</div>':''}
    <div class="row"><button class="btn" data-st-go="1" ${P.pain==null?'disabled':''}>Empezar sesión</button></div>
    <div class="row"><button class="btn ghost" data-st-close="1">Solo ver la rutina</button></div>`;
 }
+$('#startM').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='stgin'){e.preventDefault();saveGym('stgin',n=>{P.g=n});renderStart()}});
 $('#startM').addEventListener('click',e=>{
   audio();const b=e.target.closest('button');if(!b)return;const D=b.dataset;
   if(D.stW){P.w=+D.stW;renderStart();return}
@@ -731,7 +761,10 @@ $('#startM').addEventListener('click',e=>{
   if(D.stView){const[w,d]=D.stView.split('|');S.w=+w;S.d=d;save();closeStart();showTab('train');setTimeout(()=>$('#sumBox')?.scrollIntoView({block:'start'}),60);return}
   if(D.stCont){const og=ongoing();S.w=og.w;S.d=og.d;save();closeStart();showTab('train');return}
   if(D.stClose){closeStart();renderTrain();return}
-  if(D.stGo&&P.pain!=null){S.w=P.w;S.d=P.d;const l=cur(true);l.pre=P.pain;l.mode=modeFor(P.pain,P.d);l.showAll=false;
+  if(D.stGy!=null){const n=(S.gyms||[])[+D.stGy];P.g=P.g===n?null:n;renderStart();return}
+  if(D.stGadd){ADDQ='stgym';renderStart();$('#stgin')?.focus();return}
+  if(D.stGsave){saveGym('stgin',n=>{P.g=n});renderStart();return}
+  if(D.stGo&&P.pain!=null){S.w=P.w;S.d=P.d;const l=cur(true);l.g=P.g;if(P.g)S.lastGym=P.g;l.pre=P.pain;l.mode=modeFor(P.pain,P.d);l.showAll=false;
     const al=autoAlts(P.w,P.d,P.pain);l.autoAlt=al.map(a=>a.ex.id);for(const a of al)l.alt[a.ex.id]=true;
     if(l.t1)l.t1=null;if(!l.t0)l.t0=Date.now();save();closeStart();showTab('train')}
 });
