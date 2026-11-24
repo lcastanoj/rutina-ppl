@@ -611,7 +611,7 @@ let PENDING=null;
 function renderData(){
   const sm=summarize(S);
   $('#v-data').innerHTML=`<h2 style="font-size:32px;margin-top:20px">Tus datos</h2>
-  <p class="note">Se guardan solo en este navegador. Para pasarlos a otro dispositivo, exporta aquí e importa allá.</p>
+  <p class="note">Versión de la app: <b>17</b> · Se guardan solo en este navegador. Para pasarlos a otro dispositivo, exporta aquí e importa allá.</p>
   <div class="sum"><b>En este navegador</b>${sumHTML(sm)}</div>
   ${molMap()}
   <h3 style="font-size:24px;margin-top:22px">Exportar historial</h3>
