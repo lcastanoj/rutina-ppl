@@ -716,7 +716,7 @@ function renderEnd(){
   const st=sessStats(S.w,S.d),miss=st.t-st.n;
   $('#endS').innerHTML=`<h3>Terminar ${dayName(S.d)}</h3>
    <div class="stats" style="margin-top:10px"><div><b>${fmt(st.dur)}</b><small>duración</small></div><div><b>${st.n}/${st.t}</b><small>series</small></div><div><b>${st.full}/${st.total}</b><small>ejercicios completos</small></div></div>
-   ${st.dur>4*3600?`<div class="msg x">Esta sesión marca ${fmt(st.dur)}: seguramente quedó abierta desde otro día. Escribe cuánto duró de verdad y se corrige al terminar.</div><div class="qadd" style="margin-top:8px"><input id="endmin" inputmode="numeric" maxlength="3" placeholder="Minutos reales (ej. 70)" aria-label="Duración real en minutos"></div>`:''}
+   ${st.dur>2*3600?`<div class="msg x">Esta sesión marca ${fmt(st.dur)}: seguramente quedó abierta desde otro día. Escribe cuánto duró de verdad y se corrige al terminar.</div><div class="qadd" style="margin-top:8px"><input id="endmin" inputmode="numeric" maxlength="3" placeholder="Minutos reales (ej. 70)" aria-label="Duración real en minutos"></div>`:''}
    ${miss?`<div class="msg w">Te faltan ${miss} series. Si terminas ahora, quedan guardadas como no hechas; puedes reabrir la sesión después.</div>`:''}
    <div class="lbl">Dolor lumbar ahora (0–10)${st.pre!=null?' · antes de empezar: '+st.pre:''}</div>${scale('end-p',EP)}
    ${painMsg(EP)}
@@ -734,7 +734,7 @@ const sameDay=t=>{const a=new Date(t),b=new Date();return a.toDateString()===b.t
 let P=null;
 function suggest(){let best=null;for(const[k,l]of Object.entries(S.log))if(l.t1&&(!best||l.t1>best.t)){const[w,d]=k.split('|');best={w:+w,d,t:l.t1}}
   if(!best)return{w:1,d:DAYS[0].id};for(let w=best.w;w<=8;w++)for(const d of DAYS){const l=L(w,d.id);if(!l||!l.t1)return{w,d:d.id}}return{w:8,d:DAYS[DAYS.length-1].id}}
-function ongoing(){for(const[k,l]of Object.entries(S.log))if(l.t0&&!l.t1&&Date.now()-l.t0<5*3600e3){const[w,d]=k.split('|');return{w:+w,d,l}}return null}
+function ongoing(){for(const[k,l]of Object.entries(S.log))if(l.t0&&!l.t1&&Date.now()-l.t0<2*3600e3){const[w,d]=k.split('|');return{w:+w,d,l}}return null}
 function autoAlts(w,d,pre){const out=[];for(const ex of EX[d]){const v=[];for(let pw=1;pw<=8;pw++){if(pw===w)continue;const l=L(pw,d),e=l&&l.ex[ex.id];if(e&&e.m!=null)v.push(e.m)}const hi=v.filter(x=>x>=3).length,last=v[v.length-1];if(hi>=2||(pre!=null&&pre>=3&&last>=3))out.push({ex,last})}return out}
 function openStart(keep){const sg=suggest();P={w:S.w,d:S.d,pain:null,sg,g:qn(S.lastGym)};const l=cur();if(!keep&&!(l&&l.t0&&!l.t1)){P.w=sg.w;P.d=sg.d}if(keep&&l&&l.pre!=null)P.pain=l.pre;renderStart();START=true;showTab('train')}
 function renderStart(){
