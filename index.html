@@ -716,6 +716,7 @@ function renderEnd(){
   const st=sessStats(S.w,S.d),miss=st.t-st.n;
   $('#endS').innerHTML=`<h3>Terminar ${dayName(S.d)}</h3>
    <div class="stats" style="margin-top:10px"><div><b>${fmt(st.dur)}</b><small>duración</small></div><div><b>${st.n}/${st.t}</b><small>series</small></div><div><b>${st.full}/${st.total}</b><small>ejercicios completos</small></div></div>
+   ${st.dur>4*3600?`<div class="msg x">Esta sesión marca ${fmt(st.dur)}: seguramente quedó abierta desde otro día. Escribe cuánto duró de verdad y se corrige al terminar.</div><div class="qadd" style="margin-top:8px"><input id="endmin" inputmode="numeric" maxlength="3" placeholder="Minutos reales (ej. 70)" aria-label="Duración real en minutos"></div>`:''}
    ${miss?`<div class="msg w">Te faltan ${miss} series. Si terminas ahora, quedan guardadas como no hechas; puedes reabrir la sesión después.</div>`:''}
    <div class="lbl">Dolor lumbar ahora (0–10)${st.pre!=null?' · antes de empezar: '+st.pre:''}</div>${scale('end-p',EP)}
    ${painMsg(EP)}
@@ -723,9 +724,9 @@ function renderEnd(){
    <div class="row"><button class="btn ghost" data-end-no="1">Seguir entrenando</button></div>`;
 }
 $('#endM').addEventListener('click',e=>{const b=e.target.closest('button');if(!b){if(e.target.id==='endM')$('#endM').hidden=true;return}const D=b.dataset;
-  if(D.endP!=null){const v=+D.endP;EP=EP===v?null:v;renderEnd();return}
+  if(D.endP!=null){const v=+D.endP,keep=($('#endmin')||{}).value;EP=EP===v?null:v;renderEnd();if(keep&&$('#endmin'))$('#endmin').value=keep;return}
   if(D.endNo){$('#endM').hidden=true;return}
-  if(D.endGo){const l=cur(true);if(EP!=null)l.pain=EP;if(!l.t0)l.t0=Date.now();l.t1=Date.now();stopRest();LAST={w:S.w,d:S.d};const sg=suggest();S.w=sg.w;S.d=sg.d;save();$('#endM').hidden=true;showTab('train');beep(2,700,.15)}
+  if(D.endGo){const l=cur(true);if(EP!=null)l.pain=EP;if(!l.t0)l.t0=Date.now();l.t1=Date.now();const em=parseInt(($('#endmin')||{}).value,10);if(em>0&&em<600){l.t0=l.t1;l.acc=em*60}stopRest();LAST={w:S.w,d:S.d};const sg=suggest();S.w=sg.w;S.d=sg.d;save();$('#endM').hidden=true;showTab('train');beep(2,700,.15)}
 });
 const sameDay=t=>{const a=new Date(t),b=new Date();return a.toDateString()===b.toDateString()};
 
